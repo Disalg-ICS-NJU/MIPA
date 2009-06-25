@@ -23,27 +23,55 @@ package net.sourceforge.mipa.components;
 import java.rmi.Remote;
 
 /**
- * This interface provides system register interface for others modules in mipa system.
+ * This interface provides system Naming interface for others modules in mipa system.
  * 
- * @author Jianping YU
+ * @author Jianping YU <jianp.yue@gmail.com>
  */
-public interface Naming {
+public class Naming {
+	
+	/** rmi registry address */
+	private static String registryAddress = "";
+	
+	/**
+	 * Sets rmi registry address.
+	 * 
+	 * @param address a URL.
+	 */
+	public static void setRegistryAddress(String address) {
+		registryAddress = address;
+	}
+	
+	/**
+	 * Returns rmi registry address which sets by <code>setRegistryAddress</code>.
+	 * 
+	 * @return a URL of rmi registry address.
+	 */
+	public static String getRegistryAddress() {
+		return registryAddress;
+	}
+	
 	/**
 	 * Binds the specified <code>name</code> to a remote object.
 	 * 
 	 * @param name a name in Naming Server
 	 * @param obj a reference for remote object
 	 */
-	public void bind(String name, Remote obj);
+	public static void bind(String name, Remote obj) {
+		
+		
+	}
 	
 	/**
 	 * Returns a reference for the remote object associated with the specified <code>name</code>.
 	 * 
 	 * @param name a name in Naming Server
 	 * @return a reference for a remote object if the specified <code>name</code> object exists, 
-	 * NULL otherwise
+	 * <code>null</code> otherwise
 	 */
-	public Remote lookup(String name);
+	public static Remote lookup(String name) {
+		
+		return null;
+	}
 	
 	/**
 	 * Rebinds the specified <code>name</code> to a new object.
@@ -51,13 +79,17 @@ public interface Naming {
 	 * @param name a name in Naming Server
 	 * @param obj new object to associate with the <code>name</code>
 	 */
-	public void rebind(String name, Remote obj);
+	public static void rebind(String name, Remote obj) {
+		
+		
+	}
 	
 	/**
 	 * Destroys the binding for the specified <code>name</code> that is associated with an object.
 	 * 
 	 * @param name a name in Naming Server
 	 */
-	public void unbind(String name);
-
+	public static void unbind(String name) {
+		
+	}
 }
