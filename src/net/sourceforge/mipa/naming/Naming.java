@@ -34,25 +34,29 @@ import java.rmi.RemoteException;
  */
 public interface Naming extends Remote {
     /**
-     * Returns a reference for the remote object associated with the specified <code>name</code>.
+     * Returns a reference for the remote object associated with the specified
+     * <code>name</code>.
      * 
-     * @param name a name in Naming Server
-     * @return a reference for a remote object if the specified <code>name</code> object exists, 
-     * <code>null</code> otherwise
+     * @param name
+     *            a name in Naming Server
+     * @return a reference for a remote object if the specified
+     *         <code>name</code> object exists, <code>null</code> otherwise
      * 
      * @throws AccessException
      * @throws RemoteException
      * @throws NotBoundException
      * @throws MalformedURLException
      */
-    public Remote lookup(String name) throws AccessException,
-			RemoteException, NotBoundException, MalformedURLException;
-	
+    public Remote lookup(String name) throws AccessException, RemoteException,
+                                     NotBoundException, MalformedURLException;
+
     /**
      * Binds the specified <code>name</code> to a remote object.
      * 
-     * @param name a name in Naming Server
-     * @param obj a reference for remote object
+     * @param name
+     *            a name in Naming Server
+     * @param obj
+     *            a reference for remote object
      * 
      * @throws AccessException
      * @throws RemoteException
@@ -60,31 +64,38 @@ public interface Naming extends Remote {
      * @throws MalformedURLException
      */
     public void bind(String name, Remote obj) throws AccessException,
-			RemoteException, AlreadyBoundException, MalformedURLException;
+                                             RemoteException,
+                                             AlreadyBoundException,
+                                             MalformedURLException;
 
     /**
      * Rebinds the specified <code>name</code> to a new object.
      * 
-     * @param name a name in Naming Server
-     * @param obj new object to associate with the <code>name</code>
+     * @param name
+     *            a name in Naming Server
+     * @param obj
+     *            new object to associate with the <code>name</code>
      * 
      * @throws AccessException
      * @throws RemoteException
      * @throws MalformedURLException
      */
     public void rebind(String name, Remote obj) throws AccessException,
-			RemoteException, MalformedURLException;
+                                               RemoteException,
+                                               MalformedURLException;
 
     /**
-     * Destroys the binding for the specified <code>name</code> that is associated with an object.
+     * Destroys the binding for the specified <code>name</code> that is
+     * associated with an object.
      * 
-     * @param name a name in Naming Server
+     * @param name
+     *            a name in Naming Server
      * 
      * @throws AccessException
      * @throws RemoteException
      * @throws NotBoundException
      * @throws MalformedURLException
      */
-    public void unbind(String name) throws AccessException,
-			RemoteException, NotBoundException, MalformedURLException;
+    public void unbind(String name) throws AccessException, RemoteException,
+                                   NotBoundException, MalformedURLException;
 }

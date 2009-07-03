@@ -28,38 +28,42 @@ import net.sourceforge.mipa.naming.Naming;
 /**
  * Naming server test example.
  * 
- * @author Jianping Yu <jianp.yue@gmail.com
+ * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class NamingTest implements NamingTestInterface {
-    
+
     public String str = "A test from Naming tree.";
-    
+
     /*
-    public NamingTest() throws RemoteException {
-	super();
+     * public NamingTest() throws RemoteException { super(); }
+     */
+
+    public String getStr() throws RemoteException {
+        return str;
     }
-    */
-    
-    public String getStr() throws RemoteException { return str; }
-    
+
     public static void main(String[] args) {
-	try {
-	    Naming server = (Naming) java.rmi.Naming.lookup("rmi://127.0.0.1:1099/Naming");
-	    System.out.println("look up successfully.");
-	    NamingTest test = new NamingTest();
-	    NamingTestInterface stub = (NamingTestInterface) UnicastRemoteObject.exportObject(test, 0);
-	    
-	    server.bind("str", stub);
-	    System.out.println("Binding successful.");
-	    
-	    NamingTestInterface t1 = (NamingTestInterface) server.lookup("str");
-	    System.out.println(t1.getStr());
-	    
-	    server.unbind("str");
-	    System.out.println("Unbinding successful.");
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
+        try {
+            Naming server = (Naming) java.rmi.Naming
+                                                    .lookup("rmi://127.0.0.1:1099/Naming");
+            System.out.println("look up successfully.");
+            NamingTest test = new NamingTest();
+            NamingTestInterface stub = (NamingTestInterface) UnicastRemoteObject
+                                                                                .exportObject(
+                                                                                              test,
+                                                                                              0);
+
+            server.bind("str", stub);
+            System.out.println("Binding successful.");
+
+            NamingTestInterface t1 = (NamingTestInterface) server.lookup("str");
+            System.out.println(t1.getStr());
+
+            server.unbind("str");
+            System.out.println("Unbinding successful.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

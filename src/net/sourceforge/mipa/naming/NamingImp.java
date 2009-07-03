@@ -40,30 +40,33 @@ public class NamingImp implements Naming {
 
     /** rmi registry address */
     private String registryAddress = "";
-    
+
     /** rmi registry format address */
     private String formatAddress = null;
 
     public NamingImp() throws RemoteException {
-	super();
+        super();
     }
 
     /**
      * sets rmi registry port.
-     * @param port an integer presents rmi registry port
+     * 
+     * @param port
+     *            an integer presents rmi registry port
      */
     public void setPort(int port) {
-	this.port = port;
+        this.port = port;
     }
-    
+
     /**
      * returns rmi registry port.
+     * 
      * @return an integer presents rmi registry port
      */
     public int getPort() {
-	return port;
+        return port;
     }
-    
+
     /**
      * Sets rmi registry address.
      * 
@@ -71,7 +74,7 @@ public class NamingImp implements Naming {
      *            a URL.
      */
     public void setRegistryAddress(String address) {
-	this.registryAddress = address;
+        this.registryAddress = address;
     }
 
     /**
@@ -81,36 +84,39 @@ public class NamingImp implements Naming {
      * @return a URL of rmi registry address.
      */
     public String getRegistryAddress() {
-	return registryAddress;
+        return registryAddress;
     }
 
     /**
      * Formats registry address.
      */
     public void formatAddress() {
-	formatAddress = registryAddress + ":" + port + "/";
-	System.out.println(formatAddress);
+        formatAddress = registryAddress + ":" + port + "/";
+        System.out.println(formatAddress);
     }
 
     public void bind(String name, Remote obj) throws AccessException,
-	    RemoteException, AlreadyBoundException, MalformedURLException {
+                                             RemoteException,
+                                             AlreadyBoundException,
+                                             MalformedURLException {
 
-	java.rmi.Naming.bind(formatAddress + name, obj);
+        java.rmi.Naming.bind(formatAddress + name, obj);
 
     }
 
     public Remote lookup(String name) throws AccessException, RemoteException,
-	    NotBoundException, MalformedURLException {
-	return java.rmi.Naming.lookup(formatAddress + name);
+                                     NotBoundException, MalformedURLException {
+        return java.rmi.Naming.lookup(formatAddress + name);
     }
 
     public void rebind(String name, Remote obj) throws AccessException,
-	    RemoteException, MalformedURLException {
-	java.rmi.Naming.rebind(formatAddress + name, obj);
+                                               RemoteException,
+                                               MalformedURLException {
+        java.rmi.Naming.rebind(formatAddress + name, obj);
     }
 
     public void unbind(String name) throws AccessException, RemoteException,
-	    NotBoundException, MalformedURLException {
-	java.rmi.Naming.unbind(formatAddress + name);
+                                   NotBoundException, MalformedURLException {
+        java.rmi.Naming.unbind(formatAddress + name);
     }
 }
