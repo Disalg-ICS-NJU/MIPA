@@ -25,6 +25,7 @@ import java.rmi.RemoteException;
 
 /**
  * test routine interface.
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public interface NamingTestInterface extends Remote {

@@ -32,52 +32,53 @@ public class NamingServer {
 
     /** registry port */
     private int port;
-    
+
     /** registry address */
     private String address;
-    
+
     /**
      * <code>NamingServer</code> construction.
+     * 
      * @param port
      */
     public NamingServer(String address, int port) {
-	this.address = address;
-	this.port  = port;
+        this.address = address;
+        this.port = port;
     }
-    
+
     /**
      * starts naming server.
      */
     public void startServer() {
-	try {
-	    //TODO add security policy
-	    
-	    LocateRegistry.createRegistry(port);
-	    
-	    NamingImp server = new NamingImp();
-	    	    
-	    server.setRegistryAddress(address);
-	    server.setPort(port);
-	    server.formatAddress();
-	    
-	    Naming stub = (Naming) UnicastRemoteObject.exportObject(server, 0);
-	    
-	    java.rmi.Naming.rebind(address + ":" + port + "/Naming", stub);
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
+        try {
+            // TODO add security policy
+
+            LocateRegistry.createRegistry(port);
+
+            NamingImp server = new NamingImp();
+
+            server.setRegistryAddress(address);
+            server.setPort(port);
+            server.formatAddress();
+
+            Naming stub = (Naming) UnicastRemoteObject.exportObject(server, 0);
+
+            java.rmi.Naming.rebind(address + ":" + port + "/Naming", stub);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
+
     /**
      * @param args
      */
     public static void main(String[] args) {
-	
-	String address = "rmi://127.0.0.1";
-	int port = 1099;
-	
-	NamingServer server = new NamingServer(address, port);
-	System.out.println("Naming server is running...");
-	server.startServer();
+
+        String address = "rmi://127.0.0.1";
+        int port = 1099;
+
+        NamingServer server = new NamingServer(address, port);
+        System.out.println("Naming server is running...");
+        server.startServer();
     }
 }
