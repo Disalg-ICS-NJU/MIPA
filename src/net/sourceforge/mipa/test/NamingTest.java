@@ -23,6 +23,8 @@ package net.sourceforge.mipa.test;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import net.sourceforge.mipa.naming.Catalog;
+import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 
 /**
@@ -61,6 +63,13 @@ public class NamingTest implements NamingTestInterface {
 
             server.unbind("str");
             System.out.println("Unbinding successful.");
+            
+            IDManager idManager = (IDManager) server.lookup("IDManager");
+            for(int i = 0; i < 10; i++) {
+                System.out.println(idManager.getID(Catalog.DataSource));
+                System.out.println(idManager.getID(Catalog.Checker));
+                System.out.println(idManager.getID(Catalog.NormalProcess));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
