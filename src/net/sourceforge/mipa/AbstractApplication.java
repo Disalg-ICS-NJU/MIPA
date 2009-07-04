@@ -29,8 +29,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.sourceforge.mipa.components.MIPAResource;
-import net.sourceforge.mipa.components.PredicateParserMethod;
 import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
 
 import org.w3c.dom.Document;
 
