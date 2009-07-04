@@ -19,8 +19,11 @@
  */
 package net.sourceforge.mipa;
 
+import static config.Debug.DEBUG;
 import java.io.File;
+
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,7 +35,7 @@ import net.sourceforge.mipa.naming.Naming;
 import org.w3c.dom.Document;
 
 /**
- * provides application abstract method (template design pattern).
+ * provides application abstract method.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
@@ -68,28 +71,81 @@ public abstract class AbstractApplication implements ResultCallback {
 
     /**
      * starts application.
+     * 
+     * @param configFileName
+     *            config file name
      */
-    public void start() {
+    public void start(String configFileName) {
+        parseConfig(configFileName);
+        
         String namingAddress = MIPAResource.getNamingAddress();
+        
+        if(DEBUG) {
+            System.out.println("naming address is " + namingAddress);
+        }
+        
         try {
             Naming server = (Naming) java.rmi.Naming.lookup(namingAddress
                                                             + "Naming");
+            
+            if(DEBUG) {
+                System.out.println("application lookup Naming successfully.");
+            }
 
             // TODO generates application name
-            applicationName = "";
-            server.bind(applicationName, this);
+            applicationName = "app_1";
+            
+            ResultCallback stub = (ResultCallback) UnicastRemoteObject.exportObject(this, 0);
+            server.bind(applicationName, stub);
+            
+            if(DEBUG) {
+                System.out.println("application binds successfully.");
+            }
 
             // get predicate parser and transfer xml document to it.
 
             PredicateParserMethod parser = (PredicateParserMethod) server
                                                                          .lookup("predicateParser");
+            if(DEBUG) {
+                System.out.println("application lookups predicate parser successfully.");
+            }
+            
             parser.parsePredicate(applicationName, predicate);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * parse config file.
+     * 
+     * @param fileName
+     *            config file name
+     */
+    private void parseConfig(String fileName) {
 
+        try {
+            File f = new File(fileName);
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory
+                                                                   .newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(f);
+
+            String address = doc.getElementsByTagName("address").item(0)
+                                .getFirstChild().getNodeValue();
+
+            String port = doc.getElementsByTagName("port").item(0)
+                             .getFirstChild().getNodeValue();
+
+            MIPAResource
+                        .setNamingAddress("rmi://" + address + ":" + port + "/");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * parse predicate to document.
      * 
