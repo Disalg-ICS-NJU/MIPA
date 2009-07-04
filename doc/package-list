@@ -1,1 +1,6 @@
+config
+net.sourceforge.mipa
 net.sourceforge.mipa.components
+net.sourceforge.mipa.naming
+net.sourceforge.mipa.predicatedetection
+net.sourceforge.mipa.test
