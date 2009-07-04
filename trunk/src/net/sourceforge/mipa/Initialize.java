@@ -20,6 +20,7 @@
 package net.sourceforge.mipa;
 
 import static config.Debug.DEBUG;
+
 import java.io.File;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -27,6 +28,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.naming.IDManager;
+import net.sourceforge.mipa.naming.IDManagerImp;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.PredicateParser;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
@@ -55,13 +58,21 @@ public class Initialize {
                                                     .lookup(MIPAResource
                                                                         .getNamingAddress()
                                                             + "Naming");
-            PredicateParser predicateParser = new PredicateParser();
-            PredicateParserMethod stub = (PredicateParserMethod) UnicastRemoteObject
-                                                                                    .exportObject(
-                                                                                                  predicateParser,
-                                                                                                  0);
 
-            server.bind("predicateParser", stub);
+            IDManagerImp idManager = new IDManagerImp();
+            IDManager managerStub = (IDManager) UnicastRemoteObject
+                                                                   .exportObject(
+                                                                                 idManager,
+                                                                                 0);
+            server.bind("IDManager", managerStub);
+
+            PredicateParser predicateParser = new PredicateParser();
+            PredicateParserMethod predicateParserStub = (PredicateParserMethod) UnicastRemoteObject
+                                                                                                   .exportObject(
+                                                                                                                 predicateParser,
+                                                                                                                 0);
+
+            server.bind("PredicateParser", predicateParserStub);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,8 +112,8 @@ public class Initialize {
         } else {
             System.out.println("Error occurs when initializing");
         }
-        
-        if(DEBUG) {
+
+        if (DEBUG) {
             System.out.println(MIPAResource.getNamingAddress());
         }
     }

@@ -105,7 +105,7 @@ public abstract class AbstractApplication implements ResultCallback {
             // get predicate parser and transfer xml document to it.
 
             PredicateParserMethod parser = (PredicateParserMethod) server
-                                                                         .lookup("predicateParser");
+                                                                         .lookup("PredicateParser");
             if(DEBUG) {
                 System.out.println("application lookups predicate parser successfully.");
             }
