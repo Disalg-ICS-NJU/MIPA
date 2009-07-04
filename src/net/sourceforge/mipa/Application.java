@@ -17,31 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.predicatedetection;
+package net.sourceforge.mipa;
 
-import static config.Debug.DEBUG;
-import org.w3c.dom.Document;
+import java.rmi.RemoteException;
 
 /**
- * Checker parser module.
- * 
+ * MIPA application.
+ *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class CheckerParser {
+public class Application extends AbstractApplication {
+    
     /**
-     * parse checker logic from <code>Document</code>.
+     * <code>Application</code> construction.
      * 
-     * @param predicate
-     *            a document
-     * @param callbackID
-     *            a String represented application which is waiting for checker
-     *            result
+     * @param fileName
+     *            a file contains predicate
      */
-    public void parseChecker(Document predicate, String callbackID,
-                             PredicateType type) {
-        // TODO parse checker logic
-        if(DEBUG) {
-            System.out.println("\tparsing checker logic...");
-        }
+    public Application(String fileName) {
+        super(fileName);
     }
+    
+    @Override
+    public void callback(int value) throws RemoteException {
+        //TODO implements application logic
+        System.out.println("Result returns:");
+        System.out.println("\t" + value);
+    }
+
+    public static void main(String[] args) {
+        Application app = new Application("predicate.xml");
+        app.start("config.xml");
+    }
+
 }

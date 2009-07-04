@@ -20,6 +20,7 @@
 
 package net.sourceforge.mipa.predicatedetection;
 
+import static config.Debug.DEBUG;
 import org.w3c.dom.Document;
 
 /**
@@ -30,6 +31,9 @@ import org.w3c.dom.Document;
 public class PredicateIdentify {
     public static PredicateType predicateIdentify(Document predicate) {
         
+        if(DEBUG) {
+            System.out.println("\tidentify predicate...");
+        }
         return PredicateType.WCP;
     }
 }

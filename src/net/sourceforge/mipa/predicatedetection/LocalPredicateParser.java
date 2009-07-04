@@ -19,7 +19,7 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
-
+import static config.Debug.DEBUG;
 import org.w3c.dom.Document;
 
 /**
@@ -42,7 +42,9 @@ public class LocalPredicateParser {
     public void parseLocalPredicate(Document predicate, String coordinateID,
                                     PredicateType type) {
         // TODO parse local predicate
-        System.out.println("parsing local preidcate...");
+        if(DEBUG) {
+            System.out.println("\tparsing local preidcate...");
+        }
 
         /*
          * NodeList elements = predicate.getElementsByTagName("LP"); for(int i =
