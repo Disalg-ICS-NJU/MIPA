@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa;
 
+import static config.Debug.DEBUG;
 import java.io.File;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -99,6 +100,10 @@ public class Initialize {
             System.out.println("Initialization finished.");
         } else {
             System.out.println("Error occurs when initializing");
+        }
+        
+        if(DEBUG) {
+            System.out.println(MIPAResource.getNamingAddress());
         }
     }
 }

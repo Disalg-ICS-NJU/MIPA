@@ -38,9 +38,10 @@ public class CheckerParser {
      *            a String represented application which is waiting for checker
      *            result
      */
-    public void parseChecker(Document predicate, String callbackID, PredicateType type) {
+    public void parseChecker(Document predicate, String callbackID,
+                             PredicateType type) {
         // TODO parse checker logic
         System.out.println("parsing checker logic...");
-        
+
     }
 }

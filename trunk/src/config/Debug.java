@@ -17,26 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.components;
-
-import java.rmi.RemoteException;
+package config;
 
 /**
+ * Debug flag class.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class CoordinatorImp implements Coordinator {
-    
-    @Override
-    public void normalProcessFinished(String entityID, String normalProcessID)
-                                                                              throws RemoteException {
-
-    }
-
-    @Override
-    public void newCoordinator(String entityID, String CheckID,
-                               String[] normalProcessList)
-                                                          throws RemoteException {
-
-    }
+public class Debug {
+    public final static boolean DEBUG = true;
 }
