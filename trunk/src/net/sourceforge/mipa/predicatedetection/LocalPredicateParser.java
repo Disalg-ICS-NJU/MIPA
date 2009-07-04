@@ -17,31 +17,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.components;
+package net.sourceforge.mipa.predicatedetection;
 
-import net.sourceforge.mipa.predicatedetection.PredicateType;
 
 import org.w3c.dom.Document;
 
 /**
- * Checker parser module.
+ * local predicate parser module.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class CheckerParser {
+public class LocalPredicateParser {
+
     /**
-     * parse checker logic from <code>Document</code>.
+     * parse local predicate from <code>Document</code>.
      * 
      * @param predicate
      *            a document
-     * @param callbackID
-     *            a String represented application which is waiting for checker
-     *            result
+     * @param coordinateID
+     *            a String, usually is applicationName
+     * @param type
+     *            predicate type
      */
-    public void parseChecker(Document predicate, String callbackID,
-                             PredicateType type) {
-        // TODO parse checker logic
-        System.out.println("parsing checker logic...");
+    public void parseLocalPredicate(Document predicate, String coordinateID,
+                                    PredicateType type) {
+        // TODO parse local predicate
+        System.out.println("parsing local preidcate...");
 
+        /*
+         * NodeList elements = predicate.getElementsByTagName("LP"); for(int i =
+         * 0; i < elements.getLength(); i++) {
+         * 
+         * }
+         */
     }
 }

@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.components;
+package net.sourceforge.mipa.predicatedetection;
 
+import static config.Debug.DEBUG;
 import java.rmi.RemoteException;
 
-import net.sourceforge.mipa.predicatedetection.PredicateIdentify;
-import net.sourceforge.mipa.predicatedetection.PredicateType;
 
 import org.w3c.dom.Document;
 
@@ -48,6 +47,10 @@ public class PredicateParser implements PredicateParserMethod {
 
     public void parsePredicate(String applicationName, Document predicate)
                                                                           throws RemoteException {
+        
+        if(DEBUG) {
+            System.out.println("parsing predicate...");
+        }
         
         PredicateType type = PredicateIdentify.predicateIdentify(predicate);
         
