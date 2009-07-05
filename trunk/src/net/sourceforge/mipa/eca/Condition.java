@@ -24,14 +24,8 @@ package net.sourceforge.mipa.eca;
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class Condition {
+public interface Condition {
 
-    /** reference to action of ECA */
-    private Listener action;
-
-    public Condition(Listener action) {
-        this.action = action;
-    }
 
     /**
      * called by DataSource for notifying event change.
@@ -42,9 +36,7 @@ public class Condition {
      *            event value
      * @see DataSource
      */
-    public void update(String eventName, String value) {
-
-    }
+    public void update(String eventName, String value);
 
     /**
      * notify the action of ECA mechanism.
@@ -52,7 +44,5 @@ public class Condition {
      * @param eventName
      *            event name
      */
-    public void notifyListener(String eventName) {
-
-    }
+    public void notifyListener(String eventName);
 }
