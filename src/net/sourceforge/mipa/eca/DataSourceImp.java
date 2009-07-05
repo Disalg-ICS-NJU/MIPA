@@ -19,7 +19,6 @@
  */
 package net.sourceforge.mipa.eca;
 
-import static config.Debug.DEBUG;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
