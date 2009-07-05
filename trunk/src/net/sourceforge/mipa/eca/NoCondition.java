@@ -19,20 +19,29 @@
  */
 package net.sourceforge.mipa.eca;
 
+import net.sourceforge.mipa.predicatedetection.LocalPredicate;
+
 /**
  * report everything condition.
- *
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class NoCondition implements Condition {
 
-    /**  reference to action of ECA */
+    /** reference to action of ECA */
     private Listener action;
-    
-    public NoCondition(Listener action) {
+
+    /** local predicate which <code>Condition</code> should concern */
+    private LocalPredicate localPredicate;
+
+    public NoCondition(Listener action, LocalPredicate localPredicate) {
         this.action = action;
+        this.localPredicate = localPredicate;
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.mipa.eca.Condition#notifyListener(java.lang.String)
      */
     @Override
@@ -40,13 +49,31 @@ public class NoCondition implements Condition {
         action.update(eventName, value);
     }
 
-    /* (non-Javadoc)
-     * @see net.sourceforge.mipa.eca.Condition#update(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sourceforge.mipa.eca.Condition#update(java.lang.String,
+     * java.lang.String)
      */
     @Override
     public synchronized void update(String eventName, String value) {
-        notifyListener(eventName, value);
+        boolean result = assign(eventName, value);
 
+        notifyListener(eventName, String.valueOf(result));
+    }
+
+    /**
+     * calculate the local predicate value.
+     * 
+     * @param eventName
+     *            event name
+     * @param value
+     *            event value
+     * @return local predicate result
+     */
+    private boolean assign(String eventName, String value) {
+
+        return true;
     }
 
 }
