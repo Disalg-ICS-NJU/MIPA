@@ -34,7 +34,6 @@ public class ContextMapping {
 
     public ContextMapping() {
         map = new HashMap<String, String>();
-
     }
 
     /**
