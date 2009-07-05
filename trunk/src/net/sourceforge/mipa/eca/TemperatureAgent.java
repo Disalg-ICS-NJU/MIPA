@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.eca;
 
+import static config.Debug.DEBUG;
 import net.sourceforge.mipa.eca.sensor.Sensor;
 import net.sourceforge.mipa.eca.sensor.Temperature;
 
@@ -41,6 +42,7 @@ public class TemperatureAgent implements SensorAgent {
     
     public TemperatureAgent(DataSource source, String name) {
         this.dataSource = source;
+        this.name = name;
         sensor = new Temperature();
     }
     
@@ -62,8 +64,19 @@ public class TemperatureAgent implements SensorAgent {
 
     @Override
     public void run() {
-        
-        
+        //Thread.yield();
+        try {
+            for(int i = 0; i < 10; i++) {
+                
+                if(DEBUG) {
+                    System.out.println("generating data now...");
+                }
+                Thread.sleep(1000);
+                dataSource.update(this.name, "value " + i);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     
 }
