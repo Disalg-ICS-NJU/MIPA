@@ -40,7 +40,7 @@ public class DataSourceImp implements DataSource {
     }
 
     @Override
-    public void attach(Condition condition, String eventName)
+    public synchronized void attach(Condition condition, String eventName)
                                                              throws RemoteException {
 
         if (map.containsKey(eventName) == false) {
@@ -54,7 +54,7 @@ public class DataSourceImp implements DataSource {
     }
 
     @Override
-    public void detach(Condition condition, String eventName)
+    public synchronized void detach(Condition condition, String eventName)
                                                              throws RemoteException,
                                                              ConditionNotFoundException {
         if (map.containsKey(eventName) == true) {
@@ -69,12 +69,13 @@ public class DataSourceImp implements DataSource {
         }
     }
 
+    //FIXME: This method may not need synchronized prefix
     @Override
-    public void notifyCondition(String eventName, String value)
-                                                               throws RemoteException,
-                                                               EventNotFoundException {
+    public synchronized void notifyCondition(String eventName, String value)
+                                                               throws RemoteException {
         if (map.containsKey(eventName) == false)
-            throw new EventNotFoundException("Event not found.");
+            //throw new EventNotFoundException("Event not found.");
+            return;
 
         ArrayList<Condition> list = map.get(eventName);
         for (int i = 0; i < list.size(); i++) {
@@ -87,5 +88,6 @@ public class DataSourceImp implements DataSource {
     public synchronized void update(String eventName, String value)
                                                                    throws RemoteException {
 
+        notifyCondition(eventName, value);
     }
 }

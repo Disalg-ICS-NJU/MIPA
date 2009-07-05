@@ -67,8 +67,7 @@ public interface DataSource extends Remote {
      * @throws RemoteException
      */
     public void notifyCondition(String eventName, String value)
-                                                               throws RemoteException,
-                                                               EventNotFoundException;
+                                                               throws RemoteException;
 
     /**
      * called by SensorAgent for updating sensor data.
