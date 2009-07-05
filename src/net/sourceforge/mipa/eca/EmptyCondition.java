@@ -26,7 +26,7 @@ import net.sourceforge.mipa.predicatedetection.LocalPredicate;
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class NoCondition implements Condition {
+public class EmptyCondition implements Condition {
 
     /** reference to action of ECA */
     private Listener action;
@@ -34,7 +34,7 @@ public class NoCondition implements Condition {
     /** local predicate which <code>Condition</code> should concern */
     private LocalPredicate localPredicate;
 
-    public NoCondition(Listener action, LocalPredicate localPredicate) {
+    public EmptyCondition(Listener action, LocalPredicate localPredicate) {
         this.action = action;
         this.localPredicate = localPredicate;
     }
@@ -72,7 +72,9 @@ public class NoCondition implements Condition {
      * @return local predicate result
      */
     private boolean assign(String eventName, String value) {
-
+        //TODO parse local predicate
+        assert(eventName.equals(localPredicate.getName()));
+        
         return true;
     }
 

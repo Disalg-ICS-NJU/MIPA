@@ -27,6 +27,9 @@ import java.rmi.server.UnicastRemoteObject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import net.sourceforge.mipa.components.ContextMapping;
+import net.sourceforge.mipa.components.ContextRegister;
+import net.sourceforge.mipa.components.ContextRegisterImp;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.IDManagerImp;
@@ -59,6 +62,10 @@ public class Initialize {
                                                                         .getNamingAddress()
                                                             + "Naming");
 
+            if(DEBUG) {
+                System.out.println("Creating IDManager...");
+            }
+            
             IDManagerImp idManager = new IDManagerImp();
             IDManager managerStub = (IDManager) UnicastRemoteObject
                                                                    .exportObject(
@@ -66,6 +73,22 @@ public class Initialize {
                                                                                  0);
             server.bind("IDManager", managerStub);
 
+            if(DEBUG) {
+                System.out.println("Creating ContextRegister...");
+            }
+            
+            ContextMapping contextMapping = new ContextMapping();
+            ContextRegisterImp contextRegister = new ContextRegisterImp(
+                                                                        contextMapping);
+            ContextRegister contextRegisterStub = (ContextRegister) UnicastRemoteObject
+                                                                                       .exportObject(
+                                                                                                     contextRegister,
+                                                                                                     0);
+            server.bind("ContextRegister", contextRegisterStub);
+
+            if(DEBUG) {
+                System.out.println("Creating PredicateParser...");
+            }
             PredicateParser predicateParser = new PredicateParser();
             PredicateParserMethod predicateParserStub = (PredicateParserMethod) UnicastRemoteObject
                                                                                                    .exportObject(

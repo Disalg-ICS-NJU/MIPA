@@ -20,6 +20,7 @@
 package net.sourceforge.mipa.eca;
 
 import static config.Debug.DEBUG;
+
 import java.io.File;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -88,7 +89,7 @@ public class ECAInitialize {
             // FIXME this part should move into ECAManager.
             // new listener and condition
             Listener listener = new DemoListener();
-            Condition everything = new NoCondition(listener);
+            Condition everything = new EmptyCondition(listener);
             // attaching condition to data source.
 
             dataSource.attach(everything, eventName);
