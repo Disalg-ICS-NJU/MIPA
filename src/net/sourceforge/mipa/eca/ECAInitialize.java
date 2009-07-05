@@ -23,15 +23,16 @@ import static config.Debug.DEBUG;
 
 import java.io.File;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
-import net.sourceforge.mipa.test.DemoListener;
 
 import org.w3c.dom.Document;
 
@@ -52,19 +53,8 @@ public class ECAInitialize {
             Naming server = (Naming) java.rmi.Naming.lookup(namingAddress
                                                             + "Naming");
 
-            IDManager idManager = (IDManager) server.lookup("IDManager");
-
-            // TODO binding ECA manager
-            String ecaManagerId = idManager.getID(Catalog.ECAManager);
-
-            ECAManagerImp ecaManager = new ECAManagerImp();
-            ecaManager.setECAManagerName(ecaManagerId);
-
-            ECAManager ecaManagerStub = (ECAManager) UnicastRemoteObject
-                                                                        .exportObject(
-                                                                                      ecaManager,
-                                                                                      0);
-            server.bind(ecaManagerId, ecaManagerStub);
+            IDManager idManager = (IDManager) server.lookup("IDManager");  
+            ContextRegister contextRegister = (ContextRegister) server.lookup("ContextRegister");
 
             // binding data source
             String dataSourceId = idManager.getID(Catalog.DataSource);
@@ -74,8 +64,19 @@ public class ECAInitialize {
                                                                                       dataSource,
                                                                                       0);
             server.bind(dataSourceId, dataSourceStub);
+            
+            String ecaManagerId = idManager.getID(Catalog.ECAManager);
+            ECAManagerImp ecaManager = new ECAManagerImp(contextRegister, dataSourceStub, ecaManagerId);
+            //ecaManager.setECAManagerName(ecaManagerId);
+
+            ECAManager ecaManagerStub = (ECAManager) UnicastRemoteObject
+                                                                        .exportObject(
+                                                                                      ecaManager,
+                                                                                      0);
+            server.bind(ecaManagerId, ecaManagerStub);
 
             // start sensor agent in threads.
+            //TODO sensor name should read from config file.
             String eventName = "temperature";
             SensorAgent temperature = new TemperatureAgent(dataSourceStub,
                                                            eventName);
@@ -85,14 +86,12 @@ public class ECAInitialize {
             if (DEBUG) {
                 System.out.println("sensor running...");
             }
-
-            // FIXME this part should move into ECAManager.
-            // new listener and condition
-            Listener listener = new DemoListener();
-            Condition everything = new EmptyCondition(listener);
-            // attaching condition to data source.
-
-            dataSource.attach(everything, eventName);
+            
+            ArrayList<String> list = new ArrayList<String>();
+            list.add(eventName);
+            String[] resources = (String[]) list.toArray();
+            
+            ecaManager.registerResources(resources);
 
         } catch (Exception e) {
             e.printStackTrace();
