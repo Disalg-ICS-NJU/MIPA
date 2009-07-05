@@ -43,6 +43,8 @@ public interface Condition {
      * 
      * @param eventName
      *            event name
+     * @param value
+     *            event value
      */
-    public void notifyListener(String eventName);
+    public void notifyListener(String eventName, String value);
 }
