@@ -38,10 +38,12 @@ public class ContextRegisterImp implements ContextRegister {
      * @see net.sourceforge.mipa.components.ContextRegister#registerResource(java.lang.String, java.lang.String)
      */
     @Override
-    public void registerResource(String resourceName, String entityId)
+    public synchronized void registerResource(String resourceName, String entityId)
                                                                       throws RemoteException {
-        
-
+        try {
+            mapping.map(resourceName, entityId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
-
 }
