@@ -53,10 +53,20 @@ public class ECAInitialize {
 
             IDManager idManager = (IDManager) server.lookup("IDManager");
 
-            String dataSourceId = idManager.getID(Catalog.DataSource);
             // TODO binding ECA manager
+            String ecaManagerId = idManager.getID(Catalog.ECAManager);
+
+            ECAManagerImp ecaManager = new ECAManagerImp();
+            ecaManager.setECAManagerName(ecaManagerId);
+
+            ECAManager ecaManagerStub = (ECAManager) UnicastRemoteObject
+                                                                        .exportObject(
+                                                                                      ecaManager,
+                                                                                      0);
+            server.bind(ecaManagerId, ecaManagerStub);
 
             // binding data source
+            String dataSourceId = idManager.getID(Catalog.DataSource);
             DataSourceImp dataSource = new DataSourceImp();
             DataSource dataSourceStub = (DataSource) UnicastRemoteObject
                                                                         .exportObject(
@@ -70,8 +80,8 @@ public class ECAInitialize {
                                                            eventName);
             Thread t = new Thread(temperature);
             t.start();
-            //temperature.start();
-            if(DEBUG) {
+            // temperature.start();
+            if (DEBUG) {
                 System.out.println("sensor running...");
             }
 
