@@ -1,6 +1,8 @@
 config
 net.sourceforge.mipa
 net.sourceforge.mipa.components
+net.sourceforge.mipa.eca
+net.sourceforge.mipa.eca.sensor
 net.sourceforge.mipa.naming
 net.sourceforge.mipa.predicatedetection
 net.sourceforge.mipa.test

@@ -26,6 +26,7 @@ import java.rmi.RemoteException;
  * Data source of ECA mechanism.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
+ * @see Condition
  */
 public interface DataSource extends Remote {
 
@@ -52,7 +53,8 @@ public interface DataSource extends Remote {
      * @throws RemoteException
      */
     public void detach(Condition condition, String eventName)
-                                                             throws RemoteException;
+                                                             throws RemoteException,
+                                                             ConditionNotFoundException;
 
     /**
      * notify the specific conditions who concern the event whose name is
@@ -60,9 +62,13 @@ public interface DataSource extends Remote {
      * 
      * @param eventName
      *            event name
+     * @param value
+     *            event value
      * @throws RemoteException
      */
-    public void notifyCondition(String eventName) throws RemoteException;
+    public void notifyCondition(String eventName, String value)
+                                                               throws RemoteException,
+                                                               EventNotFoundException;
 
     /**
      * called by SensorAgent for updating sensor data.
