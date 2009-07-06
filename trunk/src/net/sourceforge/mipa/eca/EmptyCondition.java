@@ -72,11 +72,48 @@ public class EmptyCondition implements Condition {
      * @return local predicate result
      */
     private boolean assign(String eventName, String[] values) {
-        assert(eventName.equals(localPredicate.getName()));
         
-        for(int i = 0; i < values.length; i++) {
-            if(localPredicate.value(values[i]) == true) return true;
+        String operator = localPredicate.getOperator();
+        String name = localPredicate.getName();
+        String value = localPredicate.getValue();
+        String valueType = localPredicate.getValueType();
+        
+        assert (eventName.equals(name));
+
+        // FIXME This part is terribly coded.
+        if (valueType.equals("String") == true) {
+            // String operators
+            if (operator.equals("contain") == true) {
+                for (int i = 0; i < values.length; i++)
+                    if (value.equals(values[i]) == true)
+                        return true;
+            } else if(operator.equals("not-contain") == true) {
+                for(int i = 0; i < values.length; i++)
+                    if(value.equals(values[i]) == true)
+                        return false;
+                return true;
+            } else {
+                System.out.println("The operator of String has not been defined.");
+            }
+            
+        } else if (localPredicate.getValueType().equals("Float") == true) {
+            // Float operators
+            float sensorValue = Float.parseFloat(values[0]);
+            float threshold = Float.parseFloat(value);
+            
+            if(operator.equals("great-than") == true) {
+                if(sensorValue > threshold) return true;
+            } else if(operator.equals("equals") == true) {
+                if(sensorValue == threshold) return true;
+            } else if(operator.equals("less-than") == true) {
+                if(sensorValue < threshold) return true;
+            } else {
+                System.out.println("The operator of Float has not been defined.");
+            }
+        } else {
+            System.out.println("value type is undefined.");
         }
+
         return false;
     }
 }
