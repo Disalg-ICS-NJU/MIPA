@@ -32,11 +32,11 @@ public interface Condition {
      * 
      * @param eventName
      *            event name
-     * @param value
-     *            event value
+     * @param values
+     *            event values
      * @see DataSource
      */
-    public void update(String eventName, String value);
+    public void update(String eventName, String[] values);
 
     /**
      * notify the action of ECA mechanism.

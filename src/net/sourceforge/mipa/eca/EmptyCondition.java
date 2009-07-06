@@ -56,8 +56,8 @@ public class EmptyCondition implements Condition {
      * java.lang.String)
      */
     @Override
-    public synchronized void update(String eventName, String value) {
-        boolean result = assign(eventName, value);
+    public synchronized void update(String eventName, String[] values) {
+        boolean result = assign(eventName, values);
 
         notifyListener(eventName, String.valueOf(result));
     }
@@ -67,15 +67,16 @@ public class EmptyCondition implements Condition {
      * 
      * @param eventName
      *            event name
-     * @param value
-     *            event value
+     * @param values
+     *            event values
      * @return local predicate result
      */
-    private boolean assign(String eventName, String value) {
-        //TODO parse local predicate
+    private boolean assign(String eventName, String[] values) {
         assert(eventName.equals(localPredicate.getName()));
         
-        return true;
+        for(int i = 0; i < values.length; i++) {
+            if(localPredicate.value(values[i]) == true) return true;
+        }
+        return false;
     }
-
 }
