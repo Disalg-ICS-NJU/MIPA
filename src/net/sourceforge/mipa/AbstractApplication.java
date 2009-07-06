@@ -20,8 +20,8 @@
 package net.sourceforge.mipa;
 
 import static config.Debug.DEBUG;
-import java.io.File;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -29,6 +29,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.naming.Catalog;
+import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
 
@@ -77,28 +79,31 @@ public abstract class AbstractApplication implements ResultCallback {
      */
     public void start(String configFileName) {
         parseConfig(configFileName);
-        
+
         String namingAddress = MIPAResource.getNamingAddress();
-        
-        if(DEBUG) {
+
+        if (DEBUG) {
             System.out.println("naming address is " + namingAddress);
         }
-        
+
         try {
             Naming server = (Naming) java.rmi.Naming.lookup(namingAddress
                                                             + "Naming");
-            
-            if(DEBUG) {
+
+            if (DEBUG) {
                 System.out.println("application lookup Naming successfully.");
             }
 
-            // TODO generates application name
-            applicationName = "app_1";
-            
-            ResultCallback stub = (ResultCallback) UnicastRemoteObject.exportObject(this, 0);
+            IDManager idManager = (IDManager) server.lookup("IDManager");
+            applicationName = idManager.getID(Catalog.Application);
+
+            ResultCallback stub = (ResultCallback) UnicastRemoteObject
+                                                                      .exportObject(
+                                                                                    this,
+                                                                                    0);
             server.bind(applicationName, stub);
-            
-            if(DEBUG) {
+
+            if (DEBUG) {
                 System.out.println("application binds successfully.");
             }
 
@@ -106,17 +111,18 @@ public abstract class AbstractApplication implements ResultCallback {
 
             PredicateParserMethod parser = (PredicateParserMethod) server
                                                                          .lookup("PredicateParser");
-            if(DEBUG) {
-                System.out.println("application lookups predicate parser successfully.");
+            if (DEBUG) {
+                System.out
+                          .println("application lookups predicate parser successfully.");
             }
-            
+
             parser.parsePredicate(applicationName, predicate);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * parse config file.
      * 
@@ -145,7 +151,7 @@ public abstract class AbstractApplication implements ResultCallback {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * parse predicate to document.
      * 
