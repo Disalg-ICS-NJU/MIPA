@@ -29,5 +29,6 @@ public enum Catalog {
     DataSource,
     ECAManager,
     NormalProcess,
-    Checker
+    Checker,
+    Application
 }
