@@ -28,6 +28,8 @@ import net.sourceforge.mipa.predicatedetection.LocalPredicate;
  */
 public class EmptyCondition implements Condition {
 
+    private static final long serialVersionUID = 3157401071515138509L;
+
     /** reference to action of ECA */
     private Listener action;
 

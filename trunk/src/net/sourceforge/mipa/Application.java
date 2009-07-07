@@ -49,5 +49,4 @@ public class Application extends AbstractApplication {
         Application app = new Application("predicate.xml");
         app.start("config.xml");
     }
-
 }

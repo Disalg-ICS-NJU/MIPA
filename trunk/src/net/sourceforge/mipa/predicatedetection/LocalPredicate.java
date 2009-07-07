@@ -19,14 +19,18 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
+import java.io.Serializable;
+
 /**
  * The <code>LocalPredicate</code> class represents local predicate.
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class LocalPredicate {
+public class LocalPredicate implements Serializable {
     //TODO implement completely predicate
     
+    private static final long serialVersionUID = 1032369328241304696L;
+
     private String operator;
     
     private String name;

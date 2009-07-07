@@ -19,12 +19,14 @@
  */
 package net.sourceforge.mipa.eca;
 
+import java.io.Serializable;
+
 /**
  * Condition of ECA mechanism.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public interface Condition {
+public interface Condition extends Serializable {
 
 
     /**

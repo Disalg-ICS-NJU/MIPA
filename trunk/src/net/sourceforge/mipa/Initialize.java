@@ -78,6 +78,7 @@ public class Initialize {
             }
             
             ContextMapping contextMapping = new ContextMapping();
+            
             ContextRegisterImp contextRegister = new ContextRegisterImp(
                                                                         contextMapping);
             ContextRegister contextRegisterStub = (ContextRegister) UnicastRemoteObject
@@ -89,7 +90,7 @@ public class Initialize {
             if(DEBUG) {
                 System.out.println("Creating PredicateParser...");
             }
-            PredicateParser predicateParser = new PredicateParser();
+            PredicateParser predicateParser = new PredicateParser(contextMapping);
             PredicateParserMethod predicateParserStub = (PredicateParserMethod) UnicastRemoteObject
                                                                                                    .exportObject(
                                                                                                                  predicateParser,

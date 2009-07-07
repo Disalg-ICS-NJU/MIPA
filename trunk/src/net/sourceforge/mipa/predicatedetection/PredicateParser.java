@@ -20,8 +20,10 @@
 package net.sourceforge.mipa.predicatedetection;
 
 import static config.Debug.DEBUG;
+
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.components.ContextMapping;
 
 import org.w3c.dom.Document;
 
@@ -40,22 +42,23 @@ public class PredicateParser implements PredicateParserMethod {
     /**
      * default construction.
      */
-    public PredicateParser() {
-        localPredicateParser = new LocalPredicateParser();
+    public PredicateParser(ContextMapping contextMapping) {
+        localPredicateParser = new LocalPredicateParser(contextMapping);
         checkerParser = new CheckerParser();
     }
 
     public void parsePredicate(String applicationName, Document predicate)
                                                                           throws RemoteException {
-        
-        if(DEBUG) {
+
+        if (DEBUG) {
             System.out.println("parsing predicate...");
         }
-        
+
         PredicateType type = PredicateIdentify.predicateIdentify(predicate);
-        
-        localPredicateParser.parseLocalPredicate(predicate, applicationName, type);
-        
+
+        localPredicateParser.parseLocalPredicate(predicate, applicationName,
+                                                 type);
+
         checkerParser.parseChecker(predicate, applicationName, type);
     }
 }

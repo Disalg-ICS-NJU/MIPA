@@ -72,7 +72,7 @@ public class TemperatureAgent implements SensorAgent {
                     System.out.println("generating data now...");
                 }
                 Thread.sleep(1000);
-                String[] values = {"value " + i};
+                String[] values = {String.valueOf(i)};
                 dataSource.update(this.name, values);
             }
         } catch(Exception e) {
