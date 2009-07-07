@@ -39,7 +39,7 @@ public class Application extends AbstractApplication {
     }
     
     @Override
-    public void callback(int value) throws RemoteException {
+    public void callback(String value) throws RemoteException {
         //TODO implements application logic
         System.out.println("Result returns:");
         System.out.println("\t" + value);

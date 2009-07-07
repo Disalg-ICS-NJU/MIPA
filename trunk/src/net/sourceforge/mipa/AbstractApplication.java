@@ -69,7 +69,7 @@ public abstract class AbstractApplication implements ResultCallback {
         this.predicate = xml;
     }
 
-    public abstract void callback(int value) throws RemoteException;
+    public abstract void callback(String value) throws RemoteException;
 
     /**
      * starts application.
