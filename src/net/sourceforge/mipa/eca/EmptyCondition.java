@@ -98,10 +98,10 @@ public class EmptyCondition implements Condition {
                 System.out.println("The operator of String has not been defined.");
             }
             
-        } else if (localPredicate.getValueType().equals("Float") == true) {
+        } else if (localPredicate.getValueType().equals("Double") == true) {
             // Float operators
-            float sensorValue = Float.parseFloat(values[0]);
-            float threshold = Float.parseFloat(value);
+            double sensorValue = Double.parseDouble(values[0]);
+            double threshold = Double.parseDouble(value);
             
             if(operator.equals("great-than") == true) {
                 if(sensorValue > threshold) return true;

@@ -66,13 +66,12 @@ public class TemperatureAgent implements SensorAgent {
     public void run() {
         //Thread.yield();
         try {
-            for(int i = 0; i < 10; i++) {
-                
-                if(DEBUG) {
-                    System.out.println("generating data now...");
-                }
+            while(true) {
                 Thread.sleep(1000);
-                String[] values = {String.valueOf(i)};
+                String[] values = {sensor.getData()};
+                if(DEBUG) {
+                    System.out.println("temperature now is " + values[0]);
+                }
                 dataSource.update(this.name, values);
             }
         } catch(Exception e) {
