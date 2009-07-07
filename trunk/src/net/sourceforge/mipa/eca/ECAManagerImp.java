@@ -96,11 +96,13 @@ public class ECAManagerImp implements ECAManager {
         Condition everything = new EmptyCondition(listener, localPredicate);
         // attaching condition to data source.
 
-        if(DEBUG) {
-            System.out.println("local predicate name is " + localPredicate.getName());
+        if (DEBUG) {
+            System.out.println("local predicate name is "
+                               + localPredicate.getName());
         }
+        
+        //FIXME should attach local predicate related events, get from atoms. 
         dataSource.attach(everything, localPredicate.getName());
-
     }
 
     /**
@@ -115,7 +117,9 @@ public class ECAManagerImp implements ECAManager {
         try {
             for (int i = 0; i < resources.size(); i++) {
                 SensorAgent resource = resources.get(i);
-                contextRegister.registerResource(resource.getName(), resource.getValueType(), ecaManagerName);
+                contextRegister.registerResource(resource.getName(),
+                                                 resource.getValueType(),
+                                                 ecaManagerName);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -66,6 +66,9 @@ public abstract class Condition implements Serializable {
      */
     protected boolean assign(String eventName, String[] values) {
         
+        //FIXME should calculate for every atom which in local predicate
+        
+        
         String operator = localPredicate.getOperator();
         String name = localPredicate.getName();
         String value = localPredicate.getValue();
