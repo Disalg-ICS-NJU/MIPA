@@ -58,51 +58,88 @@ public class LocalPredicateParser {
         // TODO parse local predicate
         if (DEBUG) {
             System.out.println("\tparsing local preidcate...");
+        }
 
-            LocalPredicate localPredicate = new LocalPredicate();
-            localPredicate.setName("temperature");
-            localPredicate.setOperator("great-than");
-            localPredicate.setValue("40");
+        NodeList elements = predicate.getElementsByTagName("LP");
 
-            try {
-                String ecaManagerId = contextMapping
-                                                    .getEntityId(localPredicate
-                                                                               .getName());
-                localPredicate
-                              .setValueType(contextMapping
-                                                          .getValueType(localPredicate
-                                                                                      .getName()));
-                // FIXME put lookup to a method
-                Naming server = (Naming) java.rmi.Naming
-                                                        .lookup(MIPAResource
-                                                                            .getNamingAddress()
-                                                                + "Naming");
-                ECAManager ecaManager = (ECAManager) server
-                                                           .lookup(ecaManagerId);
-                System.out.println("find eca manager successfully.");
-                System.out.println(ecaManagerId);
-                ecaManager.registerLocalPredicate(localPredicate, coordinateID,
-                                                  type);
+        if (elements != null) {
+            for (int i = 0; i < elements.getLength(); i++) {
+                Node localPredicate = elements.item(i);
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                for (Node node = localPredicate.getFirstChild(); node != null; node = node
+                                                                                          .getNextSibling()) {
+
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        if (node.getNodeName().equals("formula")) {
+                            for (Node atom = node.getFirstChild(); atom != null; atom = atom
+                                                                                            .getNextSibling()) {
+                                if (atom.getNodeType() == Node.ELEMENT_NODE) {
+                                    if (atom.getNodeName().equals("atom")) {
+                                        String operator = atom
+                                                              .getAttributes()
+                                                              .getNamedItem(
+                                                                            "operator")
+                                                              .getNodeValue();
+                                        String name = atom
+                                                          .getAttributes()
+                                                          .getNamedItem(
+                                                                        "name")
+                                                          .getNodeValue();
+                                        String value = atom
+                                                           .getAttributes()
+                                                           .getNamedItem(
+                                                                         "value")
+                                                           .getNodeValue();
+
+                                        if (name.equals("temperature")) {
+                                            registerLocalPredicate(
+                                                                   operator,
+                                                                   name,
+                                                                   value,
+                                                                   coordinateID,
+                                                                   type);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        /*
-        NodeList elements = predicate.getElementsByTagName("LP");
-        if(elements != null) { 
-            for(int i = 0; i < elements.getLength(); i++) { 
-                Node localPredicate = elements.item(i);
-                Node formula = localPredicate.getChildNodes().item(0);
-                
-            }
-         }
-*/
-        /*
-         * NodeList elements = predicate.getElementsByTagName("LP"); for(int i =
-         * 0; i < elements.getLength(); i++) {
-         * 
-         * }
-         */
+    }
+
+    private void registerLocalPredicate(String operator, String name,
+                                        String value, String coordinateID,
+                                        PredicateType type) {
+        
+        LocalPredicate localPredicate = new LocalPredicate();
+        localPredicate.setOperator(operator);
+        localPredicate.setName(name);
+        localPredicate.setValue(value);
+
+        try {
+            String ecaManagerId = contextMapping
+                                                .getEntityId(localPredicate
+                                                                           .getName());
+            localPredicate
+                          .setValueType(contextMapping
+                                                      .getValueType(localPredicate
+                                                                                  .getName()));
+            // FIXME put lookup to a method
+            Naming server = (Naming) java.rmi.Naming
+                                                    .lookup(MIPAResource
+                                                                        .getNamingAddress()
+                                                            + "Naming");
+            ECAManager ecaManager = (ECAManager) server
+                                                       .lookup(ecaManagerId);
+            System.out.println("find eca manager successfully.");
+            System.out.println(ecaManagerId);
+            ecaManager.registerLocalPredicate(localPredicate, coordinateID,
+                                              type);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
