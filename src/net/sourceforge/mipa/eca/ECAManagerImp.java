@@ -24,7 +24,10 @@ import static config.Debug.DEBUG;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.ContextRegister;
+import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.PredicateType;
 import net.sourceforge.mipa.test.DemoListener;
@@ -91,8 +94,21 @@ public class ECAManagerImp implements ECAManager {
                                        String groupId, PredicateType type)
                                                                           throws RemoteException {
         // new listener and condition
-        // TODO listener should be Normal process
-        Listener listener = new DemoListener();
+        // TODO listener should be Normal process and remove lookup to somewhere else.
+        ResultCallback callback = null;
+        try {
+        Naming server = (Naming) java.rmi.Naming
+                                                .lookup(MIPAResource
+                                                                    .getNamingAddress()
+                                                        + "Naming");
+        
+        callback = (ResultCallback) server.lookup(groupId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        Listener listener = new DemoListener(callback);
+        
         Condition everything = new EmptyCondition(listener, localPredicate);
         // attaching condition to data source.
 
@@ -100,8 +116,8 @@ public class ECAManagerImp implements ECAManager {
             System.out.println("local predicate name is "
                                + localPredicate.getName());
         }
-        
-        //FIXME should attach local predicate related events, get from atoms. 
+
+        // FIXME should attach local predicate related events, get from atoms.
         dataSource.attach(everything, localPredicate.getName());
     }
 

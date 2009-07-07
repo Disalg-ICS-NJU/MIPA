@@ -19,22 +19,33 @@
  */
 package net.sourceforge.mipa.test;
 
+import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.eca.Listener;
 
 /**
- *
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class DemoListener implements Listener {
 
-    /* (non-Javadoc)
-     * @see net.sourceforge.mipa.eca.Listener#update(java.lang.String, java.lang.String)
-     */
+    private static final long serialVersionUID = -892909796372166708L;
+
+    private ResultCallback callback;
+
+    public DemoListener(ResultCallback callback) {
+        this.callback = callback;
+    }
+
     @Override
     public void update(String eventName, String value) {
         // just output the result
         System.out.println("Event Name is " + eventName);
         System.out.println("value is " + value);
+        try {
+            callback.callback(value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

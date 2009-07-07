@@ -28,4 +28,10 @@ public class LocalPredicate extends Atom {
 
     private static final long serialVersionUID = -1765170172935638206L;
     
+    private Atom[] atoms;
+    
+    public Atom getAtomByName(String name) {
+        
+        return null;
+    }
 }
