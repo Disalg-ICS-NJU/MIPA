@@ -98,21 +98,21 @@ public class LocalPredicateParser {
                                                                    value,
                                                                    coordinateID,
                                                                    type);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                        } //:end if
+                                    } //:end if
+                                } //:end if
+                            } //:end for
+                        } //:end if
+                    } //:end if
+                } //:end for
+            } //:end for
+        } //:end if
     }
 
     private void registerLocalPredicate(String operator, String name,
                                         String value, String coordinateID,
                                         PredicateType type) {
-        
+
         LocalPredicate localPredicate = new LocalPredicate();
         localPredicate.setOperator(operator);
         localPredicate.setName(name);

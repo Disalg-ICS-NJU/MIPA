@@ -102,7 +102,6 @@ public class Initialize {
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
 
