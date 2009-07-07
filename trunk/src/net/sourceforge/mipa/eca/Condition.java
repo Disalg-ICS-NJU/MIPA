@@ -21,14 +21,19 @@ package net.sourceforge.mipa.eca;
 
 import java.io.Serializable;
 
+import net.sourceforge.mipa.predicatedetection.LocalPredicate;
+
 /**
  * Condition of ECA mechanism.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public interface Condition extends Serializable {
+public abstract class Condition implements Serializable {
 
+    private static final long serialVersionUID = -5349061659963216502L;
 
+    /** local predicate which <code>Condition</code> should concern */
+    protected LocalPredicate localPredicate;
     /**
      * called by DataSource for notifying event change.
      * 
@@ -38,7 +43,7 @@ public interface Condition extends Serializable {
      *            event values
      * @see DataSource
      */
-    public void update(String eventName, String[] values);
+    public abstract void update(String eventName, String[] values);
 
     /**
      * notify the action of ECA mechanism.
@@ -48,5 +53,60 @@ public interface Condition extends Serializable {
      * @param value
      *            event value
      */
-    public void notifyListener(String eventName, String value);
+    public abstract void notifyListener(String eventName, String value);
+    
+    /**
+     * calculate the local predicate value.
+     * 
+     * @param eventName
+     *            event name
+     * @param values
+     *            event values
+     * @return local predicate result
+     */
+    protected boolean assign(String eventName, String[] values) {
+        
+        String operator = localPredicate.getOperator();
+        String name = localPredicate.getName();
+        String value = localPredicate.getValue();
+        String valueType = localPredicate.getValueType();
+        
+        assert (eventName.equals(name));
+
+        // FIXME This part is terribly coded.
+        if (valueType.equals("String") == true) {
+            // String operators
+            if (operator.equals("contain") == true) {
+                for (int i = 0; i < values.length; i++)
+                    if (value.equals(values[i]) == true)
+                        return true;
+            } else if(operator.equals("not-contain") == true) {
+                for(int i = 0; i < values.length; i++)
+                    if(value.equals(values[i]) == true)
+                        return false;
+                return true;
+            } else {
+                System.out.println("The operator of String has not been defined.");
+            }
+            
+        } else if (localPredicate.getValueType().equals("Double") == true) {
+            // Float operators
+            double sensorValue = Double.parseDouble(values[0]);
+            double threshold = Double.parseDouble(value);
+            
+            if(operator.equals("great-than") == true) {
+                if(sensorValue > threshold) return true;
+            } else if(operator.equals("equals") == true) {
+                if(sensorValue == threshold) return true;
+            } else if(operator.equals("less-than") == true) {
+                if(sensorValue < threshold) return true;
+            } else {
+                System.out.println("The operator of Float has not been defined.");
+            }
+        } else {
+            System.out.println("value type is undefined.");
+        }
+
+        return false;
+    }
 }

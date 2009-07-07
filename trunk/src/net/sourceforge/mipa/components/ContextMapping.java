@@ -30,10 +30,13 @@ import java.util.Map;
  */
 public class ContextMapping {
     /** mapping event name to entity id */
-    private Map<String, String> map;
+    private Map<String, String> mapEntityId;
+
+    private Map<String, String> mapValueType;
 
     public ContextMapping() {
-        map = new HashMap<String, String>();
+        mapEntityId = new HashMap<String, String>();
+        mapValueType = new HashMap<String, String>();
     }
 
     /**
@@ -41,29 +44,49 @@ public class ContextMapping {
      * 
      * @param eventName
      *            event name
+     * @param valueType
+     *            value type of event name
      * @param entityId
      *            entity id
      */
-    public synchronized void map(String eventName, String entityId)
-                                                                   throws EventNameBoundTwiceException {
-        if (map.containsKey(eventName) == true)
+    public synchronized void map(String eventName, String valueType,
+                                 String entityId)
+                                                 throws EventNameBoundTwiceException {
+        if (mapEntityId.containsKey(eventName) == true)
             throw new EventNameBoundTwiceException(eventName);
 
-        map.put(eventName, entityId);
+        mapEntityId.put(eventName, entityId);
+        mapValueType.put(eventName, valueType);
     }
 
     /**
-     * gets mapping result.
+     * gets mapping entity id.
      * 
      * @param eventName
      *            event name
-     * @return mapping result(a <code>String</code>)
+     * @return mapping result: entity id(a <code>String</code>)
      * @throws EventNameNotFoundException
      */
-    public String getMapping(String eventName)
+    public String getEntityId(String eventName)
                                               throws EventNameNotFoundException {
-        if (map.containsKey(eventName) == false)
+        if (mapEntityId.containsKey(eventName) == false)
             throw new EventNameNotFoundException(eventName);
-        return map.get(eventName);
+        
+        return mapEntityId.get(eventName);
+        
+    }
+    
+    /**
+     * gets mapping value type.
+     * 
+     * @param eventName
+     * @return value type of event name.
+     * @throws EventNameNotFoundException
+     */
+    public String getValueType(String eventName) throws EventNameNotFoundException {
+        if(mapValueType.containsKey(eventName) == false)
+            throw new EventNameNotFoundException(eventName);
+        
+        return mapValueType.get(eventName);
     }
 }

@@ -23,26 +23,32 @@ import java.rmi.RemoteException;
 
 /**
  * <code>ContextRegister</code> implementation.
- *
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class ContextRegisterImp implements ContextRegister {
 
     /** context mapping */
     private ContextMapping mapping;
-    
+
     public ContextRegisterImp(ContextMapping mapping) {
         this.mapping = mapping;
     }
-    /* (non-Javadoc)
-     * @see net.sourceforge.mipa.components.ContextRegister#registerResource(java.lang.String, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * net.sourceforge.mipa.components.ContextRegister#registerResource(java
+     * .lang.String, java.lang.String)
      */
     @Override
-    public synchronized void registerResource(String resourceName, String entityId)
-                                                                      throws RemoteException {
+    public synchronized void registerResource(String resourceName,
+                                              String valueType, String entityId)
+                                                                                throws RemoteException {
         try {
-            mapping.map(resourceName, entityId);
-        } catch(Exception e) {
+            mapping.map(resourceName, valueType, entityId);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
