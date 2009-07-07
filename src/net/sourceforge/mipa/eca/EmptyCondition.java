@@ -26,15 +26,12 @@ import net.sourceforge.mipa.predicatedetection.LocalPredicate;
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class EmptyCondition implements Condition {
+public class EmptyCondition extends Condition {
 
-    private static final long serialVersionUID = 3157401071515138509L;
+    private static final long serialVersionUID = 2929083434758138845L;
 
     /** reference to action of ECA */
     private Listener action;
-
-    /** local predicate which <code>Condition</code> should concern */
-    private LocalPredicate localPredicate;
 
     public EmptyCondition(Listener action, LocalPredicate localPredicate) {
         this.action = action;
@@ -62,60 +59,5 @@ public class EmptyCondition implements Condition {
         boolean result = assign(eventName, values);
 
         notifyListener(eventName, String.valueOf(result));
-    }
-
-    /**
-     * calculate the local predicate value.
-     * 
-     * @param eventName
-     *            event name
-     * @param values
-     *            event values
-     * @return local predicate result
-     */
-    private boolean assign(String eventName, String[] values) {
-        
-        String operator = localPredicate.getOperator();
-        String name = localPredicate.getName();
-        String value = localPredicate.getValue();
-        String valueType = localPredicate.getValueType();
-        
-        assert (eventName.equals(name));
-
-        // FIXME This part is terribly coded.
-        if (valueType.equals("String") == true) {
-            // String operators
-            if (operator.equals("contain") == true) {
-                for (int i = 0; i < values.length; i++)
-                    if (value.equals(values[i]) == true)
-                        return true;
-            } else if(operator.equals("not-contain") == true) {
-                for(int i = 0; i < values.length; i++)
-                    if(value.equals(values[i]) == true)
-                        return false;
-                return true;
-            } else {
-                System.out.println("The operator of String has not been defined.");
-            }
-            
-        } else if (localPredicate.getValueType().equals("Double") == true) {
-            // Float operators
-            double sensorValue = Double.parseDouble(values[0]);
-            double threshold = Double.parseDouble(value);
-            
-            if(operator.equals("great-than") == true) {
-                if(sensorValue > threshold) return true;
-            } else if(operator.equals("equals") == true) {
-                if(sensorValue == threshold) return true;
-            } else if(operator.equals("less-than") == true) {
-                if(sensorValue < threshold) return true;
-            } else {
-                System.out.println("The operator of Float has not been defined.");
-            }
-        } else {
-            System.out.println("value type is undefined.");
-        }
-
-        return false;
     }
 }

@@ -33,6 +33,14 @@ public interface SensorAgent extends Runnable {
      */
     public String getName();
     
+    
+    /**
+     * sensor agent's value type.
+     * 
+     * @return value type
+     */
+    public String getValueType();
+    
     /**
      * sensor agent works in pull mode.
      * 

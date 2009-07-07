@@ -26,6 +26,8 @@ import net.sourceforge.mipa.eca.ECAManager;
 import net.sourceforge.mipa.naming.Naming;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * local predicate parser module.
@@ -61,23 +63,37 @@ public class LocalPredicateParser {
             localPredicate.setName("temperature");
             localPredicate.setOperator("great-than");
             localPredicate.setValue("40");
-            localPredicate.setValueType("Double");
+
             try {
-                String ECAManagerId = contextMapping.getMapping("temperature");
+                String ecaManagerId = contextMapping
+                                                    .getEntityId(localPredicate
+                                                                               .getName());
+                localPredicate
+                              .setValueType(contextMapping
+                                                          .getValueType(localPredicate
+                                                                                      .getName()));
                 // FIXME put lookup to a method
                 Naming server = (Naming) java.rmi.Naming
                                                         .lookup(MIPAResource
                                                                             .getNamingAddress()
                                                                 + "Naming");
-                ECAManager ecaManager = (ECAManager) server.lookup(ECAManagerId);
+                ECAManager ecaManager = (ECAManager) server
+                                                           .lookup(ecaManagerId);
                 System.out.println("find eca manager successfully.");
-                System.out.println(ECAManagerId);
-                ecaManager.registerLocalPredicate(localPredicate, coordinateID, type);
+                System.out.println(ecaManagerId);
+                ecaManager.registerLocalPredicate(localPredicate, coordinateID,
+                                                  type);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        /*
+         * NodeList elements = predicate.getElementsByTagName("LP"); if(elements
+         * != null) { for(int i = 0; i < elements.getLength(); i++) { Node
+         * localPredicate = elements.item(i); localPredicate.getChildNodes(); }
+         * }
+         */
 
         /*
          * NodeList elements = predicate.getElementsByTagName("LP"); for(int i =

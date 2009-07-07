@@ -39,13 +39,22 @@ public class TemperatureAgent implements SensorAgent {
     /** sensor agent's name */
     private String name;
     
+    /** sensor agent's value type */
+    private String valueType;
     
-    public TemperatureAgent(DataSource source, String name) {
+    
+    public TemperatureAgent(DataSource source, String name, String valueType) {
         this.dataSource = source;
         this.name = name;
+        this.valueType = valueType;
         sensor = new Temperature();
     }
-    
+
+    @Override
+    public String getValueType() {
+        return valueType;
+    }
+
     @Override
     public String getName() {
         return name;

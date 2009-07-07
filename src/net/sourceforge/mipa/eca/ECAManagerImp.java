@@ -20,7 +20,9 @@
 package net.sourceforge.mipa.eca;
 
 import static config.Debug.DEBUG;
+
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
@@ -107,12 +109,13 @@ public class ECAManagerImp implements ECAManager {
      * @param resources
      *            local resources
      */
-    public void registerResources(String[] resources) {
+    public void registerResources(ArrayList<SensorAgent> resources) {
         // TODO auto scan local resource
 
         try {
-            for (int i = 0; i < resources.length; i++) {
-                contextRegister.registerResource(resources[i], ecaManagerName);
+            for (int i = 0; i < resources.size(); i++) {
+                SensorAgent resource = resources.get(i);
+                contextRegister.registerResource(resource.getName(), resource.getValueType(), ecaManagerName);
             }
         } catch (Exception e) {
             e.printStackTrace();

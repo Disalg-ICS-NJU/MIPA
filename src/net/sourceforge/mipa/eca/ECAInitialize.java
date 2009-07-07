@@ -81,8 +81,9 @@ public class ECAInitialize {
             // start sensor agent in threads.
             // TODO sensor name should read from config file.
             String eventName = "temperature";
+            String valueType = "Double";
             SensorAgent temperature = new TemperatureAgent(dataSourceStub,
-                                                           eventName);
+                                                           eventName, valueType);
             Thread t = new Thread(temperature);
             t.start();
             // temperature.start();
@@ -91,15 +92,13 @@ public class ECAInitialize {
             }
 
             // add resources to list for registering resources.
-            ArrayList<String> list = new ArrayList<String>();
-            list.add(eventName);
-            String[] resources = new String[list.size()];
-            list.toArray(resources);
+            ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
+            resources.add(temperature);
 
             if (DEBUG) {
                 System.out.println("resources value: ");
-                for (int i = 0; i < resources.length; i++) {
-                    System.out.println(resources[i]);
+                for (int i = 0; i < resources.size(); i++) {
+                    System.out.println(resources.get(i).getName());
                 }
                 System.out.println();
             }
