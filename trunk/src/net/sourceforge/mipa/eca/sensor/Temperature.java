@@ -30,8 +30,7 @@ public class Temperature implements Sensor {
      */
     @Override
     public String getData() {
-        
-        return null;
+        double value = Math.random() * 100;
+        return String.valueOf(value);
     }
-
 }

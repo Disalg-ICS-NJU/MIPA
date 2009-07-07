@@ -60,8 +60,8 @@ public class LocalPredicateParser {
             LocalPredicate localPredicate = new LocalPredicate();
             localPredicate.setName("temperature");
             localPredicate.setOperator("great-than");
-            localPredicate.setValue("1");
-            localPredicate.setValueType("Float");
+            localPredicate.setValue("40");
+            localPredicate.setValueType("Double");
             try {
                 String ECAManagerId = contextMapping.getMapping("temperature");
                 // FIXME put lookup to a method
