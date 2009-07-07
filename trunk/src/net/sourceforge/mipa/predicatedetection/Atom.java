@@ -38,6 +38,8 @@ public class Atom implements Serializable {
     private String value;
     
     private String valueType;
+    
+    private boolean not;
 
     /**
      * @param operator the operator to set
@@ -93,6 +95,20 @@ public class Atom implements Serializable {
      */
     public String getValueType() {
         return valueType;
+    }
+
+    /**
+     * @param not the not to set
+     */
+    public void setNot(boolean not) {
+        this.not = not;
+    }
+
+    /**
+     * @return the not
+     */
+    public boolean isNot() {
+        return not;
     }
     
     /*

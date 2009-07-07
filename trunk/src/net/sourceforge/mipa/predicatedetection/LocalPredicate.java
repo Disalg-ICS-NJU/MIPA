@@ -19,6 +19,8 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
+import java.util.ArrayList;
+
 /**
  * The <code>LocalPredicate</code> class represents local predicate.
  *
@@ -28,10 +30,32 @@ public class LocalPredicate extends Atom {
 
     private static final long serialVersionUID = -1765170172935638206L;
     
-    private Atom[] atoms;
+    /** atoms that local predicate related */
+    private ArrayList<Atom> atoms;
+    
+    private String connection;
+    
+    public LocalPredicate() {
+        atoms = new ArrayList<Atom>();
+    }
     
     public Atom getAtomByName(String name) {
-        
+        for(int i = 0; i < atoms.size(); i++) {
+            if(name.equals(atoms.get(i))) return atoms.get(i);
+        }
         return null;
     }
+
+    /**
+     * @return the atoms
+     */
+    public ArrayList<Atom> getAtoms() {
+        return atoms;
+    }
+    
+    public void addAtom(Atom atom) {
+        atoms.add(atom);
+    }
+    
+    
 }
