@@ -19,12 +19,14 @@
  */
 package net.sourceforge.mipa.eca;
 
+import java.io.Serializable;
+
 /**
  * the action interface of ECA mechanism.
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public interface Listener {
+public interface Listener extends Serializable {
     
     public void update(String eventName, String value);
 }

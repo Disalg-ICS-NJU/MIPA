@@ -53,8 +53,9 @@ public class ECAInitialize {
             Naming server = (Naming) java.rmi.Naming.lookup(namingAddress
                                                             + "Naming");
 
-            IDManager idManager = (IDManager) server.lookup("IDManager");  
-            ContextRegister contextRegister = (ContextRegister) server.lookup("ContextRegister");
+            IDManager idManager = (IDManager) server.lookup("IDManager");
+            ContextRegister contextRegister = (ContextRegister) server
+                                                                      .lookup("ContextRegister");
 
             // binding data source
             String dataSourceId = idManager.getID(Catalog.DataSource);
@@ -64,10 +65,12 @@ public class ECAInitialize {
                                                                                       dataSource,
                                                                                       0);
             server.bind(dataSourceId, dataSourceStub);
-            
+
             String ecaManagerId = idManager.getID(Catalog.ECAManager);
-            ECAManagerImp ecaManager = new ECAManagerImp(contextRegister, dataSourceStub, ecaManagerId);
-            //ecaManager.setECAManagerName(ecaManagerId);
+            ECAManagerImp ecaManager = new ECAManagerImp(contextRegister,
+                                                         dataSourceStub,
+                                                         ecaManagerId);
+            // ecaManager.setECAManagerName(ecaManagerId);
 
             ECAManager ecaManagerStub = (ECAManager) UnicastRemoteObject
                                                                         .exportObject(
@@ -76,7 +79,7 @@ public class ECAInitialize {
             server.bind(ecaManagerId, ecaManagerStub);
 
             // start sensor agent in threads.
-            //TODO sensor name should read from config file.
+            // TODO sensor name should read from config file.
             String eventName = "temperature";
             SensorAgent temperature = new TemperatureAgent(dataSourceStub,
                                                            eventName);
@@ -86,11 +89,21 @@ public class ECAInitialize {
             if (DEBUG) {
                 System.out.println("sensor running...");
             }
-            
+
+            // add resources to list for registering resources.
             ArrayList<String> list = new ArrayList<String>();
             list.add(eventName);
-            String[] resources = (String[]) list.toArray();
-            
+            String[] resources = new String[list.size()];
+            list.toArray(resources);
+
+            if (DEBUG) {
+                System.out.println("resources value: ");
+                for (int i = 0; i < resources.length; i++) {
+                    System.out.println(resources[i]);
+                }
+                System.out.println();
+            }
+
             ecaManager.registerResources(resources);
 
         } catch (Exception e) {

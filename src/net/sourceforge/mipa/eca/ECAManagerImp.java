@@ -19,10 +19,12 @@
  */
 package net.sourceforge.mipa.eca;
 
+import static config.Debug.DEBUG;
 import java.rmi.RemoteException;
 
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
+import net.sourceforge.mipa.predicatedetection.PredicateType;
 import net.sourceforge.mipa.test.DemoListener;
 
 /**
@@ -42,6 +44,7 @@ public class ECAManagerImp implements ECAManager {
                          DataSource dataSource, String ecaManagerName) {
         this.setContextRegister(contextRegister);
         this.ecaManagerName = ecaManagerName;
+        this.dataSource = dataSource;
     }
 
     /**
@@ -83,14 +86,17 @@ public class ECAManagerImp implements ECAManager {
      */
     @Override
     public void registerLocalPredicate(LocalPredicate localPredicate,
-                                       String groupId)
-                                                      throws RemoteException {
+                                       String groupId, PredicateType type)
+                                                                          throws RemoteException {
         // new listener and condition
-        //TODO listener should be Normal process
+        // TODO listener should be Normal process
         Listener listener = new DemoListener();
         Condition everything = new EmptyCondition(listener, localPredicate);
         // attaching condition to data source.
 
+        if(DEBUG) {
+            System.out.println("local predicate name is " + localPredicate.getName());
+        }
         dataSource.attach(everything, localPredicate.getName());
 
     }

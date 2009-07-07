@@ -20,6 +20,11 @@
 package net.sourceforge.mipa.predicatedetection;
 
 import static config.Debug.DEBUG;
+import net.sourceforge.mipa.components.ContextMapping;
+import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.eca.ECAManager;
+import net.sourceforge.mipa.naming.Naming;
+
 import org.w3c.dom.Document;
 
 /**
@@ -28,6 +33,13 @@ import org.w3c.dom.Document;
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class LocalPredicateParser {
+
+    /** context mapping */
+    private ContextMapping contextMapping;
+
+    public LocalPredicateParser(ContextMapping contextMapping) {
+        this.contextMapping = contextMapping;
+    }
 
     /**
      * parse local predicate from <code>Document</code>.
@@ -42,8 +54,29 @@ public class LocalPredicateParser {
     public void parseLocalPredicate(Document predicate, String coordinateID,
                                     PredicateType type) {
         // TODO parse local predicate
-        if(DEBUG) {
+        if (DEBUG) {
             System.out.println("\tparsing local preidcate...");
+
+            LocalPredicate localPredicate = new LocalPredicate();
+            localPredicate.setName("temperature");
+            localPredicate.setOperator("great-than");
+            localPredicate.setValue("1");
+            localPredicate.setValueType("Float");
+            try {
+                String ECAManagerId = contextMapping.getMapping("temperature");
+                // FIXME put lookup to a method
+                Naming server = (Naming) java.rmi.Naming
+                                                        .lookup(MIPAResource
+                                                                            .getNamingAddress()
+                                                                + "Naming");
+                ECAManager ecaManager = (ECAManager) server.lookup(ECAManagerId);
+                System.out.println("find eca manager successfully.");
+                System.out.println(ECAManagerId);
+                ecaManager.registerLocalPredicate(localPredicate, coordinateID, type);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         /*

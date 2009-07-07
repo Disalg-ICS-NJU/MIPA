@@ -23,6 +23,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
+import net.sourceforge.mipa.predicatedetection.PredicateType;
 
 /**
  * ECA manager.
@@ -37,8 +38,11 @@ public interface ECAManager extends Remote {
      *            local predicate
      * @param groupId
      *            group id
+     * @param type
+     *            predicate type
      * @throws RemoteException
      */
-    public void registerLocalPredicate(LocalPredicate localPredicate, String groupId)
-                                                                    throws RemoteException;
+    public void registerLocalPredicate(LocalPredicate localPredicate,
+                                       String groupId, PredicateType type)
+                                                                          throws RemoteException;
 }
