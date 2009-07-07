@@ -89,12 +89,15 @@ public class LocalPredicateParser {
             }
         }
         /*
-         * NodeList elements = predicate.getElementsByTagName("LP"); if(elements
-         * != null) { for(int i = 0; i < elements.getLength(); i++) { Node
-         * localPredicate = elements.item(i); localPredicate.getChildNodes(); }
-         * }
-         */
-
+        NodeList elements = predicate.getElementsByTagName("LP");
+        if(elements != null) { 
+            for(int i = 0; i < elements.getLength(); i++) { 
+                Node localPredicate = elements.item(i);
+                Node formula = localPredicate.getChildNodes().item(0);
+                
+            }
+         }
+*/
         /*
          * NodeList elements = predicate.getElementsByTagName("LP"); for(int i =
          * 0; i < elements.getLength(); i++) {

@@ -19,111 +19,13 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
-import java.io.Serializable;
-
 /**
  * The <code>LocalPredicate</code> class represents local predicate.
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class LocalPredicate implements Serializable {
-    //TODO implement completely predicate
+public class LocalPredicate extends Atom {
+
+    private static final long serialVersionUID = -1765170172935638206L;
     
-    private static final long serialVersionUID = 1032369328241304696L;
-
-    private String operator;
-    
-    private String name;
-    
-    private String value;
-    
-    private String valueType;
-
-    /**
-     * @param operator the operator to set
-     */
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    /**
-     * @return the operator
-     */
-    public String getOperator() {
-        return operator;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param value the value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    /**
-     * @return the value
-     */
-    public String getValue() {
-        return value;
-    }
-    
-    /**
-     * @param valueType the valueType to set
-     */
-    public void setValueType(String valueType) {
-        this.valueType = valueType;
-    }
-
-    /**
-     * @return the valueType
-     */
-    public String getValueType() {
-        return valueType;
-    }
-    
-    /*
-    //FIXME this part is terribly coded.
-    public boolean value(String value) {
-        if(valueType.equals("String") == true) {
-            if("contain".equals(operator) == true) {
-                if(this.value.equals(value) == true) return true;
-                else return false;
-            } else if("not-contain".equals(operator) == true) {
-                if(this.value.equals(value) == false) return true;
-                else return false;
-            } else {
-                System.out.println("The operation of String has not been defined.");
-            }
-        } else if(valueType.equals("Float") == true) {
-            float valueFloat = Float.parseFloat(value);
-            float threshold = Float.parseFloat(this.value);
-            if("equal".equals(operator) == true) {
-            
-            } else if("great-than".equals(operator) == true) {
-            
-            } else if("less-than".equals(operator) == true) {
-            
-            } else {
-                System.out.println("The operation of Float has not been defined.");
-            }
-        } else {
-            System.out.println("value type undefined.");
-        }
-        return true;
-    }
-    */
 }
