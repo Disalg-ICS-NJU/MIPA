@@ -31,6 +31,8 @@ import net.sourceforge.mipa.components.ContextMapping;
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.ContextRegisterImp;
 import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.components.MessageDispatcher;
+import net.sourceforge.mipa.components.NoDelayMessageDispatcher;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.IDManagerImp;
 import net.sourceforge.mipa.naming.Naming;
@@ -62,10 +64,10 @@ public class Initialize {
                                                                         .getNamingAddress()
                                                             + "Naming");
 
-            if(DEBUG) {
+            if (DEBUG) {
                 System.out.println("Creating IDManager...");
             }
-            
+
             IDManagerImp idManager = new IDManagerImp();
             IDManager managerStub = (IDManager) UnicastRemoteObject
                                                                    .exportObject(
@@ -73,12 +75,12 @@ public class Initialize {
                                                                                  0);
             server.bind("IDManager", managerStub);
 
-            if(DEBUG) {
+            if (DEBUG) {
                 System.out.println("Creating ContextRegister...");
             }
-            
+
             ContextMapping contextMapping = new ContextMapping();
-            
+
             ContextRegisterImp contextRegister = new ContextRegisterImp(
                                                                         contextMapping);
             ContextRegister contextRegisterStub = (ContextRegister) UnicastRemoteObject
@@ -87,10 +89,22 @@ public class Initialize {
                                                                                                      0);
             server.bind("ContextRegister", contextRegisterStub);
 
-            if(DEBUG) {
+            NoDelayMessageDispatcher messageDispatcher = new NoDelayMessageDispatcher(
+                                                                                      server);
+            MessageDispatcher messageDispatcherStub = (MessageDispatcher) UnicastRemoteObject
+                                                                                             .exportObject(
+                                                                                                           messageDispatcher,
+                                                                                                           0);
+            server.bind("MessageDispatcher", messageDispatcherStub);
+            
+            Thread t = new Thread(messageDispatcher);
+            t.start();
+
+            if (DEBUG) {
                 System.out.println("Creating PredicateParser...");
             }
-            PredicateParser predicateParser = new PredicateParser(contextMapping);
+            PredicateParser predicateParser = new PredicateParser(
+                                                                  contextMapping);
             PredicateParserMethod predicateParserStub = (PredicateParserMethod) UnicastRemoteObject
                                                                                                    .exportObject(
                                                                                                                  predicateParser,

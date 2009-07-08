@@ -131,4 +131,8 @@ public class ECAInitialize {
             e.printStackTrace();
         }
     }
+    
+    public static void main(String[] args) {
+        new ECAInitialize().initialize();
+    }
 }
