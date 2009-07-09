@@ -21,12 +21,24 @@ package net.sourceforge.mipa.components;
 
 import java.io.Serializable;
 
+import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
+
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class MessageContent implements Serializable {
+public abstract class MessageContent implements Serializable {
 
     private static final long serialVersionUID = 3007128772811018095L;
-
+    
+    SCPMessageContent scp;
+    
+    public SCPMessageContent getSCPRelatedContent() {
+        return scp;
+    }
+    
+    public void setSCPRelatedConttent(SCPMessageContent content) {
+        scp = content;
+    }
+    
 }
