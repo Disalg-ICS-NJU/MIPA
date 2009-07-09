@@ -64,12 +64,17 @@ public class NamingTest implements NamingTestInterface {
             server.unbind("str");
             System.out.println("Unbinding successful.");
             
+            /*
             IDManager idManager = (IDManager) server.lookup("IDManager");
             for(int i = 0; i < 10; i++) {
                 System.out.println(idManager.getID(Catalog.DataSource));
                 System.out.println(idManager.getID(Catalog.Checker));
                 System.out.println(idManager.getID(Catalog.NormalProcess));
             }
+            */
+            
+            InterfaceB ab = (InterfaceB) server.lookup("ab");
+            ab.B();
         } catch (Exception e) {
             e.printStackTrace();
         }

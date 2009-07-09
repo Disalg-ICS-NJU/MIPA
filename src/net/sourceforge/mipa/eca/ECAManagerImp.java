@@ -22,15 +22,19 @@ package net.sourceforge.mipa.eca;
 import static config.Debug.DEBUG;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.ContextRegister;
+import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.naming.Catalog;
+import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
+import net.sourceforge.mipa.predicatedetection.NormalProcess;
 import net.sourceforge.mipa.predicatedetection.PredicateType;
-import net.sourceforge.mipa.test.DemoListener;
+import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
 
 /**
  * 
@@ -94,31 +98,39 @@ public class ECAManagerImp implements ECAManager {
                                        String groupId, PredicateType type)
                                                                           throws RemoteException {
         // new listener and condition
-        // TODO listener should be Normal process and remove lookup to somewhere else.
-        ResultCallback callback = null;
+        // TODO listener should be Normal process and remove lookup to construction.
+        
         try {
-        Naming server = (Naming) java.rmi.Naming
+            Naming server = (Naming) java.rmi.Naming
                                                 .lookup(MIPAResource
                                                                     .getNamingAddress()
                                                         + "Naming");
         
-        callback = (ResultCallback) server.lookup(groupId);
+            IDManager idManger = (IDManager) server.lookup("IDManager");
+            
+            Coordinator coordinator = (Coordinator) server.lookup("Coordinator");
+            
+            String npName = idManger.getID(Catalog.NormalProcess);
+        
+            SCPNormalProcess np = new SCPNormalProcess(npName);
+            NormalProcess npStub = (NormalProcess) UnicastRemoteObject.exportObject(np, 0);
+            
+            server.bind(npName, npStub);
+            coordinator.normalProcessFinished(groupId, npName);
+        
+            Condition everything = new EmptyCondition(np, localPredicate);
+            // attaching condition to data source.
+
+            if (DEBUG) {
+                System.out.println("local predicate name is "
+                                   + localPredicate.getName());
+            }
+
+            // FIXME should attach local predicate related events, get from atoms.
+            dataSource.attach(everything, localPredicate.getName());
         } catch(Exception e) {
             e.printStackTrace();
         }
-        
-        Listener listener = new DemoListener(callback);
-        
-        Condition everything = new EmptyCondition(listener, localPredicate);
-        // attaching condition to data source.
-
-        if (DEBUG) {
-            System.out.println("local predicate name is "
-                               + localPredicate.getName());
-        }
-
-        // FIXME should attach local predicate related events, get from atoms.
-        dataSource.attach(everything, localPredicate.getName());
     }
 
     /**

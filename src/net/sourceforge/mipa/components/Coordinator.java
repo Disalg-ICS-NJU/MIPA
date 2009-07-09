@@ -22,6 +22,8 @@ package net.sourceforge.mipa.components;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.predicatedetection.PredicateType;
+
 /**
  * 
  * 
@@ -30,20 +32,21 @@ import java.rmi.RemoteException;
 public interface Coordinator extends Remote {
     /**
      * 
-     * @param entityID
+     * @param groupID
      * @param normalProcessID
      * @throws RemoteException
      */
-    public void normalProcessFinished(String entityID, String normalProcessID)
-                                                                              throws RemoteException;
+    public void normalProcessFinished(String groupID, String normalProcessID)
+                                                                             throws RemoteException;
 
     /**
      * 
-     * @param entityID
-     * @param normalProcessList
+     * @param groupID
+     * @param numberOfNormalProcesses
+     * @param type
      * @throws RemoteException
      */
-    public void newCoordinator(String entityID, String CheckID,
-                               String[] normalProcessList)
-                                                          throws RemoteException;
+    public void newCoordinator(String groupID, int numberOfNormalProcesses,
+                               PredicateType type)
+                                                  throws RemoteException;
 }
