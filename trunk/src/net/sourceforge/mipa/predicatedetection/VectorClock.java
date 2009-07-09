@@ -32,12 +32,22 @@ public abstract class VectorClock implements Serializable {
     private static final long serialVersionUID = -3242932698549998388L;
 
     /** vector clock */
-    ArrayList<Long> vectorClock;
+    private ArrayList<Long> vectorClock;
 
     public VectorClock(int number) {
+        vectorClock = new ArrayList<Long>();
+        
         for (int i = 0; i < number; i++) {
             vectorClock.add(new Long(0));
         }
+    }
+    
+    public VectorClock(VectorClock clock) {
+        vectorClock = new ArrayList<Long>();
+        ArrayList<Long> vectorList = clock.vectorClock;
+        
+        for(int i = 0; i < vectorList.size(); i++)
+            vectorClock.add(new Long(vectorList.get(i)));
     }
 
     /**
