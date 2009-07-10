@@ -19,13 +19,58 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
+import java.rmi.server.UnicastRemoteObject;
+
+import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.components.Communication;
+import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.predicatedetection.scp.SCPChecker;
+
 /**
- *
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class CheckerFactory {
-    
-    public static void newChecker(String checkerName, String[] normalProcesses, PredicateType type) {
-        
+
+    private static Naming server;
+    static {
+        try {
+            server = (Naming) java.rmi.Naming
+                                             .lookup(MIPAResource
+                                                                 .getNamingAddress()
+                                                     + "Naming");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void newChecker(String callback, String checkerName,
+                                  String[] normalProcesses,
+                                  PredicateType type) {
+        try {
+            ResultCallback application = (ResultCallback) server
+                                                                .lookup(callback);
+
+            switch (type) {
+            case SCP:
+                SCPChecker checker = new SCPChecker(application, checkerName,
+                                                    normalProcesses);
+                Communication checkerStub = (Communication) UnicastRemoteObject
+                                                                               .exportObject(
+                                                                                             checker,
+                                                                                             0);
+                server.bind(checkerName, checkerStub);
+                break;
+            case LP:
+
+            case WCP:
+
+            default:
+                System.out.println("Type has not been defined.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

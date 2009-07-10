@@ -77,7 +77,7 @@ public class CoordinatorImp implements Coordinator {
             String[] normalProcesses = g.getNormalProcesses();
             String checker = g.getCheckerName();
             
-            CheckerFactory.newChecker(checker, normalProcesses, type);
+            CheckerFactory.newChecker(groupID, checker, normalProcesses, type);
             for(int i = 0; i < normalProcesses.length; i++) {
                 try {
                     NormalProcess np = (NormalProcess) server.lookup(normalProcesses[i]);

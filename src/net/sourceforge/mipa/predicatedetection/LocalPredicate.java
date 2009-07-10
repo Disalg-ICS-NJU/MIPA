@@ -33,7 +33,7 @@ public class LocalPredicate extends Atom {
     /** atoms that local predicate related */
     private ArrayList<Atom> atoms;
     
-    private String connection;
+    //private String connection;
     
     public LocalPredicate() {
         atoms = new ArrayList<Atom>();

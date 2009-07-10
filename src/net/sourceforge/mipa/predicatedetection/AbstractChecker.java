@@ -20,16 +20,36 @@
 package net.sourceforge.mipa.predicatedetection;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.components.Communication;
 
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public abstract class AbstractChecker implements Serializable {
+public abstract class AbstractChecker implements Serializable, Communication {
 
     private static final long serialVersionUID = -5023931031473945453L;
+    
+    protected ResultCallback application;
+    
+    protected String name;
+    
+    protected String[] normalProcesses;
+    
+    protected Map<String, Integer> nameToID;
 
-    public AbstractChecker() {
+    public AbstractChecker(ResultCallback application, String checkerName, String[] normalProcesses) {
+        this.application = application;
+        this.name = checkerName;
+        this.normalProcesses = normalProcesses;
         
+        nameToID = new HashMap<String, Integer>();
+        for(int i = 0; i < normalProcesses.length; i++) {
+            nameToID.put(normalProcesses[i], new Integer(i));
+        }
     }
 }
