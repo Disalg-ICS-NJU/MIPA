@@ -28,7 +28,6 @@ import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageContent;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
-import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 /**
  * 
