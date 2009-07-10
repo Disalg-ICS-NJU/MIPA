@@ -5,4 +5,5 @@ net.sourceforge.mipa.eca
 net.sourceforge.mipa.eca.sensor
 net.sourceforge.mipa.naming
 net.sourceforge.mipa.predicatedetection
+net.sourceforge.mipa.predicatedetection.scp
 net.sourceforge.mipa.test
