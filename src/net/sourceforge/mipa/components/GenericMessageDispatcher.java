@@ -78,7 +78,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
                 Thread.sleep(heartBeat);
                 currentTime += heartBeat;
                 if(DEBUG){
-                    System.out.println("current time is " + currentTime);
+                    //System.out.println("current time is " + currentTime);
                 }
                 while (true) {
                     Message m = dispatchQueue.peek();

@@ -87,17 +87,13 @@ public class SCPVectorClock extends VectorClock {
         ArrayList<Long> left = vectorClock;
         
         assert(right.size() == left.size());
-        boolean great = false;
+        boolean result = true, first = false;
         for(int i = 0; i < right.size(); i++) {
             long rightValue = right.get(i).longValue();
             long leftValue = left.get(i).longValue();
-            if(rightValue > leftValue) {
-                great = true;
-            } else if(rightValue < leftValue) {
-                return false;
-            }
+            if(leftValue > rightValue) result = false;
+            else if(leftValue < rightValue) first = true;
         }
-        if(great == true) return true;
-        else return false;
+        return !(result && first);
     }
 }

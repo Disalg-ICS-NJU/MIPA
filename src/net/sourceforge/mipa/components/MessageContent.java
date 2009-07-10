@@ -21,7 +21,7 @@ package net.sourceforge.mipa.components;
 
 import java.io.Serializable;
 
-import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
+import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 /**
  *
@@ -31,8 +31,13 @@ public abstract class MessageContent implements Serializable {
 
     private static final long serialVersionUID = 3007128772811018095L;
     
-    protected SCPMessageContent scp;
+   //protected SCPMessageContent scp;
     
+    public abstract VectorClock getLo();
+    
+    public abstract VectorClock getHi();
+    
+    /*
     public SCPMessageContent getSCPRelatedContent() {
         return scp;
     }
@@ -40,5 +45,6 @@ public abstract class MessageContent implements Serializable {
     public void setSCPRelatedConttent(SCPMessageContent content) {
         scp = content;
     }
+    */
     
 }

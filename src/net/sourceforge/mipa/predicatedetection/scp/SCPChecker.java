@@ -19,6 +19,8 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
+import static config.Debug.DEBUG;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageContent;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
+import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 /**
  * 
@@ -54,9 +57,27 @@ public class SCPChecker extends AbstractChecker {
 
     @Override
     public void receive(Message message) throws RemoteException {
-        // TODO Auto-generated method stub
+        /*
+        if (DEBUG) {
+            System.out.println("received message");
+            MessageContent debug = message.getContent();
+            VectorClock lo = debug.getLo();
+            ArrayList<Long> list = lo.getVectorClock();
+            for(int i = 0; i < list.size(); i++)
+                System.out.print(list.get(i));
+            System.out.print(' ');
+            VectorClock hi = debug.getHi();
+            list = hi.getVectorClock();
+            for(int i = 0; i < list.size(); i++)
+                System.out.print(list.get(i));
+            System.out.println();
+        }
+        */
         String normalProcess = message.getSenderID();
         int id = nameToID.get(normalProcess).intValue();
+        
+        if(DEBUG) System.out.println(id);
+        
         MessageContent content = message.getContent();
 
         ArrayList<MessageContent> queue = queues.get(id);
@@ -65,6 +86,7 @@ public class SCPChecker extends AbstractChecker {
         ArrayList<Integer> changed = new ArrayList<Integer>();
 
         if (queue.size() == 1) {
+            if(DEBUG) System.out.println("In size == 1");
             changed.add(new Integer(id));
             while (true) {
                 while (changed.size() != 0) {
@@ -76,25 +98,25 @@ public class SCPChecker extends AbstractChecker {
                                 continue;
                             ArrayList<MessageContent> qi = queues.get(elem);
                             ArrayList<MessageContent> qj = queues.get(j);
-                            MessageContent qiHead = qi.get(0);
-                            MessageContent qjHead = qj.get(0);
-                            if (qjHead
-                                      .getSCPRelatedContent()
-                                      .getLo()
-                                      .notLessThan(
-                                                   qiHead
-                                                         .getSCPRelatedContent()
-                                                         .getHi())) {
-                                newchanged.add(new Integer(elem));
-                            }
-                            if (qiHead
-                                      .getSCPRelatedContent()
-                                      .getLo()
-                                      .notLessThan(
-                                                   qjHead
-                                                         .getSCPRelatedContent()
-                                                         .getHi())) {
-                                newchanged.add(new Integer(j));
+                            if (qi.size() != 0 && qj.size() != 0) {
+                                MessageContent qiHead = qi.get(0);
+                                MessageContent qjHead = qj.get(0);
+                                if (qjHead
+                                          .getLo()
+                                          .notLessThan(
+                                                       qiHead
+                                                             .getHi())) {
+                                    //if(DEBUG) System.out.println("condition 1");
+                                    newchanged.add(new Integer(elem));
+                                }
+                                if (qiHead
+                                          .getLo()
+                                          .notLessThan(
+                                                       qjHead
+                                                             .getHi())) {
+                                    //if(DEBUG) System.out.println("condition 2");
+                                    newchanged.add(new Integer(j));
+                                }
                             }
                         } // end for j
                     }// end for i
@@ -117,10 +139,11 @@ public class SCPChecker extends AbstractChecker {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                } else break;
-                
+                } else
+                    break;
+
                 // detection found
-                for(int i = 0; i < normalProcesses.length; i++) {
+                for (int i = 0; i < normalProcesses.length; i++) {
                     queues.get(i).remove(0);
                     changed.add(new Integer(i));
                 }

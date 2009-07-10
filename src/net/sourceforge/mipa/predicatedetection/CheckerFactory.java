@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
+import static config.Debug.DEBUG;
 import java.rmi.server.UnicastRemoteObject;
 
 import net.sourceforge.mipa.ResultCallback;
@@ -48,6 +49,9 @@ public class CheckerFactory {
     public static void newChecker(String callback, String checkerName,
                                   String[] normalProcesses,
                                   PredicateType type) {
+        if(DEBUG) {
+            System.out.println("CheckerFactory: newChecker");
+        }
         try {
             ResultCallback application = (ResultCallback) server
                                                                 .lookup(callback);
@@ -61,6 +65,9 @@ public class CheckerFactory {
                                                                                              checker,
                                                                                              0);
                 server.bind(checkerName, checkerStub);
+                if(DEBUG) {
+                    System.out.println("binding checker " + checkerName);
+                }
                 break;
             case LP:
 
