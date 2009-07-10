@@ -31,7 +31,7 @@ public abstract class MessageContent implements Serializable {
 
     private static final long serialVersionUID = 3007128772811018095L;
     
-    SCPMessageContent scp;
+    protected SCPMessageContent scp;
     
     public SCPMessageContent getSCPRelatedContent() {
         return scp;

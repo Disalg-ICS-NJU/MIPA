@@ -19,10 +19,30 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
+import net.sourceforge.mipa.components.MessageContent;
+
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class SCPMessageContent {
+public class SCPMessageContent extends MessageContent {
 
+    private static final long serialVersionUID = -172044301137888284L;
+
+    private SCPVectorClock lo;
+    
+    private SCPVectorClock hi;
+    
+    public SCPMessageContent(SCPVectorClock lo, SCPVectorClock hi) {
+        this.lo = lo;
+        this.hi = hi;
+    }
+    
+    public SCPVectorClock getLo() {
+        return lo;
+    }
+    
+    public SCPVectorClock getHi() {
+        return hi;
+    }
 }

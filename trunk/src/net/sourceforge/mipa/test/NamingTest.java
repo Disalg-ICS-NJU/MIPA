@@ -23,8 +23,6 @@ package net.sourceforge.mipa.test;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import net.sourceforge.mipa.naming.Catalog;
-import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 
 /**

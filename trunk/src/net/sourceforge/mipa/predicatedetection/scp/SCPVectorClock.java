@@ -19,6 +19,8 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
+import java.util.ArrayList;
+
 import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 /**
@@ -55,7 +57,47 @@ public class SCPVectorClock extends VectorClock {
     @Override
     public void update(VectorClock timestamp) {
         // TODO Auto-generated method stub
+        ArrayList<Long> clock = timestamp.getVectorClock();
 
+        assert (vectorClock.size() == clock.size());
+
+        for (int i = 0; i < vectorClock.size(); i++) {
+            long clockValue = vectorClock.get(i).longValue();
+            long msgClockValue = clock.get(i).longValue();
+
+            Long newValue = new Long(clockValue > msgClockValue ? clockValue
+                                                               : msgClockValue);
+            vectorClock.set(i, newValue);
+        }
     }
 
+    @Override
+    public void increment(int id) {
+        assert (id < getVectorClock().size());
+
+        Long clock = getVectorClock().get(id);
+        getVectorClock().set(id, new Long(clock.longValue() + 1));
+    }
+
+    
+    //FIXME need to prove the correctness.
+    @Override
+    public boolean notLessThan(VectorClock timestamp) {
+        ArrayList<Long> right = timestamp.getVectorClock();
+        ArrayList<Long> left = vectorClock;
+        
+        assert(right.size() == left.size());
+        boolean great = false;
+        for(int i = 0; i < right.size(); i++) {
+            long rightValue = right.get(i).longValue();
+            long leftValue = left.get(i).longValue();
+            if(rightValue > leftValue) {
+                great = true;
+            } else if(rightValue < leftValue) {
+                return false;
+            }
+        }
+        if(great == true) return true;
+        else return false;
+    }
 }

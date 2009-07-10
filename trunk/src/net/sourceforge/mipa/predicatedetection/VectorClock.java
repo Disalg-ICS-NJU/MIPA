@@ -32,22 +32,36 @@ public abstract class VectorClock implements Serializable {
     private static final long serialVersionUID = -3242932698549998388L;
 
     /** vector clock */
-    private ArrayList<Long> vectorClock;
+    protected ArrayList<Long> vectorClock;
 
     public VectorClock(int number) {
-        vectorClock = new ArrayList<Long>();
+        this.vectorClock = new ArrayList<Long>();
         
         for (int i = 0; i < number; i++) {
-            vectorClock.add(new Long(0));
+            getVectorClock().add(new Long(0));
         }
     }
     
     public VectorClock(VectorClock clock) {
-        vectorClock = new ArrayList<Long>();
-        ArrayList<Long> vectorList = clock.vectorClock;
+        this.vectorClock = new ArrayList<Long>();
+        ArrayList<Long> vectorList = clock.getVectorClock();
         
         for(int i = 0; i < vectorList.size(); i++)
             vectorClock.add(new Long(vectorList.get(i)));
+    }
+
+    /**
+     * @param vectorClock the vectorClock to set
+     */
+    public void setVectorClock(ArrayList<Long> vectorClock) {
+        this.vectorClock = vectorClock;
+    }
+
+    /**
+     * @return the vectorClock
+     */
+    public ArrayList<Long> getVectorClock() {
+        return vectorClock;
     }
 
     /**
@@ -57,5 +71,9 @@ public abstract class VectorClock implements Serializable {
      *            external vector clock
      */
     public abstract void update(VectorClock timestamp);
+    
+    public abstract void increment(int id);
+    
+    public abstract boolean notLessThan(VectorClock timestamp);
 
 }
