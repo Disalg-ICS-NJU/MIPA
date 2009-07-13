@@ -20,15 +20,24 @@
 package net.sourceforge.mipa.eca.sensor;
 
 /**
- * sensor in environment.
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public interface Sensor {
-    /**
-     * reads sensor data from environment.
-     * 
-     * @return sensor data
+public class RFID implements Sensor {
+
+    private String[] tags = {"tag_00001"};
+    /* (non-Javadoc)
+     * @see net.sourceforge.mipa.eca.sensor.Sensor#getData()
      */
-    public String[] getData();
+    @Override
+    public String[] getData() {
+        double random = Math.random();
+        if(random > 0.5) {
+            return tags;
+        }
+        
+        String[] empty = {""};
+        return empty;
+    }
+
 }
