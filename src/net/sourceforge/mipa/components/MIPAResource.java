@@ -19,6 +19,10 @@
  */
 package net.sourceforge.mipa.components;
 
+import net.sourceforge.mipa.naming.IDManager;
+import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.predicatedetection.PredicateParser;
+
 /**
  * <code>MIPAResource</code> provides basic resource that MIPA uses.
  * 
@@ -27,6 +31,18 @@ package net.sourceforge.mipa.components;
 public class MIPAResource {
     /** naming server address */
     private static String namingAddress;
+
+    private static Naming server = null;
+
+    private static IDManager idManager = null;
+
+    private static ContextRegister contextRegister = null;
+    
+    private static Coordinator coordinator = null;
+    
+    private static PredicateParser predicateParser = null;
+    
+    private static MessageDispatcher messageDispatcher = null;
 
     /**
      * returns naming server address.
@@ -45,5 +61,81 @@ public class MIPAResource {
      */
     public static void setNamingAddress(String namingAddress) {
         MIPAResource.namingAddress = namingAddress;
+    }
+    
+
+    public static Naming getNamingServer() {
+        if (server == null) {
+            try {
+                server = (Naming) java.rmi.Naming
+                                                 .lookup(MIPAResource
+                                                                     .getNamingAddress()
+                                                         + "Naming");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return server;
+    }
+    
+    
+    public static IDManager getIDManager() {
+        if(idManager == null) {
+            Naming server = getNamingServer();
+            try {
+                idManager = (IDManager) server.lookup("IDManager");
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return idManager;
+    }
+    
+    public static ContextRegister getContextRegister() {
+        if(contextRegister == null) {
+            Naming server = getNamingServer();
+            try {
+                contextRegister = (ContextRegister) server.lookup("ContextRegister");
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return contextRegister;
+    }
+    
+    public static Coordinator getCoordinator() {
+        if(coordinator == null) {
+            Naming server = getNamingServer();
+            try {
+                coordinator = (Coordinator) server.lookup("Coordinator");
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return coordinator;
+    }
+    
+    public static PredicateParser getPredicateParser() {
+        if(predicateParser == null) {
+            Naming server = getNamingServer();
+            try {
+                predicateParser = (PredicateParser) server.lookup("PredicateParser");
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return predicateParser;
+    }
+    
+    public static MessageDispatcher getMessageDispatcher() {
+        if(messageDispatcher == null) {
+            Naming server = getNamingServer();
+            try {
+                messageDispatcher = (MessageDispatcher) server.lookup("MessageDispatcher");
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return messageDispatcher;
     }
 }

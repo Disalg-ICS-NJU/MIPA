@@ -87,14 +87,13 @@ public abstract class AbstractApplication implements ResultCallback {
         }
 
         try {
-            Naming server = (Naming) java.rmi.Naming.lookup(namingAddress
-                                                            + "Naming");
+            Naming server = MIPAResource.getNamingServer();
 
             if (DEBUG) {
                 System.out.println("application lookup Naming successfully.");
             }
 
-            IDManager idManager = (IDManager) server.lookup("IDManager");
+            IDManager idManager = MIPAResource.getIDManager();
             applicationName = idManager.getID(Catalog.Application);
 
             ResultCallback stub = (ResultCallback) UnicastRemoteObject
@@ -109,8 +108,7 @@ public abstract class AbstractApplication implements ResultCallback {
 
             // get predicate parser and transfer xml document to it.
 
-            PredicateParserMethod parser = (PredicateParserMethod) server
-                                                                         .lookup("PredicateParser");
+            PredicateParserMethod parser = MIPAResource.getPredicateParser();
             if (DEBUG) {
                 System.out
                           .println("application lookups predicate parser successfully.");
