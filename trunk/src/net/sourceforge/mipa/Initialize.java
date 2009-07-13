@@ -30,6 +30,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import net.sourceforge.mipa.components.ContextMapping;
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.ContextRegisterImp;
+import net.sourceforge.mipa.components.Coordinator;
+import net.sourceforge.mipa.components.CoordinatorImp;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.MessageDispatcher;
 import net.sourceforge.mipa.components.NoDelayMessageDispatcher;
@@ -111,6 +113,10 @@ public class Initialize {
                                                                                                                  0);
 
             server.bind("PredicateParser", predicateParserStub);
+            
+            CoordinatorImp coordinator = new CoordinatorImp();
+            Coordinator coordinatorStub = (Coordinator) UnicastRemoteObject.exportObject(coordinator, 0);
+            server.bind("Coordinator", coordinatorStub);
 
         } catch (Exception e) {
             e.printStackTrace();
