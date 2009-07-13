@@ -29,8 +29,9 @@ public class Temperature implements Sensor {
      * @see net.sourceforge.mipa.eca.sensor.Sensor#getData()
      */
     @Override
-    public String getData() {
+    public String[] getData() {
         double value = Math.random() * 100;
-        return String.valueOf(value);
+        String[] results = {String.valueOf(value)}; 
+        return results;
     }
 }

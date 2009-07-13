@@ -19,19 +19,36 @@
  */
 package net.sourceforge.mipa.eca;
 
+
 /**
  * Sensor Agent.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public interface SensorAgent extends Runnable {
+public abstract class SensorAgent implements Runnable {
     
+    /** data source of ECA mechanism. */
+    protected DataSource dataSource;
+    
+    /** sensor agent's name */
+    protected String name;
+    
+    /** sensor agent's value type */
+    protected String valueType;
+    
+    public SensorAgent(DataSource dataSource, String name, String valueType) {
+        this.dataSource = dataSource;
+        this.name = name;
+        this.valueType = valueType;
+    }
     /**
      * sensor agent's name.
      * 
      * @return a <code>String</code> represents name
      */
-    public String getName();
+    public String getName() {
+        return name;
+    }
     
     
     /**
@@ -39,17 +56,19 @@ public interface SensorAgent extends Runnable {
      * 
      * @return value type
      */
-    public String getValueType();
+    public String getValueType() {
+        return valueType;
+    }
     
     /**
      * sensor agent works in pull mode.
      * 
      * @return sensor data
      */
-    public String getData();
+    public abstract String getData();
     
     /**
      * sensor agent works in push mode.
      */
-    public void generateData();
+    public abstract void generateData();
 }

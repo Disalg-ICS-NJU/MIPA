@@ -91,22 +91,22 @@ public class LocalPredicateParser {
                                                                          "value")
                                                            .getNodeValue();
 
-                                        if (name.equals("temperature")) {
-                                            registerLocalPredicate(
-                                                                   operator,
-                                                                   name,
-                                                                   value,
-                                                                   coordinateID,
-                                                                   type);
-                                        } //:end if
-                                    } //:end if
-                                } //:end if
-                            } //:end for
-                        } //:end if
-                    } //:end if
-                } //:end for
-            } //:end for
-        } //:end if
+                                        // if (name.equals("temperature")) {
+                                        registerLocalPredicate(
+                                                               operator,
+                                                               name,
+                                                               value,
+                                                               coordinateID,
+                                                               type);
+                                        // } //:end if
+                                    } // :end if
+                                } // :end if
+                            } // :end for
+                        } // :end if
+                    } // :end if
+                } // :end for
+            } // :end for
+        } // :end if
     }
 
     private void registerLocalPredicate(String operator, String name,
@@ -127,10 +127,7 @@ public class LocalPredicateParser {
                                                       .getValueType(localPredicate
                                                                                   .getName()));
             // FIXME put lookup to a method
-            Naming server = (Naming) java.rmi.Naming
-                                                    .lookup(MIPAResource
-                                                                        .getNamingAddress()
-                                                            + "Naming");
+            Naming server = MIPAResource.getNamingServer();
             ECAManager ecaManager = (ECAManager) server
                                                        .lookup(ecaManagerId);
             System.out.println("find eca manager successfully.");

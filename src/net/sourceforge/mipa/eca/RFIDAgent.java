@@ -20,50 +20,62 @@
 package net.sourceforge.mipa.eca;
 
 import static config.Debug.DEBUG;
+import net.sourceforge.mipa.eca.sensor.RFID;
 import net.sourceforge.mipa.eca.sensor.Sensor;
-import net.sourceforge.mipa.eca.sensor.Temperature;
 
 /**
- * Temperature sensor agent.
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class TemperatureAgent extends SensorAgent {
+public class RFIDAgent extends SensorAgent {
+
     
     /** the sensor which sensor agent manages */
-    private Sensor sensor;
+    protected Sensor sensor;
     
-    public TemperatureAgent(DataSource source, String name, String valueType) {
-        super(source, name, valueType);
-        sensor = new Temperature();
+    public RFIDAgent(DataSource dataSource, String name, String valueType) {
+        super(dataSource, name, valueType);
+        sensor = new RFID();
     }
     
+    /* (non-Javadoc)
+     * @see net.sourceforge.mipa.eca.SensorAgent#generateData()
+     */
     @Override
     public void generateData() {
-        
+        // TODO Auto-generated method stub
+
     }
 
+    /* (non-Javadoc)
+     * @see net.sourceforge.mipa.eca.SensorAgent#getData()
+     */
     @Override
     public String getData() {
-        
+        // TODO Auto-generated method stub
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run() {
-        //Thread.yield();
+        // TODO Auto-generated method stub
+        
         try {
             while(true) {
                 Thread.sleep(1000);
                 String[] values = sensor.getData();
                 if(DEBUG) {
-                    System.out.println("temperature now is " + values[0]);
+                    
                 }
                 dataSource.update(this.name, values);
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
+
     }
-    
+
 }
