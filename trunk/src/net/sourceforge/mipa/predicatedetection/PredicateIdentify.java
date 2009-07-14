@@ -34,6 +34,6 @@ public class PredicateIdentify {
         if(DEBUG) {
             System.out.println("\tidentify predicate...");
         }
-        return PredicateType.WCP;
+        return PredicateType.SCP;
     }
 }

@@ -47,6 +47,7 @@ public class Group {
         this.numberOfFinishedNormalProcesses = 0;
         this.numberOfNormalProcesses = numberOfNormalProcesses;
         this.predicateType = type;
+        this.normalProcesses = new ArrayList<String>();
     }
 
     /**

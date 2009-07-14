@@ -68,7 +68,7 @@ public class ECAInitialize {
 
             String ecaManagerId = idManager.getID(Catalog.ECAManager);
             ECAManagerImp ecaManager = new ECAManagerImp(contextRegister,
-                                                         dataSourceStub,
+                                                         dataSource,
                                                          ecaManagerId);
             // ecaManager.setECAManagerName(ecaManagerId);
 
@@ -88,12 +88,20 @@ public class ECAInitialize {
             t.start();
             // temperature.start();
             if (DEBUG) {
-                System.out.println("sensor running...");
+                System.out.println("temperature sensor running...");
             }
-
+            
+            eventName = "RFID";
+            valueType = "String";
+            SensorAgent RFID = new RFIDAgent(dataSourceStub, eventName, valueType);
+            
+            t = new Thread(RFID);
+            t.start();
+            
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
             resources.add(temperature);
+            resources.add(RFID);
 
             if (DEBUG) {
                 System.out.println("resources value: ");

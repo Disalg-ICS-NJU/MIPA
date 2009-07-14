@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.eca;
 
+import static config.Debug.DEBUG;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,11 +43,21 @@ public class DataSourceImp implements DataSource {
     public synchronized void attach(Condition condition, String eventName)
                                                              throws RemoteException {
 
+        if(DEBUG) {
+            System.out.println("attaching condtion to data source...");
+        }
+        
         if (map.containsKey(eventName) == false) {
+            if(DEBUG) {
+                System.out.println("New event in data source...");
+            }
             ArrayList<Condition> list = new ArrayList<Condition>();
             list.add(condition);
             map.put(eventName, list);
         } else {
+            if(DEBUG) {
+                System.out.println("already contained event in data source...");
+            }
             ArrayList<Condition> list = map.get(eventName);
             list.add(condition);
         }

@@ -29,7 +29,7 @@ import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageDispatcher;
 import net.sourceforge.mipa.eca.Listener;
-import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.predicatedetection.scp.SCPVectorClock;
 
 /**
  * abstract normal process.
@@ -63,13 +63,7 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
         finished = false;
 
         try {
-            Naming server = (Naming) java.rmi.Naming
-                                                    .lookup(MIPAResource
-                                                                        .getNamingAddress()
-                                                            + "Naming");
-
-            messageDispatcher = (MessageDispatcher) server
-                                                          .lookup("MessageDispatcher");
+            messageDispatcher = MIPAResource.getMessageDispatcher();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,6 +83,10 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
         if (finished) {
             boolean newValue = Boolean.parseBoolean(value);
             action(newValue);
+        }
+        
+        if(DEBUG) {
+            System.out.println("in Normal Process update method...");
         }
 
         if (DEBUG && !finished) {
@@ -117,7 +115,12 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
         this.normalProcessesList = normalProcessesList;
         this.checker = checker;
         // initial its vector clock to 1
+        
+        //FIXME initialization should not be here
+        //----------------------------------------------
+        currentClock = new SCPVectorClock(normalProcessesList.length);
         currentClock.increment(id);
+        //----------------------------------------------
         finished = true;
         
         // run application thread

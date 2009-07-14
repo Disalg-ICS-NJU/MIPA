@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.components;
 
+import static config.Debug.DEBUG;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,11 +46,8 @@ public class CoordinatorImp implements Coordinator {
         groupMap = new HashMap<String, Group>();
 
         try {
-            server = (Naming) java.rmi.Naming
-                                             .lookup(MIPAResource
-                                                                 .getNamingAddress()
-                                                     + "Naming");
-            idManager = (IDManager) server.lookup("IDManager");
+            server = MIPAResource.getNamingServer();
+            idManager = MIPAResource.getIDManager();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,6 +67,10 @@ public class CoordinatorImp implements Coordinator {
         
         finishedNum++;
         g.setNumberOfFinishedNormalProcesses(finishedNum);
+        
+        if(DEBUG) {
+            System.out.println("Coordinator receive normal process name: " + normalProcessID);
+        }
         g.addNormalProcess(normalProcessID);
         
         if(finishedNum == total) {
@@ -77,6 +79,10 @@ public class CoordinatorImp implements Coordinator {
             String[] normalProcesses = g.getNormalProcesses();
             String checker = g.getCheckerName();
             
+            if(DEBUG) {
+                System.out.println("new checker in coordinator...");
+                System.out.println("type is " + type);
+            }
             CheckerFactory.newChecker(groupID, checker, normalProcesses, type);
             for(int i = 0; i < normalProcesses.length; i++) {
                 try {
