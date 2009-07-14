@@ -100,6 +100,11 @@ public abstract class GenericMessageDispatcher implements Runnable,
      *            message to delivery.
      */
     private void dispatch(Message message) {
+        if(DEBUG) {
+            System.out.println("Message dispatch:");
+            System.out.println("\t" + message.getSenderID() + " -> " + message.getReceiverID());
+        }
+        
         try {
             if (comTable.containsKey(message.getReceiverID())) {
                 comTable.get(message.getReceiverID()).receive(message);

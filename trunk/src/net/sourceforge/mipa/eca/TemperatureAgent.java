@@ -57,7 +57,7 @@ public class TemperatureAgent extends SensorAgent {
                 Thread.sleep(1000);
                 String[] values = sensor.getData();
                 if(DEBUG) {
-                    System.out.println("temperature now is " + values[0]);
+                    System.out.println("temperature sensor list:\n\t" + values[0]);
                 }
                 dataSource.update(this.name, values);
             }

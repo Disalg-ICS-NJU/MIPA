@@ -19,8 +19,6 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
-import static config.Debug.DEBUG;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -75,8 +73,6 @@ public class SCPChecker extends AbstractChecker {
         String normalProcess = message.getSenderID();
         int id = nameToID.get(normalProcess).intValue();
         
-        if(DEBUG) System.out.println(id);
-        
         MessageContent content = message.getContent();
 
         ArrayList<MessageContent> queue = queues.get(id);
@@ -85,7 +81,6 @@ public class SCPChecker extends AbstractChecker {
         ArrayList<Integer> changed = new ArrayList<Integer>();
 
         if (queue.size() == 1) {
-            if(DEBUG) System.out.println("In size == 1");
             changed.add(new Integer(id));
             while (true) {
                 while (changed.size() != 0) {
@@ -105,7 +100,7 @@ public class SCPChecker extends AbstractChecker {
                                           .notLessThan(
                                                        qiHead
                                                              .getHi())) {
-                                    //if(DEBUG) System.out.println("condition 1");
+                                    
                                     newchanged.add(new Integer(elem));
                                 }
                                 if (qiHead
@@ -113,7 +108,7 @@ public class SCPChecker extends AbstractChecker {
                                           .notLessThan(
                                                        qjHead
                                                              .getHi())) {
-                                    //if(DEBUG) System.out.println("condition 2");
+                                    
                                     newchanged.add(new Integer(j));
                                 }
                             }
