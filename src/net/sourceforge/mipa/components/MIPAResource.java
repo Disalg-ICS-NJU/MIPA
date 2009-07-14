@@ -22,6 +22,7 @@ package net.sourceforge.mipa.components;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.PredicateParser;
+import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
 
 /**
  * <code>MIPAResource</code> provides basic resource that MIPA uses.
@@ -40,7 +41,7 @@ public class MIPAResource {
     
     private static Coordinator coordinator = null;
     
-    private static PredicateParser predicateParser = null;
+    private static PredicateParserMethod predicateParser = null;
     
     private static MessageDispatcher messageDispatcher = null;
 
@@ -115,11 +116,11 @@ public class MIPAResource {
         return coordinator;
     }
     
-    public static PredicateParser getPredicateParser() {
+    public static PredicateParserMethod getPredicateParser() {
         if(predicateParser == null) {
             Naming server = getNamingServer();
             try {
-                predicateParser = (PredicateParser) server.lookup("PredicateParser");
+                predicateParser = (PredicateParserMethod) server.lookup("PredicateParser");
             } catch(Exception e) {
                 e.printStackTrace();
             }

@@ -37,10 +37,7 @@ public class CheckerFactory {
     private static Naming server;
     static {
         try {
-            server = (Naming) java.rmi.Naming
-                                             .lookup(MIPAResource
-                                                                 .getNamingAddress()
-                                                     + "Naming");
+            server = MIPAResource.getNamingServer();
         } catch (Exception e) {
             e.printStackTrace();
         }

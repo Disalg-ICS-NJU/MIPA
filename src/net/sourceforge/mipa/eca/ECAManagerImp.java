@@ -53,6 +53,14 @@ public class ECAManagerImp implements ECAManager {
                          DataSource dataSource, String ecaManagerName) {
         this.setContextRegister(contextRegister);
         this.ecaManagerName = ecaManagerName;
+        /*
+        try {
+            Naming server = MIPAResource.getNamingServer();
+            this.dataSource = (DataSource) server.lookup(dataSourceId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        */
         this.dataSource = dataSource;
     }
 
@@ -101,16 +109,17 @@ public class ECAManagerImp implements ECAManager {
         // TODO listener should be Normal process and remove lookup to construction.
         
         try {
-            Naming server = (Naming) java.rmi.Naming
-                                                .lookup(MIPAResource
-                                                                    .getNamingAddress()
-                                                        + "Naming");
+            Naming server = MIPAResource.getNamingServer();
         
-            IDManager idManger = (IDManager) server.lookup("IDManager");
+            IDManager idManger = MIPAResource.getIDManager();
             
-            Coordinator coordinator = (Coordinator) server.lookup("Coordinator");
+            Coordinator coordinator = MIPAResource.getCoordinator();
             
             String npName = idManger.getID(Catalog.NormalProcess);
+            
+            if(DEBUG) {
+                System.out.println("Get normal process name: " + npName);
+            }
         
             SCPNormalProcess np = new SCPNormalProcess(npName);
             NormalProcess npStub = (NormalProcess) UnicastRemoteObject.exportObject(np, 0);
@@ -118,7 +127,14 @@ public class ECAManagerImp implements ECAManager {
             server.bind(npName, npStub);
             coordinator.normalProcessFinished(groupId, npName);
         
+            if(DEBUG) {
+                System.out.println("before binding condition...");
+            }
             Condition everything = new EmptyCondition(np, localPredicate);
+            
+            if(DEBUG) {
+                System.out.println("after binding condition...");
+            }
             // attaching condition to data source.
 
             if (DEBUG) {
@@ -128,6 +144,10 @@ public class ECAManagerImp implements ECAManager {
 
             // FIXME should attach local predicate related events, get from atoms.
             dataSource.attach(everything, localPredicate.getName());
+            
+            if(DEBUG) {
+                System.out.println("binding condition to data source successful.");
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }

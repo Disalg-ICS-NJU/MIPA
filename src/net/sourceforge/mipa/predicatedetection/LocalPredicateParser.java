@@ -21,6 +21,7 @@ package net.sourceforge.mipa.predicatedetection;
 
 import static config.Debug.DEBUG;
 import net.sourceforge.mipa.components.ContextMapping;
+import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.eca.ECAManager;
 import net.sourceforge.mipa.naming.Naming;
@@ -59,10 +60,22 @@ public class LocalPredicateParser {
         if (DEBUG) {
             System.out.println("\tparsing local preidcate...");
         }
+        Coordinator coordinator = MIPAResource.getCoordinator();
 
         NodeList elements = predicate.getElementsByTagName("LP");
 
         if (elements != null) {
+            
+            if(DEBUG) {
+                System.out.println("number of LOCAL PREDICATE: " + elements.getLength());
+            }
+            try {
+                coordinator.newCoordinator(coordinateID, elements.getLength(), type);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            
+            
             for (int i = 0; i < elements.getLength(); i++) {
                 Node localPredicate = elements.item(i);
 
