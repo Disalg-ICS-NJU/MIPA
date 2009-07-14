@@ -24,8 +24,6 @@ import static config.Debug.DEBUG;
 import java.rmi.RemoteException;
 
 import net.sourceforge.mipa.components.ContextMapping;
-import net.sourceforge.mipa.components.Coordinator;
-import net.sourceforge.mipa.components.MIPAResource;
 
 import org.w3c.dom.Document;
 

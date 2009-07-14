@@ -68,8 +68,9 @@ public class RFIDAgent extends SensorAgent {
                 Thread.sleep(1000);
                 String[] values = sensor.getData();
                 if(DEBUG) {
+                    System.out.println("RFID sensor list:");
                     for(int i = 0; i < values.length; i++) {
-                        System.out.println(values[i]);
+                        System.out.println("\t" + values[i]);
                     }
                 }
                 dataSource.update(this.name, values);

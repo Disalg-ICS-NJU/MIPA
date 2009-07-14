@@ -84,10 +84,6 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
             boolean newValue = Boolean.parseBoolean(value);
             action(newValue);
         }
-        
-        if(DEBUG) {
-            System.out.println("in Normal Process update method...");
-        }
 
         if (DEBUG && !finished) {
             System.out.println("Ingore event update in normal process");

@@ -21,7 +21,6 @@ package net.sourceforge.mipa.components;
 
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
-import net.sourceforge.mipa.predicatedetection.PredicateParser;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
 
 /**
