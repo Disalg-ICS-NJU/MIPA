@@ -19,9 +19,17 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
+import static config.Config.ENABLE_PHYSICAL_CLOCK;
+import static config.Config.LOG_DIRECTORY;
+
+import java.io.PrintWriter;
+import java.util.Date;
+
+import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.components.MessageContent;
 import net.sourceforge.mipa.components.MessageType;
+import net.sourceforge.mipa.naming.Catalog;
+import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
 import net.sourceforge.mipa.predicatedetection.VectorClock;
 
@@ -39,6 +47,9 @@ public class SCPNormalProcess extends AbstractNormalProcess {
     
     private SCPVectorClock lo;
     
+    private long pTimeLo;
+    
+    private PrintWriter out;
     
     /**
      * @param name
@@ -48,6 +59,14 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         // TODO Auto-generated constructor stub
         currentState = false;
         firstflag = true;
+        
+        if(ENABLE_PHYSICAL_CLOCK) {
+            try {
+                out = new PrintWriter(LOG_DIRECTORY + "/" + name);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -64,11 +83,33 @@ public class SCPNormalProcess extends AbstractNormalProcess {
             if(currentState == false) {
                 //interval begins
                 lo = new SCPVectorClock(currentClock);
+                
+                if(ENABLE_PHYSICAL_CLOCK) {
+                    pTimeLo = (new Date()).getTime();
+                }
+                
                 broadcast(MessageType.Control, null);
             } else {
                 //interval ends
                 SCPVectorClock hi = new SCPVectorClock(currentClock);
-                MessageContent content = new SCPMessageContent(lo, hi);
+                
+                SCPMessageContent content = new SCPMessageContent(lo, hi);
+                
+                if(ENABLE_PHYSICAL_CLOCK) {
+                    IDManager idManager = MIPAResource.getIDManager();
+                    try {
+                        String intervalID = idManager.getID(Catalog.Numerical);
+
+                        content.setIntervalID(intervalID);
+                        long pTimeHi = (new Date()).getTime();
+                        content.setpTimeLo(pTimeLo);
+                        content.setpTimeHi(pTimeHi);
+                        out.println(intervalID + " " + pTimeLo + " " + pTimeHi);
+                        out.flush();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 //SCP doesn't send any message to other normal processes.
                 send(MessageType.Detection, checker, content);
             }
@@ -76,14 +117,14 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         }
     }
     
-    private void send(MessageType type, String receiverName, MessageContent content) {
+    private void send(MessageType type, String receiverName, SCPMessageContent content) {
         Message m = new Message();
         m.setType(type);
         m.setSenderID(name);
         m.setReceiverID(receiverName);
         VectorClock current = new SCPVectorClock(currentClock);
         m.setTimestamp(current);
-        m.setContent(content);
+        m.setScpMessageContent(content);
         
         try {
             messageDispatcher.send(m);
@@ -93,7 +134,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         currentClock.increment(id);
     }
     
-    private void broadcast(MessageType type, MessageContent content) {
+    private void broadcast(MessageType type, SCPMessageContent content) {
         for(int i = 0; i < normalProcessesList.length; i++) {
             if(i != id) {
                 send(type, normalProcessesList[i], content);

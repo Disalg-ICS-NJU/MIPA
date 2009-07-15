@@ -17,19 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.naming;
+package config;
 
 /**
- * The <code>Catalog</code> class represents catalog of MIPA components which
- * use Naming server.
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public enum Catalog {
-    DataSource,
-    ECAManager,
-    NormalProcess,
-    Checker,
-    Application,
-    Numerical
+public class Config {
+    public final static boolean ENABLE_PHYSICAL_CLOCK = true;
+    public final static String LOG_DIRECTORY = "log";
 }

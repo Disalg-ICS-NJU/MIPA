@@ -19,12 +19,15 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
+import static config.Config.LOG_DIRECTORY;
+import static config.Config.ENABLE_PHYSICAL_CLOCK;
+
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.components.MessageContent;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
 
 /**
@@ -35,8 +38,9 @@ public class SCPChecker extends AbstractChecker {
 
     private static final long serialVersionUID = -4933006939390647117L;
 
-    private ArrayList<ArrayList<MessageContent>> queues;
+    private ArrayList<ArrayList<SCPMessageContent>> queues;
 
+    private PrintWriter out = null;
     /**
      * @param application
      * @param checkerName
@@ -46,9 +50,17 @@ public class SCPChecker extends AbstractChecker {
                       String[] normalProcesses) {
         super(application, checkerName, normalProcesses);
         // TODO Auto-generated constructor stub
-        queues = new ArrayList<ArrayList<MessageContent>>();
+        queues = new ArrayList<ArrayList<SCPMessageContent>>();
         for (int i = 0; i < normalProcesses.length; i++) {
-            queues.add(new ArrayList<MessageContent>());
+            queues.add(new ArrayList<SCPMessageContent>());
+        }
+        
+        if(ENABLE_PHYSICAL_CLOCK) {
+            try {
+                out = new PrintWriter(LOG_DIRECTORY + "/found_interval.txt");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -73,9 +85,9 @@ public class SCPChecker extends AbstractChecker {
         String normalProcess = message.getSenderID();
         int id = nameToID.get(normalProcess).intValue();
         
-        MessageContent content = message.getContent();
+        SCPMessageContent content = message.getScpMessageContent();
 
-        ArrayList<MessageContent> queue = queues.get(id);
+        ArrayList<SCPMessageContent> queue = queues.get(id);
         queue.add(content);
 
         ArrayList<Integer> changed = new ArrayList<Integer>();
@@ -90,11 +102,11 @@ public class SCPChecker extends AbstractChecker {
                         for (int j = 0; j < normalProcesses.length; j++) {
                             if (elem == j)
                                 continue;
-                            ArrayList<MessageContent> qi = queues.get(elem);
-                            ArrayList<MessageContent> qj = queues.get(j);
+                            ArrayList<SCPMessageContent> qi = queues.get(elem);
+                            ArrayList<SCPMessageContent> qj = queues.get(j);
                             if (qi.size() != 0 && qj.size() != 0) {
-                                MessageContent qiHead = qi.get(0);
-                                MessageContent qjHead = qj.get(0);
+                                SCPMessageContent qiHead = qi.get(0);
+                                SCPMessageContent qjHead = qj.get(0);
                                 if (qjHead
                                           .getLo()
                                           .notLessThan(
@@ -138,7 +150,21 @@ public class SCPChecker extends AbstractChecker {
 
                 // detection found
                 for (int i = 0; i < normalProcesses.length; i++) {
-                    queues.get(i).remove(0);
+                    SCPMessageContent foundContent = queues.get(i).remove(0);
+                    
+                    if(ENABLE_PHYSICAL_CLOCK) {
+                        String intervalID = foundContent.getIntervalID();
+                        long lo = foundContent.getpTimeLo();
+                        long hi = foundContent.getpTimeHi();
+                        try {
+                            String end = i + 1 != normalProcesses.length ? " " : "\n";
+                            out.print(intervalID + " " + lo + " " + hi + end);
+                            out.flush();
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    
                     changed.add(new Integer(i));
                 }
             }

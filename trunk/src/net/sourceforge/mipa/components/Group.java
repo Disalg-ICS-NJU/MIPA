@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import net.sourceforge.mipa.predicatedetection.PredicateType;
 
 /**
+ * a <code>group</code> contains checker and normal processes.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */

@@ -19,16 +19,23 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
-import net.sourceforge.mipa.components.MessageContent;
+import java.io.Serializable;
+
 
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class SCPMessageContent extends MessageContent {
+public class SCPMessageContent implements Serializable {
 
     private static final long serialVersionUID = -172044301137888284L;
 
+    private long pTimeLo;
+    
+    private long pTimeHi;
+    
+    private String intervalID;
+    
     private SCPVectorClock lo;
     
     private SCPVectorClock hi;
@@ -44,5 +51,47 @@ public class SCPMessageContent extends MessageContent {
     
     public SCPVectorClock getHi() {
         return hi;
+    }
+
+    /**
+     * @param pTimeLo the pTimeLo to set
+     */
+    public void setpTimeLo(long pTimeLo) {
+        this.pTimeLo = pTimeLo;
+    }
+
+    /**
+     * @return the pTimeLo
+     */
+    public long getpTimeLo() {
+        return pTimeLo;
+    }
+
+    /**
+     * @param pTimeHi the pTimeHi to set
+     */
+    public void setpTimeHi(long pTimeHi) {
+        this.pTimeHi = pTimeHi;
+    }
+
+    /**
+     * @return the pTimeHi
+     */
+    public long getpTimeHi() {
+        return pTimeHi;
+    }
+
+    /**
+     * @param intervalID the intervalID to set
+     */
+    public void setIntervalID(String intervalID) {
+        this.intervalID = intervalID;
+    }
+
+    /**
+     * @return the intervalID
+     */
+    public String getIntervalID() {
+        return intervalID;
     }
 }
