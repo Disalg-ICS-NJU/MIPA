@@ -26,7 +26,6 @@ import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.components.MessageContent;
 import net.sourceforge.mipa.components.MessageType;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
@@ -80,10 +79,10 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(2));
             clock.add(new Long(1));
             hi.setVectorClock(clock);
-            MessageContent content = new SCPMessageContent(lo, hi);
-            m.setContent(content);
+            SCPMessageContent content = new SCPMessageContent(lo, hi);
+            m.setScpMessageContent(content);
             
-            m.getContent();
+            m.getScpMessageContent();
             checkerProcess.receive(m);
             
             m = new Message();
@@ -102,7 +101,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(4));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setContent(content);
+            m.setScpMessageContent(content);
             
             checkerProcess.receive(m);
             
@@ -122,7 +121,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(2));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setContent(content);
+            m.setScpMessageContent(content);
             
             checkerProcess.receive(m);
             
@@ -142,7 +141,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(3));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setContent(content);
+            m.setScpMessageContent(content);
             
             checkerProcess.receive(m);
             
@@ -162,7 +161,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(4));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setContent(content);
+            m.setScpMessageContent(content);
             
             checkerProcess.receive(m);
         } catch (Exception e) {

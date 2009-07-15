@@ -31,6 +31,8 @@ public class IDManagerImp implements IDManager {
     /** ID count map */
     private Map<Catalog, Integer> map;
     
+    private int i = 0;
+    
     public IDManagerImp() {
         map = new HashMap<Catalog, Integer>();
         for(Catalog catalog : Catalog.values()) {
@@ -40,6 +42,11 @@ public class IDManagerImp implements IDManager {
 
     @Override
     public synchronized String getID(Catalog prefix) throws RemoteException {
+        
+        if(prefix == Catalog.Numerical) {
+            i++;
+            return String.valueOf(i);
+        }
         
         Integer count = map.get(prefix);
         String ID = prefix.toString() + count;

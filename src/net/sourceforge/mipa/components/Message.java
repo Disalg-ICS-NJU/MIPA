@@ -22,6 +22,7 @@ package net.sourceforge.mipa.components;
 import java.io.Serializable;
 
 import net.sourceforge.mipa.predicatedetection.VectorClock;
+import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
 
 /**
  * message class.
@@ -47,11 +48,14 @@ public class Message implements Serializable {
     /** dispatch time set by dispatcher */
     private long dispatchTime;
     
-    /** message content */
-    private MessageContent content;
-    
     /** vector clock of message */
     private VectorClock timestamp;
+    
+    /** SCP message content */
+    private SCPMessageContent scpMessageContent = null;
+    
+    //TODO other predicate message content types go here.
+    
 
     /**
      * @param type the type to set
@@ -138,16 +142,16 @@ public class Message implements Serializable {
     }
 
     /**
-     * @param content the content to set
+     * @param scpMessageContent the scpMessageContent to set
      */
-    public void setContent(MessageContent content) {
-        this.content = content;
+    public void setScpMessageContent(SCPMessageContent scpMessageContent) {
+        this.scpMessageContent = scpMessageContent;
     }
 
     /**
-     * @return the content
+     * @return the scpMessageContent
      */
-    public MessageContent getContent() {
-        return content;
+    public SCPMessageContent getScpMessageContent() {
+        return scpMessageContent;
     }
 }
