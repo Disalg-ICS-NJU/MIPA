@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 /**
+ * Calculate overlap interval.
  * 
  * @author Tingting Hua <huatingting0820@163.com>
  */
@@ -50,8 +51,9 @@ public class PhysicalTimeCheck {
 	}
 	
 	/**
+	 * read the physical time interval of normal process from the file and store in queue.
+	 * 
 	 * @param fileList normal process file name list
-     * @read read the physical time interval of normal process from the file and store in queue
      */
 	public void read(ArrayList<String> fileList) {
 		try {
@@ -95,8 +97,9 @@ public class PhysicalTimeCheck {
 	}
 	
 	/**
+	 * check out the overlap interval and output to file.
+	 * 
 	 * @param outFileName output file name
-     * @check check out the overlap interval and output to file
      */
 	public void check(String outFileName) {
 		boolean result=false;

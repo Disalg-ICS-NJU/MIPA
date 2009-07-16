@@ -20,6 +20,7 @@
 package net.sourceforge.mipa.test;
 
 /**
+ * physical clock interval data structure.
  * 
  * @author Tingting Hua <huatingting0820@163.com>
  */
@@ -32,7 +33,9 @@ public class PhysicalTimeInterval {
     private long pTimeHi;
     
     /**
-     * @param id,lo,hi
+     * @param id
+     * @param lo
+     * @param hi
      */
     public PhysicalTimeInterval(String id,long lo,long hi) {
     	intervalID=id;
