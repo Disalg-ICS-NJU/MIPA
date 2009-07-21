@@ -21,7 +21,9 @@
 package net.sourceforge.mipa.predicatedetection;
 
 import static config.Debug.DEBUG;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Identify predicate type.
@@ -34,6 +36,11 @@ public class PredicateIdentify {
         if(DEBUG) {
             System.out.println("\tidentify predicate...");
         }
-        return PredicateType.SCP;
+        Element root = predicate.getDocumentElement();
+        
+        String type = root.getAttribute("type");
+        System.out.println("predicate type is " + type);
+        
+        return PredicateType.valueOf(type);
     }
 }
