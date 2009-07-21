@@ -13,3 +13,17 @@ ECLIPSE:
     2. Go to File -> Import -> General -> "Exsting Projects into Workspace" in 
 Eclipse.
     3. Select MIPA checkout directory as the root.
+
+
+
+
+HOW TO RUN MIPA SYSTEM?
+
+    run the demo which MIPA provides in bin/ directory. There are four steps to
+start the demo:
+    1. run naming.sh to start naming server.
+    2. run initialize.sh to initialize MIPA system.
+    3. run ECAInitialize.sh to start ECA resource in MIPA system. ECA resources 
+could run in different platforms.
+    4. start MIPA application through application.sh, you can run many applications
+in one time.
