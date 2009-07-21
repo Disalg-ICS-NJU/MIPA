@@ -33,6 +33,9 @@ public class Message implements Serializable {
 
     private static final long serialVersionUID = -8694974992774436096L;
     
+    /** message id */
+    private long messageID;
+    
     /** message type */
     private MessageType type;
     
@@ -56,6 +59,20 @@ public class Message implements Serializable {
     
     //TODO other predicate message content types go here.
     
+
+    /**
+     * @param messageID the messageID to set
+     */
+    public void setMessageID(long messageID) {
+        this.messageID = messageID;
+    }
+
+    /**
+     * @return the messageID
+     */
+    public long getMessageID() {
+        return messageID;
+    }
 
     /**
      * @param type the type to set

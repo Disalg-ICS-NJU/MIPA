@@ -24,6 +24,8 @@ import static config.Config.LOG_DIRECTORY;
 
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
@@ -51,6 +53,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
     
     private PrintWriter out;
     
+    private Map<String, Long> currentMessageCount;
     /**
      * @param name
      */
@@ -61,6 +64,11 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         currentClock.increment(id);
         
         // TODO Auto-generated constructor stub
+        currentMessageCount = new HashMap<String, Long>();
+        for(int i = 0; i < checkers.length; i++) {
+            currentMessageCount.put(checkers[i], new Long(0));
+        }
+        
         currentState = false;
         firstflag = true;
         
@@ -71,6 +79,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                 e.printStackTrace();
             }
         }
+        
     }
 
     @Override
@@ -132,6 +141,12 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         VectorClock current = new SCPVectorClock(currentClock);
         m.setTimestamp(current);
         m.setScpMessageContent(content);
+        
+        if(currentMessageCount.containsKey(receiverName) == true) {
+            long currentCount = currentMessageCount.get(receiverName);
+            m.setMessageID(currentCount);
+            currentMessageCount.put(receiverName, new Long(currentCount + 1));
+        }
         
         try {
             messageDispatcher.send(m);

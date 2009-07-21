@@ -39,8 +39,13 @@ public class SCPChecker extends AbstractChecker {
     private static final long serialVersionUID = -4933006939390647117L;
 
     private ArrayList<ArrayList<SCPMessageContent>> queues;
+    
+    private long[] currentMessageCount;
+    
+    private ArrayList<ArrayList<Message>> msgBuffer;
 
     private PrintWriter out = null;
+    
     /**
      * @param application
      * @param checkerName
@@ -50,9 +55,14 @@ public class SCPChecker extends AbstractChecker {
                       String[] normalProcesses) {
         super(application, checkerName, normalProcesses);
         // TODO Auto-generated constructor stub
+        currentMessageCount = new long[normalProcesses.length];
+        
         queues = new ArrayList<ArrayList<SCPMessageContent>>();
+        msgBuffer = new ArrayList<ArrayList<Message>>();
         for (int i = 0; i < normalProcesses.length; i++) {
             queues.add(new ArrayList<SCPMessageContent>());
+            msgBuffer.add(new ArrayList<Message>());
+            currentMessageCount[i] = 0;
         }
         
         if(ENABLE_PHYSICAL_CLOCK) {
@@ -63,36 +73,78 @@ public class SCPChecker extends AbstractChecker {
             }
         }
     }
-
+    /*
+     * -------------------------------------------------------
+     */
+    private boolean isContinuous(ArrayList<Message> messages, int id) {
+        assert(messages.size() > 0);
+        
+        long pre = messages.get(0).getMessageID();
+        for(int i = 1; i < messages.size(); i++) {
+            if(messages.get(i).getMessageID() != ++pre) {
+                currentMessageCount[id] = pre;
+                return false;
+            }
+        }
+        currentMessageCount[id] = pre + 1;
+        return true;
+    }
+    
+    private void add(ArrayList<Message> messages, Message msg) {
+        long msgID = msg.getMessageID();
+        
+        for(int i = 0; i < messages.size(); i++) {
+            long tempID = messages.get(i).getMessageID();
+            
+            if(msgID < tempID) {
+                messages.add(i, msg);
+                return;
+            }
+        }
+        messages.add(msg);
+    }
+    /*
+     * -------------------------------------------------------
+     */
+    
     @Override
     public void receive(Message message) throws RemoteException {
-        /*
-        if (DEBUG) {
-            System.out.println("received message");
-            MessageContent debug = message.getContent();
-            VectorClock lo = debug.getLo();
-            ArrayList<Long> list = lo.getVectorClock();
-            for(int i = 0; i < list.size(); i++)
-                System.out.print(list.get(i));
-            System.out.print(' ');
-            VectorClock hi = debug.getHi();
-            list = hi.getVectorClock();
-            for(int i = 0; i < list.size(); i++)
-                System.out.print(list.get(i));
-            System.out.println();
-        }
-        */
+        ArrayList<Message> messages = new ArrayList<Message> ();
         String normalProcess = message.getSenderID();
         int id = nameToID.get(normalProcess).intValue();
         
-        SCPMessageContent content = message.getScpMessageContent();
+        long messageID = message.getMessageID();
+        add(msgBuffer.get(id), message);
+        
+        if(messageID == currentMessageCount[id]) {
+            // check the buffer if is continuous or not
+            if(isContinuous(msgBuffer.get(id), id) == true) {
+                ArrayList<Message> buffer = msgBuffer.get(id);
+                int size = buffer.size();
+                for(int i = 0; i < size; i++) {
+                    messages.add(buffer.remove(0));
+                }
+                
+                check(messages);
+            }
+        }
+    }
+    
+    private void check(ArrayList<Message> messages) {
+        String normalProcess = messages.get(0).getSenderID();
+        int id = nameToID.get(normalProcess).intValue();
+        
+        ArrayList<SCPMessageContent> contents = new ArrayList<SCPMessageContent> ();
+        for(int i = 0; i < messages.size(); i++)
+            contents.add(messages.get(i).getScpMessageContent());
 
         ArrayList<SCPMessageContent> queue = queues.get(id);
-        queue.add(content);
+        //queue.add(content);
 
-        ArrayList<Integer> changed = new ArrayList<Integer>();
-
-        if (queue.size() == 1) {
+        if (queue.size() == 0) {
+            for(int i = 0; i < contents.size(); i++) queue.add(contents.get(i));
+            
+            ArrayList<Integer> changed = new ArrayList<Integer>();
             changed.add(new Integer(id));
             while (true) {
                 while (changed.size() != 0) {
@@ -168,6 +220,9 @@ public class SCPChecker extends AbstractChecker {
                     changed.add(new Integer(i));
                 }
             }
+        } // :end if(queue.size() == 0)
+        else {
+            for(int i = 0; i < contents.size(); i++) queue.add(contents.get(i));
         }
     }
 }
