@@ -34,7 +34,7 @@ import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.CoordinatorImp;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.MessageDispatcher;
-import net.sourceforge.mipa.components.NoDelayMessageDispatcher;
+import net.sourceforge.mipa.components.RandomDelayMessageDispatcher;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.IDManagerImp;
 import net.sourceforge.mipa.naming.Naming;
@@ -61,10 +61,7 @@ public class Initialize {
 
         try {
             // binds predicate parser
-            Naming server = (Naming) java.rmi.Naming
-                                                    .lookup(MIPAResource
-                                                                        .getNamingAddress()
-                                                            + "Naming");
+            Naming server = MIPAResource.getNamingServer();
 
             if (DEBUG) {
                 System.out.println("Creating IDManager...");
@@ -91,8 +88,7 @@ public class Initialize {
                                                                                                      0);
             server.bind("ContextRegister", contextRegisterStub);
 
-            NoDelayMessageDispatcher messageDispatcher = new NoDelayMessageDispatcher(
-                                                                                      server);
+            RandomDelayMessageDispatcher messageDispatcher = new RandomDelayMessageDispatcher();
             MessageDispatcher messageDispatcherStub = (MessageDispatcher) UnicastRemoteObject
                                                                                              .exportObject(
                                                                                                            messageDispatcher,

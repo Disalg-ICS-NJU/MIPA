@@ -19,33 +19,30 @@
  */
 package net.sourceforge.mipa.components;
 
+import net.sourceforge.mipa.components.GenericMessageDispatcher;
 import net.sourceforge.mipa.naming.Naming;
 
 /**
- * 
+ *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class NoDelayMessageDispatcher extends GenericMessageDispatcher {
+public class RandomDelayMessageDispatcher extends GenericMessageDispatcher {
 
     /**
-     * 
+     *
      */
-    public NoDelayMessageDispatcher() {
+    public RandomDelayMessageDispatcher() {
         super();
-        
+        // TODO Auto-generated constructor stub
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * net.sourceforge.mipa.components.GenericMessageDispatcher#addDispatchTime
-     * (net.sourceforge.mipa.components.Message)
+    /* (non-Javadoc)
+     * @see net.sourceforge.mipa.components.GenericMessageDispatcher#addDispatchTime(net.sourceforge.mipa.components.Message)
      */
     @Override
     public void addDispatchTime(Message message) {
-        
-        message.setDispatchTime(message.getReachTime());
+        int delay = (int) (Math.random() * 20) * heartBeat;
+        message.setDispatchTime(message.getReachTime() + delay);
     }
 
 }
