@@ -36,7 +36,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
         MessageDispatcher {
 
     /** heart beat time (ms) */
-    private final static int heartBeat = 30;
+    protected final static int heartBeat = 30;
 
     /** current time of message dispatcher */
     protected long currentTime;
@@ -49,7 +49,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
 
     private Naming server;
 
-    public GenericMessageDispatcher(Naming server) {
+    public GenericMessageDispatcher() {
         currentTime = 0;
         // FIXME find why PriorityQueue must have initial capacity.
         dispatchQueue = new PriorityQueue<Message>(1,
@@ -63,7 +63,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
                                                    }
                                                            });
         comTable = new HashMap<String, Communication>();
-        this.server = server;
+        this.server = MIPAResource.getNamingServer();
     }
 
     /*
