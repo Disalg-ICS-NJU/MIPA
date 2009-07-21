@@ -5,10 +5,8 @@
   <property name="ant.home" value="${env.ANT_HOME}" />
 
   <property name="src.dir" value="src" />
-  <property name="doc.dir" value="doc" />
   <property name="build.dir" value="build" />
   <property name="classes.dir" value="${build.dir}/classes" />
-  <property name="bin.dir" value="bin" />
 
   <target name="init" depends="clean">
 	<mkdir dir="${classes.dir}" />
