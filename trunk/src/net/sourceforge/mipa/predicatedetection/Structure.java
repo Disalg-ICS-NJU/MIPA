@@ -17,29 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.components;
+package net.sourceforge.mipa.predicatedetection;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /**
- * 
- * 
- * @author Jianping Yu <jianp.yue@gmail.com>
+ * @author jpyu
+ *
  */
-public interface Coordinator extends Remote {
-    /**
-     * 
-     * @param groupID
-     * @param memberID
-     * @throws RemoteException
-     */
-    public void memberFinished(String groupID, String memberID) throws RemoteException;
-
-    /**
-     * 
-     * @param g
-     * @throws RemoteException
-     */
-    public void newCoordinator(Group g) throws RemoteException;
+public interface Structure {
+    
+    public void add(Structure child);
+    
+    public ArrayList<Structure> getChildren();
+    
+    public NodeType getNodeType();
 }
