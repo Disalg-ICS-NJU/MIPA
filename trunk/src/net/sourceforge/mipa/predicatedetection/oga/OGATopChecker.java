@@ -17,39 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.predicatedetection;
+package net.sourceforge.mipa.predicatedetection.oga;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.rmi.RemoteException;
 
 import net.sourceforge.mipa.ResultCallback;
-import net.sourceforge.mipa.components.Communication;
+import net.sourceforge.mipa.components.Message;
+import net.sourceforge.mipa.predicatedetection.AbstractChecker;
 
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public abstract class AbstractChecker implements Serializable, Communication {
+public class OGATopChecker extends AbstractChecker {
 
-    private static final long serialVersionUID = -5023931031473945453L;
+    private static final long serialVersionUID = -5005195916176717460L;
     
-    protected ResultCallback application;
-    
-    protected String name;
-    
-    protected String[] children;
-    
-    protected Map<String, Integer> nameToID;
-
-    public AbstractChecker(ResultCallback application, String checkerName, String[] children) {
-        this.application = application;
-        this.name = checkerName;
-        this.children = children;
+    public OGATopChecker(ResultCallback application, String checkerName, String[] children) {
+        super(application, checkerName, children);
         
-        nameToID = new HashMap<String, Integer>();
-        for(int i = 0; i < children.length; i++) {
-            nameToID.put(children[i], new Integer(i));
-        }
     }
+
+    @Override
+    public void receive(Message message) throws RemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

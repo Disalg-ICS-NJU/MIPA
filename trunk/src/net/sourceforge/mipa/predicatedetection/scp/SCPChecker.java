@@ -151,7 +151,7 @@ public class SCPChecker extends AbstractChecker {
                     ArrayList<Integer> newchanged = new ArrayList<Integer>();
                     for (int i = 0; i < changed.size(); i++) {
                         int elem = changed.get(i).intValue();
-                        for (int j = 0; j < normalProcesses.length; j++) {
+                        for (int j = 0; j < children.length; j++) {
                             if (elem == j)
                                 continue;
                             ArrayList<SCPMessageContent> qi = queues.get(elem);
@@ -185,7 +185,7 @@ public class SCPChecker extends AbstractChecker {
                     }
                 }// end while
                 boolean found = true;
-                for (int i = 0; i < normalProcesses.length; i++) {
+                for (int i = 0; i < children.length; i++) {
                     if (queues.get(i).size() == 0) {
                         found = false;
                         break;
@@ -201,7 +201,7 @@ public class SCPChecker extends AbstractChecker {
                     break;
 
                 // detection found
-                for (int i = 0; i < normalProcesses.length; i++) {
+                for (int i = 0; i < children.length; i++) {
                     SCPMessageContent foundContent = queues.get(i).remove(0);
                     
                     if(ENABLE_PHYSICAL_CLOCK) {
@@ -209,7 +209,7 @@ public class SCPChecker extends AbstractChecker {
                         long lo = foundContent.getpTimeLo();
                         long hi = foundContent.getpTimeHi();
                         try {
-                            String end = i + 1 != normalProcesses.length ? " " : "\n";
+                            String end = i + 1 != children.length ? " " : "\n";
                             out.print(intervalID + " " + lo + " " + hi + end);
                             out.flush();
                         } catch(Exception e) {
