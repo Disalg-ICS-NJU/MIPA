@@ -20,7 +20,9 @@
 package net.sourceforge.mipa.predicatedetection.oga;
 
 import net.sourceforge.mipa.components.Message;
+import net.sourceforge.mipa.components.MessageType;
 import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
+import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 
 /**
@@ -30,6 +32,13 @@ import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
 public class OGANormalProcess extends AbstractNormalProcess {
 
     private static final long serialVersionUID = -663144941748622894L;
+    
+    private boolean currentState;
+    
+    private boolean flagMsgAct;
+    
+    private String[] groupNormalProcesses;
+    
 
     /**
      * construction.
@@ -42,22 +51,64 @@ public class OGANormalProcess extends AbstractNormalProcess {
     public OGANormalProcess(String name, String[] checkers, String[] normalProcesses, String[] subNormalProcesses) {
         super(name, checkers, normalProcesses);
         
+        currentState = false;
+        flagMsgAct = true;
+        
+        groupNormalProcesses = subNormalProcesses;
+        
     }
     @Override
     public void action(boolean value) {
-        // TODO Auto-generated method stub
+        boolean changed = false;
+        if(currentState != value) changed = true;
+        
+        if(changed == true && currentState == true) {
+            // interval begins. Sending control message to GA group.
+            
+            
+            if(flagMsgAct) {
+                
+            }
+        } else if(changed == true && currentState == false) {
+            // interval ends. Sending control message to all processes.
+            
+            if(flagMsgAct) {
+                
+            }
+        }
         
     }
 
     @Override
     public void receiveMsg(Message message) {
-        // TODO Auto-generated method stub
-        
+        VectorClock timestamp = message.getTimestamp();
+        currentClock.update(timestamp);
+        flagMsgAct = true;
     }
 
     @Override
     public void application() {
         // TODO Auto-generated method stub
         
+    }
+    
+    private void send(MessageType type, String receiverName, OGAMessageContent content) {
+        
+    }
+    
+    private void groupBroadcast(MessageType type, OGAMessageContent content) {
+        for(int i = 0; i < groupNormalProcesses.length; i++) {
+            if(! name.equals(groupNormalProcesses[i])) {
+                send(type, groupNormalProcesses[i], content);
+            }
+        }
+    }
+    
+    private void broadcoast(MessageType type, OGAMessageContent content) {
+        for(int i = 0; i < normalProcesses.length; i++) {
+            if(! name.equals(normalProcesses[i])) {
+                send(type, normalProcesses[i], content);
+            }
+        }
     }
 }
