@@ -19,6 +19,9 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageType;
 import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
@@ -37,9 +40,11 @@ public class OGANormalProcess extends AbstractNormalProcess {
     
     private boolean flagMsgAct;
     
+    private OGAVectorClock lo;
+    
     private String[] groupNormalProcesses;
     
-
+    private Map<String, Long> currentMessageCount;
     /**
      * construction.
      * 
@@ -50,6 +55,14 @@ public class OGANormalProcess extends AbstractNormalProcess {
      */
     public OGANormalProcess(String name, String[] checkers, String[] normalProcesses, String[] subNormalProcesses) {
         super(name, checkers, normalProcesses);
+        
+        currentClock = new OGAVectorClock(normalProcesses.length);
+        currentClock.increment(id);
+        
+        currentMessageCount = new HashMap<String, Long>();
+        for(int i = 0; i < checkers.length; i++) {
+            currentMessageCount.put(checkers[i], new Long(0));
+        }
         
         currentState = false;
         flagMsgAct = true;
@@ -64,19 +77,27 @@ public class OGANormalProcess extends AbstractNormalProcess {
         
         if(changed == true && currentState == true) {
             // interval begins. Sending control message to GA group.
-            
+            groupBroadcast(MessageType.Control, null);
             
             if(flagMsgAct) {
-                
+                lo = new OGAVectorClock(currentClock);
             }
         } else if(changed == true && currentState == false) {
             // interval ends. Sending control message to all processes.
-            
+            broadcast(MessageType.Control, null);
             if(flagMsgAct) {
+                OGAVectorClock hi = new OGAVectorClock(currentClock);
                 
+                OGAMessageContent content = new OGAMessageContent(lo, hi);
+                
+                for(int i = 0; i < checkers.length; i++) {
+                    String checker = checkers[i];
+                    send(MessageType.Detection, checker, content);
+                }
+                flagMsgAct = false;
             }
         }
-        
+        currentState = value;
     }
 
     @Override
@@ -93,7 +114,29 @@ public class OGANormalProcess extends AbstractNormalProcess {
     }
     
     private void send(MessageType type, String receiverName, OGAMessageContent content) {
+        Message m = new Message();
+        m.setType(type);
+        m.setSenderID(name);
+        m.setReceiverID(receiverName);
+        VectorClock current = new OGAVectorClock(currentClock);
+        m.setTimestamp(current);
+        m.setOgaMessageContent(content);
         
+        if(currentMessageCount.containsKey(receiverName) == true) {
+            long currentCount = currentMessageCount.get(receiverName);
+            m.setMessageID(currentCount);
+            currentMessageCount.put(receiverName, new Long(currentCount + 1));
+        } else {
+            assert(false);
+        }
+        
+        try {
+            messageDispatcher.send(m);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        currentClock.increment(id);
     }
     
     private void groupBroadcast(MessageType type, OGAMessageContent content) {
@@ -104,7 +147,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
         }
     }
     
-    private void broadcoast(MessageType type, OGAMessageContent content) {
+    private void broadcast(MessageType type, OGAMessageContent content) {
         for(int i = 0; i < normalProcesses.length; i++) {
             if(! name.equals(normalProcesses[i])) {
                 send(type, normalProcesses[i], content);
