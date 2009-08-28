@@ -57,12 +57,13 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
 
     protected MessageDispatcher messageDispatcher;
 
-    public AbstractNormalProcess(String name, String[] checkers, String[] normalProcesses) {
-	this.checkers = checkers;
-	this.normalProcesses = normalProcesses;
+    public AbstractNormalProcess(String name, String[] checkers,
+                                 String[] normalProcesses) {
+        this.checkers = checkers;
+        this.normalProcesses = normalProcesses;
         this.name = name;
         finished = false;
-        
+
         for (int i = 0; i < normalProcesses.length; i++) {
             if (normalProcesses[i].equals(name)) {
                 this.id = i;
@@ -80,13 +81,12 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
 
     // public abstract void broadcast(MessageType type, MessageContent content);
 
-    
     public void receive(Message message) throws RemoteException {
-        //if(finished) {
+        // if(finished) {
         receiveMsg(message);
-        //}
+        // }
     }
-    
+
     public void update(String eventName, String value) {
         if (finished) {
             boolean newValue = Boolean.parseBoolean(value);
@@ -97,21 +97,21 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
             System.out.println("Ingore event update in normal process");
         }
     }
-    
+
     public void run() {
         application();
     }
 
     public abstract void action(boolean value);
-    
+
     public abstract void receiveMsg(Message message);
-    
+
     public abstract void application();
 
     @Override
     public void finished() {
-	finished = true;
-	Thread t = new Thread(this);
-	t.start();
+        finished = true;
+        Thread t = new Thread(this);
+        t.start();
     }
 }
