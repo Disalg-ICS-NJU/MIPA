@@ -19,8 +19,6 @@
  */
 package net.sourceforge.mipa.components;
 
-import net.sourceforge.mipa.components.GenericMessageDispatcher;
-import net.sourceforge.mipa.naming.Naming;
 
 /**
  *

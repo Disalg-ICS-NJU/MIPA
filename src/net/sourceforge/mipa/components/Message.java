@@ -22,6 +22,7 @@ package net.sourceforge.mipa.components;
 import java.io.Serializable;
 
 import net.sourceforge.mipa.predicatedetection.VectorClock;
+import net.sourceforge.mipa.predicatedetection.oga.OGAMessageContent;
 import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
 
 /**
@@ -56,6 +57,9 @@ public class Message implements Serializable {
     
     /** SCP message content */
     private SCPMessageContent scpMessageContent = null;
+    
+    /** OGA message content */
+    private OGAMessageContent ogaMessageContent = null;
     
     //TODO other predicate message content types go here.
     
@@ -170,5 +174,19 @@ public class Message implements Serializable {
      */
     public SCPMessageContent getScpMessageContent() {
         return scpMessageContent;
+    }
+
+    /**
+     * @param ogaMessageContent the ogaMessageContent to set
+     */
+    public void setOgaMessageContent(OGAMessageContent ogaMessageContent) {
+        this.ogaMessageContent = ogaMessageContent;
+    }
+
+    /**
+     * @return the ogaMessageContent
+     */
+    public OGAMessageContent getOgaMessageContent() {
+        return ogaMessageContent;
     }
 }
