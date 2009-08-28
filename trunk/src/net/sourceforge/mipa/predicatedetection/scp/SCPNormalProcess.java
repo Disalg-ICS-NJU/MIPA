@@ -132,6 +132,8 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                     String checker = checkers[i];
                     send(MessageType.Detection, checker, content);
                 }
+                
+                broadcast(MessageType.Control, null);
 
                 firstflag = false;
                 
@@ -139,7 +141,6 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                     System.out.println(name + " firstflag: false");
                 }
                 
-                broadcast(MessageType.Control, null);
             }
         }
         currentState = value;
