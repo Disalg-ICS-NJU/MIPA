@@ -75,14 +75,14 @@ public class OGANormalProcess extends AbstractNormalProcess {
         boolean changed = false;
         if(currentState != value) changed = true;
         
-        if(changed == true && currentState == true) {
+        if(changed == true && currentState == false) {
             // interval begins. Sending control message to GA group.
             groupBroadcast(MessageType.Control, null);
             
             if(flagMsgAct) {
                 lo = new OGAVectorClock(currentClock);
             }
-        } else if(changed == true && currentState == false) {
+        } else if(changed == true && currentState == true) {
             // interval ends. Sending control message to all processes.
             broadcast(MessageType.Control, null);
             if(flagMsgAct) {

@@ -22,66 +22,68 @@ package net.sourceforge.mipa.predicatedetection;
 import java.util.ArrayList;
 
 /**
- * @author jpyu
- *
+ * 
+ * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class Composite implements Structure {
 
     private ArrayList<Structure> children;
-    
+
     private NodeType type;
-    
+
     private String name;
-    
+
     public Composite(NodeType type, String name) {
-	children = new ArrayList<Structure>();
-	this.type = type;
-	this.name = name;
+        children = new ArrayList<Structure>();
+        this.type = type;
+        this.name = name;
     }
-    
+
     @Override
     public void add(Structure child) {
-	// TODO Auto-generated method stub
-	children.add(child);
-	
+        // TODO Auto-generated method stub
+        children.add(child);
+
     }
 
     @Override
     public ArrayList<Structure> getChildren() {
-	// TODO Auto-generated method stub
-	return children;
+        // TODO Auto-generated method stub
+        return children;
     }
 
     /**
-     * @param type the type to set
+     * @param type
+     *            the type to set
      */
     public void setType(NodeType type) {
-	this.type = type;
+        this.type = type;
     }
 
     /**
      * @return the type
      */
     public NodeType getType() {
-	return type;
+        return type;
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     /**
      * @return the name
      */
     public String getName() {
-	return name;
+        return name;
     }
 
     @Override
     public NodeType getNodeType() {
-	return type;
+        return type;
     }
 }
