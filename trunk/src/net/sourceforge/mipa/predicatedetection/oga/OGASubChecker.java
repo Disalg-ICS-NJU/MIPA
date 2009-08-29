@@ -19,30 +19,194 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
+import static config.Config.ENABLE_PHYSICAL_CLOCK;
+
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
+import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
 
 /**
- *
+ * OGA algorithm sub checker.
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class OGASubChecker extends AbstractChecker {
 
-
     private static final long serialVersionUID = -8872862161054484454L;
+    
+    private ArrayList<ArrayList<OGAMessageContent>> queues;
+    
+    private ArrayList<ArrayList<Message>> msgBuffer;
+    
+    private long[] currentMessageCount;
     
     public OGASubChecker(ResultCallback application, String checkerName, String[] topCheckers, String[] children) {
         super(application, checkerName, children);
+        
+        currentMessageCount = new long[children.length];
+        
+        queues = new ArrayList<ArrayList<OGAMessageContent>>();
+        msgBuffer = new ArrayList<ArrayList<Message>>();
+        
+        for(int i = 0; i < children.length; i++) {
+            queues.add(new ArrayList<OGAMessageContent>());
+            msgBuffer.add(new ArrayList<Message>());
+            currentMessageCount[i] = 0;
+        }
         
     }
 
     @Override
     public void receive(Message message) throws RemoteException {
-        // TODO Auto-generated method stub
+        ArrayList<Message> messages = new ArrayList<Message>();
+        String child = message.getSenderID();
+        int id = nameToID.get(child).intValue();
+        
+        long messageID = message.getMessageID();
+        add(msgBuffer.get(id), message);
+        
+        if(messageID == currentMessageCount[id]) {
+            
+            if(isContinuous(msgBuffer.get(id), id) == true) {
+                ArrayList<Message> buffer = msgBuffer.get(id);
+                int size = buffer.size();
+                for(int i = 0; i < size; i++) {
+                    messages.add(buffer.remove(0));
+                }
+                check(messages);
+            }
+        }
         
     }
 
+    private void add(ArrayList<Message> messages, Message msg) {
+        long msgID = msg.getMessageID();
+        
+        for(int i = 0; i < messages.size(); i++) {
+            long tempID = messages.get(i).getMessageID();
+            
+            if(msgID < tempID) {
+                messages.add(i, msg);
+                return;
+            }
+        }
+        messages.add(msg);
+    }
+    
+    private boolean isContinuous(ArrayList<Message> messages, int id) {
+        assert(messages.size() > 0);
+        
+        long pre = messages.get(0).getMessageID();
+        for(int i = 1; i < messages.size(); i++) {
+            if(messages.get(i).getMessageID() != ++pre) {
+                currentMessageCount[id] = pre;
+                return false;
+            }
+        }
+        currentMessageCount[id] = pre + 1;
+        return true;
+    }
+    
+    private void check(ArrayList<Message> messages) {
+        String child = messages.get(0).getSenderID();
+        int id = nameToID.get(child).intValue();
+        
+        ArrayList<OGAMessageContent> contents = new ArrayList<OGAMessageContent> ();
+        for(int i = 0; i < messages.size(); i++)
+            contents.add(messages.get(i).getOgaMessageContent());
+
+        ArrayList<OGAMessageContent> queue = queues.get(id);
+        //queue.add(content);
+
+        if (queue.size() == 0) {
+            for(int i = 0; i < contents.size(); i++) queue.add(contents.get(i));
+            
+            ArrayList<Integer> changed = new ArrayList<Integer>();
+            changed.add(new Integer(id));
+            while (true) {
+                while (changed.size() != 0) {
+                    ArrayList<Integer> newchanged = new ArrayList<Integer>();
+                    for (int i = 0; i < changed.size(); i++) {
+                        int elem = changed.get(i).intValue();
+                        for (int j = 0; j < children.length; j++) {
+                            if (elem == j)
+                                continue;
+                            ArrayList<OGAMessageContent> qi = queues.get(elem);
+                            ArrayList<OGAMessageContent> qj = queues.get(j);
+                            if (qi.size() != 0 && qj.size() != 0) {
+                                OGAMessageContent qiHead = qi.get(0);
+                                OGAMessageContent qjHead = qj.get(0);
+                                if (qjHead
+                                          .getLo()
+                                          .notLessThan(
+                                                       qiHead
+                                                             .getHi())) {
+                                    
+                                    newchanged.add(new Integer(elem));
+                                }
+                                if (qiHead
+                                          .getLo()
+                                          .notLessThan(
+                                                       qjHead
+                                                             .getHi())) {
+                                    
+                                    newchanged.add(new Integer(j));
+                                }
+                            }
+                        } // end for j
+                    }// end for i
+                    changed = newchanged;
+                    for (int i = 0; i < changed.size(); i++) {
+                        int elem = changed.get(i).intValue();
+                        queues.get(elem).remove(0);
+                    }
+                }// end while
+                boolean found = true;
+                for (int i = 0; i < children.length; i++) {
+                    if (queues.get(i).size() == 0) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found == true) {
+                    try {
+                        application.callback(String.valueOf(true));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else
+                    break;
+
+                // detection found
+                for (int i = 0; i < children.length; i++) {
+                    OGAMessageContent foundContent = queues.get(i).remove(0);
+                    /*
+                    if(ENABLE_PHYSICAL_CLOCK) {
+                        String intervalID = foundContent.getIntervalID();
+                        long lo = foundContent.getpTimeLo();
+                        long hi = foundContent.getpTimeHi();
+                        try {
+                            String end = i + 1 != children.length ? " " : "\n";
+                            out.print(intervalID + " " + lo + " " + hi + end);
+                            out.flush();
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    */
+                    
+                    changed.add(new Integer(i));
+                }
+                // GA detected
+                
+            }
+        } // :end if(queue.size() == 0)
+        else {
+            for(int i = 0; i < contents.size(); i++) queue.add(contents.get(i));
+        }
+    }
 }

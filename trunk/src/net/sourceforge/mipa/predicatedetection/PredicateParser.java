@@ -76,7 +76,7 @@ public class PredicateParser implements PredicateParserMethod {
         Structure predicateStructure = structureParser
                                                       .parseStructure(predicate);
         if (type == PredicateType.OGAP)
-            parseOGAPStructure(null, predicateStructure);
+            parseOGAStructure(predicateStructure);
         else if (type == PredicateType.SCP)
             parseSCPStructure(predicateStructure);
         else {
@@ -87,6 +87,13 @@ public class PredicateParser implements PredicateParserMethod {
         // checkerParser.parseChecker(predicate, applicationName, type);
     }
 
+    private void parseOGAStructure(Structure s) {
+        ArrayList<Structure> children = s.getChildren();
+        
+        assert(children != null);
+        
+        assert(s.getNodeType() == NodeType.GSE);
+    }
     /**
      * 
      * @param s

@@ -127,7 +127,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                         e.printStackTrace();
                     }
                 }
-                //SCP doesn't send any message to other normal processes.
+                //??? SCP doesn't send any message to other normal processes.
                 for(int i = 0; i < checkers.length; i++) {
                     String checker = checkers[i];
                     send(MessageType.Detection, checker, content);

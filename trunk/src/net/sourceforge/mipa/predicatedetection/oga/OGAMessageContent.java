@@ -37,4 +37,12 @@ public class OGAMessageContent implements Serializable {
         this.lo = lo;
         this.hi = hi;
     }
+    
+    public OGAVectorClock getLo() {
+        return lo;
+    }
+    
+    public OGAVectorClock getHi() {
+        return hi;
+    }
 }
