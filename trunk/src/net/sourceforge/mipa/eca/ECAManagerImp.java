@@ -33,6 +33,7 @@ import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
 import net.sourceforge.mipa.predicatedetection.PredicateType;
+import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
 import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
 
 /**
@@ -53,13 +54,10 @@ public class ECAManagerImp implements ECAManager {
         this.setContextRegister(contextRegister);
         this.ecaManagerName = ecaManagerName;
         /*
-        try {
-            Naming server = MIPAResource.getNamingServer();
-            this.dataSource = (DataSource) server.lookup(dataSourceId);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        */
+         * try { Naming server = MIPAResource.getNamingServer(); this.dataSource
+         * = (DataSource) server.lookup(dataSourceId); } catch(Exception e) {
+         * e.printStackTrace(); }
+         */
         this.dataSource = dataSource;
     }
 
@@ -94,48 +92,54 @@ public class ECAManagerImp implements ECAManager {
     }
 
     @Override
-    public void registerLocalPredicate(LocalPredicate localPredicate, String name, Group g)
-	    throws RemoteException {
-	try {
-	    Naming server = MIPAResource.getNamingServer();
-	    
-	    Coordinator coordinator = MIPAResource.getCoordinator();
-	    
-	    if(DEBUG) {
-		System.out.println("Get normal process: " + name);
-	    }
-	    
-	    String[] checkers = new String[g.getOwners().size()];
-	    String[] normalProcesses = new String[g.getMembers().size()];
-	    g.getOwners().toArray(checkers);
-	    g.getMembers().toArray(normalProcesses);
-	    
-	    Listener action = null;
-	    NormalProcess npStub = null;
-	    if(g.getType() == PredicateType.SCP) {
-		SCPNormalProcess np = new SCPNormalProcess(name,checkers,normalProcesses);
-		npStub = (NormalProcess) UnicastRemoteObject.exportObject(np, 0);
-		action = np;
-	    } else if(g.getType() == PredicateType.OGAP) {
-		
-	    } else if(g.getType() == PredicateType.WCP) {
-		
-	    } else if(g.getType() == PredicateType.LP) {
-		
-	    } else {
-		
-	    }
-	    
-	    server.bind(name, npStub);
-	    coordinator.memberFinished(g.getGroupID(), name);
-	    
-            if(DEBUG) {
+    public void registerLocalPredicate(LocalPredicate localPredicate,
+                                       String name, Group g)
+                                                            throws RemoteException {
+        try {
+            Naming server = MIPAResource.getNamingServer();
+
+            Coordinator coordinator = MIPAResource.getCoordinator();
+
+            if (DEBUG) {
+                System.out.println("Get normal process: " + name);
+            }
+
+            String[] checkers = new String[g.getOwners().size()];
+            String[] normalProcesses = new String[g.getMembers().size()];
+            g.getOwners().toArray(checkers);
+            g.getMembers().toArray(normalProcesses);
+
+            Listener action = null;
+            NormalProcess npStub = null;
+            if (g.getType() == PredicateType.SCP) {
+                SCPNormalProcess np = new SCPNormalProcess(name, checkers,
+                                                           normalProcesses);
+                npStub = (NormalProcess) UnicastRemoteObject
+                                                            .exportObject(np, 0);
+                action = np;
+            } else if (g.getType() == PredicateType.OGA) {
+                String[] subMembers = new String[g.getSubMembers().size()];
+                g.getMembers().toArray(subMembers);
+                OGANormalProcess np = new OGANormalProcess(name, checkers, normalProcesses, subMembers);
+                npStub = (NormalProcess) UnicastRemoteObject.exportObject(np, 0);
+            } else if (g.getType() == PredicateType.WCP) {
+
+            } else if (g.getType() == PredicateType.LP) {
+
+            } else {
+
+            }
+
+            server.bind(name, npStub);
+            coordinator.memberFinished(g.getGroupID(), name);
+
+            if (DEBUG) {
                 System.out.println("before binding condition...");
             }
-            
+
             Condition everything = new EmptyCondition(action, localPredicate);
-            
-            if(DEBUG) {
+
+            if (DEBUG) {
                 System.out.println("after binding condition...");
             }
             // attaching condition to data source.
@@ -145,16 +149,18 @@ public class ECAManagerImp implements ECAManager {
                                    + localPredicate.getName());
             }
 
-            // FIXME should attach local predicate related events, get from atoms.
+            // FIXME should attach local predicate related events, get from
+            // atoms.
             dataSource.attach(everything, localPredicate.getName());
-            
-            if(DEBUG) {
-                System.out.println("binding condition to data source successful.");
+
+            if (DEBUG) {
+                System.out
+                          .println("binding condition to data source successful.");
             }
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
-	
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

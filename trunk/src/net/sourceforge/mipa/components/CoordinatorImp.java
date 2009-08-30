@@ -51,40 +51,43 @@ public class CoordinatorImp implements Coordinator {
 
     @Override
     public synchronized void memberFinished(String groupID, String memberID)
-	    throws RemoteException {
-	// TODO Auto-generated method stub
-	assert(groupMap.containsKey(groupID));
-	
-	Group g = groupMap.get(groupID);
-	int finishedNum = g.getNumberOfFinishedMembers();
-	int total = g.getMembers().size();
-	
-	assert(finishedNum < total);
-	
-	finishedNum++;
-	g.setNumberOfFinishedMembers(finishedNum);
-	
-	if(DEBUG) {
-	    System.out.println("Coordinator receives normal process name: " + memberID);
-	}
-	
-	if(finishedNum == total) {
-	    ArrayList<String> members = g.getMembers();
-	    for(int i = 0; i < members.size(); i++) {
-		try {
-		    NormalProcess np = (NormalProcess) server.lookup(members.get(i));
-		    np.finished();
-		} catch(Exception e) {
-		    e.printStackTrace();
-		}
-	    }
-	}
+                                                                            throws RemoteException {
+        // TODO Auto-generated method stub
+        assert (groupMap.containsKey(groupID));
+
+        Group g = groupMap.get(groupID);
+        int finishedNum = g.getNumberOfFinishedMembers();
+        int total = g.getMembers().size();
+
+        assert (finishedNum < total);
+
+        finishedNum++;
+        g.setNumberOfFinishedMembers(finishedNum);
+
+        if (DEBUG) {
+            System.out.println("Coordinator receives normal process name: "
+                               + memberID);
+        }
+
+        if (finishedNum == total) {
+            ArrayList<String> members = g.getMembers();
+            for (int i = 0; i < members.size(); i++) {
+                try {
+                    NormalProcess np = (NormalProcess) server
+                                                             .lookup(members
+                                                                            .get(i));
+                    np.finished();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
     public synchronized void newCoordinator(Group g) throws RemoteException {
-	
-	assert(groupMap.containsKey(g.getGroupID()) == false);
-	groupMap.put(g.getGroupID(), g);
+
+        assert (groupMap.containsKey(g.getGroupID()) == false);
+        groupMap.put(g.getGroupID(), g);
     }
 }
