@@ -42,6 +42,9 @@ public class Group implements Serializable {
     private ArrayList<String> owners;
     
     private ArrayList<String> members;
+    
+    /* for algorithm optimization */
+    private ArrayList<String> subMembers;
 
     public Group(String groupID, ArrayList<String> owners, ArrayList<String> members, PredicateType type) {
 	this.groupID = groupID;
@@ -122,5 +125,19 @@ public class Group implements Serializable {
      */
     public PredicateType getType() {
         return type;
+    }
+
+    /**
+     * @param subMembers the subMembers to set
+     */
+    public void setSubMembers(ArrayList<String> subMembers) {
+        this.subMembers = subMembers;
+    }
+
+    /**
+     * @return the subMembers
+     */
+    public ArrayList<String> getSubMembers() {
+        return subMembers;
     }
 }

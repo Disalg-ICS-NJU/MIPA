@@ -42,6 +42,8 @@ public class StructureParser {
      * this.contextMapping = contextMapping; }
      */
 
+    //FIXME CGS should split into each GSE, but this code merges all CGS into one GSE.
+    
     /**
      * parse structure of predicate from <code>Document</code>.
      * 

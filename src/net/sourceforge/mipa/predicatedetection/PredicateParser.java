@@ -75,7 +75,7 @@ public class PredicateParser implements PredicateParserMethod {
 
         Structure predicateStructure = structureParser
                                                       .parseStructure(predicate);
-        if (type == PredicateType.OGAP)
+        if (type == PredicateType.OGA)
             parseOGAStructure(predicateStructure);
         else if (type == PredicateType.SCP)
             parseSCPStructure(predicateStructure);
@@ -92,7 +92,102 @@ public class PredicateParser implements PredicateParserMethod {
         
         assert(children != null);
         
+        IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+        
+        ArrayList<String> topCheckers = new ArrayList<String>();
+        ArrayList<String> subCheckers = new ArrayList<String>();
+        ArrayList<String> normalProcesses = new ArrayList<String>();
+        Map<String, ArrayList<String>> subGroups = new HashMap<String, ArrayList<String>>();
+        Map<String, LocalPredicate> normalProcessToLocalPredicate = new HashMap<String, LocalPredicate>();
+        
+        String topChecker = null;
+        try {
+            topChecker = idManager.getID(Catalog.Checker);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        topCheckers.add(topChecker);
+        
         assert(s.getNodeType() == NodeType.GSE);
+        for(int i = 0; i < children.size(); i++) {
+            // parse CGS
+            String subChecker = null;
+            try {
+                subChecker = idManager.getID(Catalog.Checker);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            subCheckers.add(subChecker);
+            ArrayList<String> members = new ArrayList<String>();
+            subGroups.put(subChecker, members);
+            
+            ArrayList<Structure> LPs = children.get(i).getChildren();
+            
+            for(int j = 0; j < LPs.size(); j++) {
+                Structure unit = LPs.get(j);
+                assert (unit.getNodeType() == NodeType.LP);
+                String memberID = null;
+                try {
+                    memberID = idManager.getID(Catalog.NormalProcess);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                members.add(memberID);
+                normalProcesses.add(memberID);
+                normalProcessToLocalPredicate.put(memberID, (LocalPredicate) unit);
+            }
+        }
+        String groupID = null;
+        try {
+            groupID = idManager.getID(Catalog.Group);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        // Coordinator does not care about owners in group. We set it to null now.
+        Group coordinatorGroup = new Group(groupID, null, normalProcesses, PredicateType.OGA);
+        try{
+            coordinator.newCoordinator(coordinatorGroup);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        // create top checker in OGA.
+        String[] topCheckersArray = new String[topCheckers.size()];
+        topCheckers.toArray(topCheckersArray);
+        String[] subCheckersArray = new String[subCheckers.size()];
+        subCheckers.toArray(subCheckersArray);
+        CheckerFactory.ogaChecker(callback, topCheckers.get(0), null, subCheckersArray, 0);
+        
+        // create sub checkers in OGA.
+        for(int i = 0; i < subCheckers.size(); i++) {
+            String subCheckerName = subCheckers.get(i);
+            ArrayList<String> subMembers =  subGroups.get(subCheckerName);
+            String[] subMembersArray = new String[subMembers.size()];
+            subMembers.toArray(subMembersArray);
+            CheckerFactory.ogaChecker(null, subCheckerName, topCheckersArray, subMembersArray, 1);
+        }
+        
+        // create Normal Processes in OGA.
+        for(int i = 0; i < subCheckers.size(); i++) {
+            String subGroupID = null;
+            try {
+                subGroupID = idManager.getID(Catalog.Group);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            ArrayList<String> fathers = new ArrayList<String>();
+            fathers.add(subCheckers.get(i));
+            
+            Group subGroup = new Group(subGroupID, fathers, normalProcesses, PredicateType.OGA);
+            ArrayList<String> subMembers = subGroups.get(subCheckers.get(i));
+            subGroup.setSubMembers(subMembers);
+            
+            for(int j = 0; j < subMembers.size(); j++) {
+                LocalPredicate lp = normalProcessToLocalPredicate.get(subMembers.get(j));
+                registerLocalPredicate(lp, subMembers.get(j), subGroup);
+            }
+        }
     }
     /**
      * 
@@ -224,7 +319,7 @@ public class PredicateParser implements PredicateParserMethod {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Group g = new Group(groupID, owners, members, PredicateType.OGAP);
+            Group g = new Group(groupID, owners, members, PredicateType.OGA);
             // register group to coordinator.
 
             // register each local predicate.
