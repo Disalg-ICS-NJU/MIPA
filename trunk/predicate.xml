@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE predicate SYSTEM "dtd/predicate.dtd">
-<predicate type="OGA">
+<predicate type="SCP">
   <prefix value="def" />
   <GSE value="conjunction">
     <CGS value="conjunction">
@@ -14,18 +14,6 @@
 	  <atom operator="not-contain" name="RFID" value="tag_00001" />
 	</formula>
       </LP>
-    </CGS>
-    <CGS value="conjunction">
-    	<LP>
-    		<formula>
-    			<atom operator="less-than" name="temperature_1" value="40" />
-    		</formula>
-    	</LP>
-    	<LP>
-    		<formula>
-    			<atom operator="contain" name="RFID_1" value="tag_00002" />
-    		</formula>
-    	</LP>
     </CGS>
     <global>g</global>
   </GSE>
