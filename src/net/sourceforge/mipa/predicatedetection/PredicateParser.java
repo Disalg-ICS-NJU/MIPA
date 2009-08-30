@@ -152,6 +152,33 @@ public class PredicateParser implements PredicateParserMethod {
             e.printStackTrace();
         }
         
+        if(DEBUG) {
+            System.out.println("Top Checker:");
+            for(int i = 0; i < topCheckers.size(); i++) {
+                System.out.println("\t" + topCheckers.get(i));
+            }
+            
+            System.out.println("Sub Checkers:");
+            for(int i = 0; i < subCheckers.size(); i++) {
+                System.out.println("\t" + subCheckers.get(i));
+            }
+            
+            System.out.println("Normal Processes:");
+            for(int i = 0; i < normalProcesses.size(); i++) {
+                System.out.println("\t" + normalProcesses.get(i));
+            }
+            
+            System.out.println("Mapping:");
+            for(int i = 0; i < subCheckers.size(); i++) {
+                System.out.println("\t" + subCheckers.get(i));
+                ArrayList<String> m = subGroups.get(subCheckers.get(i));
+                for(int j = 0; j < m.size(); j++) {
+                    System.out.println("\t\t" + m.get(j));
+                }
+            }
+        }
+        
+        
         // create top checker in OGA.
         String[] topCheckersArray = new String[topCheckers.size()];
         topCheckers.toArray(topCheckersArray);
@@ -186,7 +213,7 @@ public class PredicateParser implements PredicateParserMethod {
             for(int j = 0; j < subMembers.size(); j++) {
                 LocalPredicate lp = normalProcessToLocalPredicate.get(subMembers.get(j));
                 registerLocalPredicate(lp, subMembers.get(j), subGroup);
-            }
+            }   
         }
     }
     /**
