@@ -19,6 +19,10 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
+import static config.Debug.DEBUG;
+
+import java.util.ArrayList;
+
 import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 /**
@@ -39,20 +43,85 @@ public class OGAVectorClock extends VectorClock {
 
     @Override
     public void increment(int id) {
-        // TODO Auto-generated method stub
+        assert (id < getVectorClock().size());
+
+        Long clock = getVectorClock().get(id);
+        getVectorClock().set(id, new Long(clock.longValue() + 1));
         
+        if(DEBUG) {
+            System.out.print("Normal Process " + id + ":\n\t");
+            ArrayList<Long> list = getVectorClock();
+            for(int i = 0; i < list.size(); i++) {
+                System.out.print(list.get(i) + ", ");
+            }
+            System.out.println();
+        }
     }
 
     @Override
     public boolean notLessThan(VectorClock timestamp) {
-        // TODO Auto-generated method stub
-        return false;
+        ArrayList<Long> right = timestamp.getVectorClock();
+        ArrayList<Long> left = vectorClock;
+        
+        assert(right.size() == left.size());
+        boolean result = true, first = false;
+        for(int i = 0; i < right.size(); i++) {
+            long rightValue = right.get(i).longValue();
+            long leftValue = left.get(i).longValue();
+            if(leftValue > rightValue) result = false;
+            else if(leftValue < rightValue) first = true;
+        }
+        return !(result && first);
     }
 
     @Override
     public void update(VectorClock timestamp) {
-        // TODO Auto-generated method stub
-        
-    }
+        ArrayList<Long> clock = timestamp.getVectorClock();
 
+        assert (vectorClock.size() == clock.size());
+
+        for (int i = 0; i < vectorClock.size(); i++) {
+            long clockValue = vectorClock.get(i).longValue();
+            long msgClockValue = clock.get(i).longValue();
+
+            Long newValue = new Long(clockValue > msgClockValue ? clockValue
+                                                               : msgClockValue);
+            vectorClock.set(i, newValue);
+        }
+    }
+    
+    /**
+     * 
+     * @param v1
+     * @param v2
+     * @return 0, if v1 == v2
+     *           1, if v1 > v2
+     *           -1, if v1 < v2
+     *           -2, if concurrent
+     */
+    public static int compare(VectorClock v1, VectorClock v2) {
+        ArrayList<Long> clock1 = v1.getVectorClock();
+        ArrayList<Long> clock2 = v2.getVectorClock();
+        
+        assert(clock1.size() == clock2.size());
+        
+        int flag = 0;
+        for(int i = 0; i < clock1.size(); i++) {
+            long value1 = clock1.get(i).longValue();
+            long value2 = clock2.get(i).longValue();
+            
+            if(value1 > value2) {
+                if(flag >= 0) flag++;
+                else return -2;
+            } else if(value1 < value2) {
+                if(flag <= 0) flag--;
+                else return -2;
+            } else {    // value1 == value2
+                // do nothing
+            }
+        }
+        if(flag == 0) return 0;
+        else if(flag > 0) return 1;
+        else return -1;
+    }
 }

@@ -19,15 +19,13 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
-import static config.Config.ENABLE_PHYSICAL_CLOCK;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.sourceforge.mipa.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
-import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
 
 /**
  * OGA algorithm sub checker.
@@ -172,6 +170,7 @@ public class OGASubChecker extends AbstractChecker {
                         break;
                     }
                 }
+                /*
                 if (found == true) {
                     try {
                         application.callback(String.valueOf(true));
@@ -180,28 +179,51 @@ public class OGASubChecker extends AbstractChecker {
                     }
                 } else
                     break;
-
+                */
+                if(found == false) break;
+                
                 // detection found
+                //TODO we will implement or-activity in future. Currently only and-activity
+                ArrayList<OGAVectorClock> SetLo = new ArrayList<OGAVectorClock>();
+                ArrayList<OGAVectorClock> SetHi = new ArrayList<OGAVectorClock>();
                 for (int i = 0; i < children.length; i++) {
+                    changed.add(new Integer(i));
+                    
                     OGAMessageContent foundContent = queues.get(i).remove(0);
-                    /*
-                    if(ENABLE_PHYSICAL_CLOCK) {
-                        String intervalID = foundContent.getIntervalID();
-                        long lo = foundContent.getpTimeLo();
-                        long hi = foundContent.getpTimeHi();
-                        try {
-                            String end = i + 1 != children.length ? " " : "\n";
-                            out.print(intervalID + " " + lo + " " + hi + end);
-                            out.flush();
-                        } catch(Exception e) {
-                            e.printStackTrace();
+                    SetLo.add(foundContent.getLo());
+                    SetHi.add(foundContent.getHi());
+                }
+                /* prune result in SetLo and SetHi */
+                // prune SetLo
+                for(int i = 0; i < SetLo.size(); i++) {
+                    OGAVectorClock clock_i = SetLo.get(i);
+                    for(int j = 0; j < SetLo.size(); j++) {
+                        if(i == j) continue;
+                        OGAVectorClock clock_j = SetLo.get(j);
+                        // clock_i > clock_j
+                        if(OGAVectorClock.compare(clock_i, clock_j) == 1) {
+                            SetLo.remove(j);
+                            if(i > j) i--;
+                            j--;
                         }
                     }
-                    */
-                    
-                    changed.add(new Integer(i));
                 }
-                // GA detected
+                // prune SetHi
+                for(int i = 0; i < SetHi.size(); i++) {
+                    OGAVectorClock clock_i = SetHi.get(i);
+                    for(int j = 0; j < SetHi.size(); j++) {
+                        if(i == j) continue;
+                        OGAVectorClock clock_j = SetHi.get(j);
+                        // clock_i < clock_j
+                        if(OGAVectorClock.compare(clock_i, clock_j) == -1) {
+                            SetHi.remove(j);
+                            if(i > j) i--;
+                            j--;
+                        }
+                    }
+                }
+                // send SetHi and SetLo to Top Checker.
+                
                 
             }
         } // :end if(queue.size() == 0)
