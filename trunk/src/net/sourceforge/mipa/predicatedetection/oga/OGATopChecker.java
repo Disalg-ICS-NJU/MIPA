@@ -95,6 +95,7 @@ public class OGATopChecker extends AbstractChecker {
         if (index > m) {
             try {
                 application.callback(String.valueOf(true));
+                index = 1;
             } catch (Exception e) {
                 e.printStackTrace();
             }

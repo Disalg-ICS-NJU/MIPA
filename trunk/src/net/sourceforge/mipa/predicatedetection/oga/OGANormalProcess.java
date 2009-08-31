@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
+import static config.Debug.DEBUG;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +69,6 @@ public class OGANormalProcess extends AbstractNormalProcess {
         flagMsgAct = true;
         
         groupNormalProcesses = subNormalProcesses;
-        
     }
     @Override
     public void action(boolean value) {
@@ -114,6 +114,11 @@ public class OGANormalProcess extends AbstractNormalProcess {
     }
     
     private void send(MessageType type, String receiverName, OGAMessageContent content) {
+        
+        if(DEBUG) {
+            System.out.println("In OGANormalProcess::send.");
+            System.out.println("receiver: " + receiverName);
+        }
         Message m = new Message();
         m.setType(type);
         m.setSenderID(name);
@@ -142,6 +147,10 @@ public class OGANormalProcess extends AbstractNormalProcess {
     private void groupBroadcast(MessageType type, OGAMessageContent content) {
         for(int i = 0; i < groupNormalProcesses.length; i++) {
             if(! name.equals(groupNormalProcesses[i])) {
+                if(DEBUG) {
+                    System.out.println("In OGANormalProcess::groupBroadcast.");
+                    System.out.println("receiver: " + groupNormalProcesses[i]);
+                }
                 send(type, groupNormalProcesses[i], content);
             }
         }
@@ -150,6 +159,10 @@ public class OGANormalProcess extends AbstractNormalProcess {
     private void broadcast(MessageType type, OGAMessageContent content) {
         for(int i = 0; i < normalProcesses.length; i++) {
             if(! name.equals(normalProcesses[i])) {
+                if(DEBUG) {
+                    System.out.println("In OGANormalProcess::broadcast.");
+                    System.out.println("receiver: " + normalProcesses[i]);
+                }
                 send(type, normalProcesses[i], content);
             }
         }

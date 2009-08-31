@@ -146,6 +146,7 @@ public class PredicateParser implements PredicateParserMethod {
         }
         // Coordinator does not care about owners in group. We set it to null now.
         Group coordinatorGroup = new Group(groupID, null, normalProcesses, PredicateType.OGA);
+        coordinatorGroup.setCoordinatorID(groupID);
         try{
             coordinator.newCoordinator(coordinatorGroup);
         } catch(Exception e) {
@@ -207,6 +208,7 @@ public class PredicateParser implements PredicateParserMethod {
             fathers.add(subCheckers.get(i));
             
             Group subGroup = new Group(subGroupID, fathers, normalProcesses, PredicateType.OGA);
+            subGroup.setCoordinatorID(groupID);
             ArrayList<String> subMembers = subGroups.get(subCheckers.get(i));
             subGroup.setSubMembers(subMembers);
             
@@ -262,6 +264,7 @@ public class PredicateParser implements PredicateParserMethod {
             }
             // create group for CGS
             Group g = new Group(groupID, owners, members, PredicateType.SCP);
+            g.setCoordinatorID(groupID);
 
             Coordinator coordinator = MIPAResource.getCoordinator();
             try {
