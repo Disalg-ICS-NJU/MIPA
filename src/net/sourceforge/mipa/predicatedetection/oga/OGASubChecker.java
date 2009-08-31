@@ -21,10 +21,12 @@ package net.sourceforge.mipa.predicatedetection.oga;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
+import net.sourceforge.mipa.components.MessageDispatcher;
+import net.sourceforge.mipa.components.MessageType;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
 
 /**
@@ -40,10 +42,14 @@ public class OGASubChecker extends AbstractChecker {
     
     private ArrayList<ArrayList<Message>> msgBuffer;
     
+    private String[] topCheckers;
+    
     private long[] currentMessageCount;
     
     public OGASubChecker(ResultCallback application, String checkerName, String[] topCheckers, String[] children) {
         super(application, checkerName, children);
+        
+        this.topCheckers = topCheckers;
         
         currentMessageCount = new long[children.length];
         
@@ -223,12 +229,31 @@ public class OGASubChecker extends AbstractChecker {
                     }
                 }
                 // send SetHi and SetLo to Top Checker.
+                OGAMessageContent content = new OGAMessageContent();
+                content.setSetHi(SetHi);
+                content.setSetLo(SetLo);
                 
-                
+                for(int i = 0; i < topCheckers.length; i++)
+                    send(MessageType.Detection, topCheckers[i], content);
             }
         } // :end if(queue.size() == 0)
         else {
             for(int i = 0; i < contents.size(); i++) queue.add(contents.get(i));
+        }
+    }
+    
+    private void send(MessageType type, String receiverName, OGAMessageContent content) {
+        Message m = new Message();
+        m.setType(type);
+        m.setSenderID(name);
+        m.setReceiverID(receiverName);
+        m.setOgaMessageContent(content);
+        
+        try {
+            MessageDispatcher messageDispatcher = MIPAResource.getMessageDispatcher();
+            messageDispatcher.send(m);
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 }
