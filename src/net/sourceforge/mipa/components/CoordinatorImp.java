@@ -56,6 +56,9 @@ public class CoordinatorImp implements Coordinator {
         assert (groupMap.containsKey(groupID));
 
         Group g = groupMap.get(groupID);
+        if(DEBUG) {
+            System.out.println("group ID is " + groupID);
+        }
         int finishedNum = g.getNumberOfFinishedMembers();
         int total = g.getMembers().size();
 
@@ -87,7 +90,7 @@ public class CoordinatorImp implements Coordinator {
     @Override
     public synchronized void newCoordinator(Group g) throws RemoteException {
 
-        assert (groupMap.containsKey(g.getGroupID()) == false);
+        assert (groupMap.containsKey(g.getCoordinatorID()) == false);
         groupMap.put(g.getGroupID(), g);
     }
 }

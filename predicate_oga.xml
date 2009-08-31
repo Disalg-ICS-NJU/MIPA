@@ -23,7 +23,7 @@
     	</LP>
     	<LP>
     		<formula>
-    			<atom operator="contain" name="RFID_1" value="tag_00002" />
+    			<atom operator="contain" name="RFID_1" value="tag_00001" />
     		</formula>
     	</LP>
     </CGS>

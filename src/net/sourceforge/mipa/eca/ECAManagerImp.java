@@ -119,9 +119,13 @@ public class ECAManagerImp implements ECAManager {
                 action = np;
             } else if (g.getType() == PredicateType.OGA) {
                 String[] subMembers = new String[g.getSubMembers().size()];
-                g.getMembers().toArray(subMembers);
-                OGANormalProcess np = new OGANormalProcess(name, checkers, normalProcesses, subMembers);
-                npStub = (NormalProcess) UnicastRemoteObject.exportObject(np, 0);
+                g.getSubMembers().toArray(subMembers);
+                OGANormalProcess np = new OGANormalProcess(name, checkers,
+                                                           normalProcesses,
+                                                           subMembers);
+                npStub = (NormalProcess) UnicastRemoteObject
+                                                            .exportObject(np, 0);
+                action = np;
             } else if (g.getType() == PredicateType.WCP) {
 
             } else if (g.getType() == PredicateType.LP) {
@@ -131,7 +135,7 @@ public class ECAManagerImp implements ECAManager {
             }
 
             server.bind(name, npStub);
-            coordinator.memberFinished(g.getGroupID(), name);
+            coordinator.memberFinished(g.getCoordinatorID(), name);
 
             if (DEBUG) {
                 System.out.println("before binding condition...");

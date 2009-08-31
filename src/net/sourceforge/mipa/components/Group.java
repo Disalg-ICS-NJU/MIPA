@@ -34,23 +34,26 @@ public class Group implements Serializable {
     private static final long serialVersionUID = -5628035618721334545L;
 
     private String groupID;
+    
+    private String coordinatorID;
 
     private int numberOfFinishedMembers;
 
     private PredicateType type;
-    
+
     private ArrayList<String> owners;
-    
+
     private ArrayList<String> members;
-    
+
     /* for algorithm optimization */
     private ArrayList<String> subMembers;
 
-    public Group(String groupID, ArrayList<String> owners, ArrayList<String> members, PredicateType type) {
-	this.groupID = groupID;
-	this.owners = owners;
-	this.members = members;
-	this.type = type;
+    public Group(String groupID, ArrayList<String> owners,
+                 ArrayList<String> members, PredicateType type) {
+        this.groupID = groupID;
+        this.owners = owners;
+        this.members = members;
+        this.type = type;
     }
 
     /**
@@ -69,6 +72,20 @@ public class Group implements Serializable {
     }
 
     /**
+     * @param coordinatorID the coordinatorID to set
+     */
+    public void setCoordinatorID(String coordinatorID) {
+        this.coordinatorID = coordinatorID;
+    }
+
+    /**
+     * @return the coordinatorID
+     */
+    public String getCoordinatorID() {
+        return coordinatorID;
+    }
+
+    /**
      * @param owners
      *            the checkerName to set
      */
@@ -84,19 +101,20 @@ public class Group implements Serializable {
     }
 
     /**
-     * @param members the members to set
+     * @param members
+     *            the members to set
      */
     public void setMembers(ArrayList<String> members) {
-	this.members = members;
+        this.members = members;
     }
 
     /**
      * @return the members
      */
     public ArrayList<String> getMembers() {
-	return members;
+        return members;
     }
-    
+
     /**
      * @param numberOfFinishedNormalProcesses
      *            the numberOfFinishedNormalProcesses to set
@@ -128,7 +146,8 @@ public class Group implements Serializable {
     }
 
     /**
-     * @param subMembers the subMembers to set
+     * @param subMembers
+     *            the subMembers to set
      */
     public void setSubMembers(ArrayList<String> subMembers) {
         this.subMembers = subMembers;

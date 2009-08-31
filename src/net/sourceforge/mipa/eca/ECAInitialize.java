@@ -98,10 +98,26 @@ public class ECAInitialize {
             t = new Thread(RFID);
             t.start();
             
+            eventName = "temperature_1";
+            valueType = "Double";
+            
+            SensorAgent temperature_1 = new TemperatureAgent(dataSourceStub, eventName, valueType);
+            t = new Thread(temperature_1);
+            t.start();
+            
+            eventName = "RFID_1";
+            valueType = "String";
+            
+            SensorAgent RFID_1 = new RFIDAgent(dataSourceStub, eventName, valueType);
+            t = new Thread(RFID_1);
+            t.start();
+            
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
             resources.add(temperature);
             resources.add(RFID);
+            resources.add(temperature_1);
+            resources.add(RFID_1);
 
             if (DEBUG) {
                 System.out.println("resources value: ");
