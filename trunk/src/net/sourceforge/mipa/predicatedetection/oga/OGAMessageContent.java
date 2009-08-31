@@ -20,6 +20,7 @@
 package net.sourceforge.mipa.predicatedetection.oga;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,6 +34,17 @@ public class OGAMessageContent implements Serializable {
     
     private OGAVectorClock hi;
     
+    // information used between top checker and sub checker.
+    private ArrayList<OGAVectorClock> SetLo;
+    private ArrayList<OGAVectorClock> SetHi;
+    
+    public OGAMessageContent() {
+        this.lo = null;
+        this.hi = null;
+        this.setSetLo(null);
+        this.setSetHi(null);
+    }
+    
     public OGAMessageContent(OGAVectorClock lo, OGAVectorClock hi) {
         this.lo = lo;
         this.hi = hi;
@@ -44,5 +56,33 @@ public class OGAMessageContent implements Serializable {
     
     public OGAVectorClock getHi() {
         return hi;
+    }
+
+    /**
+     * @param setLo the setLo to set
+     */
+    public void setSetLo(ArrayList<OGAVectorClock> setLo) {
+        SetLo = setLo;
+    }
+
+    /**
+     * @return the setLo
+     */
+    public ArrayList<OGAVectorClock> getSetLo() {
+        return SetLo;
+    }
+
+    /**
+     * @param setHi the setHi to set
+     */
+    public void setSetHi(ArrayList<OGAVectorClock> setHi) {
+        SetHi = setHi;
+    }
+
+    /**
+     * @return the setHi
+     */
+    public ArrayList<OGAVectorClock> getSetHi() {
+        return SetHi;
     }
 }
