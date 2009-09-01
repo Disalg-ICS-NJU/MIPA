@@ -33,12 +33,29 @@ public class OGAVectorClock extends VectorClock {
 
     private static final long serialVersionUID = 8524644883721946851L;
     
+    /** For DEBUG */
+    private long physicalClock = 0;
+    
     public OGAVectorClock(int number) {
         super(number);
     }
     
     public OGAVectorClock(VectorClock clock) {
         super(clock);
+    }
+
+    /**
+     * @param physicalClock the physicalClock to set
+     */
+    public void setPhysicalClock(long physicalClock) {
+        this.physicalClock = physicalClock;
+    }
+
+    /**
+     * @return the physicalClock
+     */
+    public long getPhysicalClock() {
+        return physicalClock;
     }
 
     @Override

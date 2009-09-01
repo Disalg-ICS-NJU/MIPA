@@ -19,78 +19,125 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
+import static config.Config.ENABLE_PHYSICAL_CLOCK;
+import static config.Config.LOG_DIRECTORY;
 import static config.Debug.DEBUG;
+
+import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageType;
+import net.sourceforge.mipa.naming.Catalog;
+import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
 import net.sourceforge.mipa.predicatedetection.VectorClock;
 
-
 /**
- *
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class OGANormalProcess extends AbstractNormalProcess {
 
     private static final long serialVersionUID = -663144941748622894L;
-    
+
     private boolean currentState;
-    
+
     private boolean flagMsgAct;
-    
+
     private OGAVectorClock lo;
-    
+
     private String[] groupNormalProcesses;
-    
+
     private Map<String, Long> currentMessageCount;
+
+    private PrintWriter out;
+
     /**
      * construction.
      * 
      * @param name
      * @param checkers
      * @param normalProcesses
-     * @param subNormalProcesses Global activity group.
+     * @param subNormalProcesses
+     *            Global activity group.
      */
-    public OGANormalProcess(String name, String[] checkers, String[] normalProcesses, String[] subNormalProcesses) {
+    public OGANormalProcess(String name, String[] checkers,
+                            String[] normalProcesses,
+                            String[] subNormalProcesses) {
         super(name, checkers, normalProcesses);
-        
+
         currentClock = new OGAVectorClock(normalProcesses.length);
         currentClock.increment(id);
-        
+
         currentMessageCount = new HashMap<String, Long>();
-        for(int i = 0; i < checkers.length; i++) {
+        for (int i = 0; i < checkers.length; i++) {
             currentMessageCount.put(checkers[i], new Long(0));
         }
-        
+
         currentState = false;
         flagMsgAct = true;
-        
+
         groupNormalProcesses = subNormalProcesses;
+
+        if (ENABLE_PHYSICAL_CLOCK) {
+            try {
+                out = new PrintWriter(LOG_DIRECTORY + "/" + name);
+                for (int i = 0; i < checkers.length; i++) {
+                    out.print(checkers[0]);
+                    if (i != checkers.length - 1)
+                        out.print(" ");
+                }
+                out.println();
+                out.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
+
     @Override
     public void action(boolean value) {
         boolean changed = false;
-        if(currentState != value) changed = true;
-        
-        if(changed == true && currentState == false) {
+        if (currentState != value)
+            changed = true;
+
+        if (changed == true && currentState == false) {
             // interval begins. Sending control message to GA group.
             groupBroadcast(MessageType.Control, null);
-            
-            if(flagMsgAct) {
+
+            if (flagMsgAct) {
                 lo = new OGAVectorClock(currentClock);
+                if (ENABLE_PHYSICAL_CLOCK) {
+                    lo.setPhysicalClock((new Date()).getTime());
+                }
             }
-        } else if(changed == true && currentState == true) {
+        } else if (changed == true && currentState == true) {
             // interval ends. Sending control message to all processes.
             broadcast(MessageType.Control, null);
-            if(flagMsgAct) {
+            if (flagMsgAct) {
                 OGAVectorClock hi = new OGAVectorClock(currentClock);
-                
+
                 OGAMessageContent content = new OGAMessageContent(lo, hi);
-                
-                for(int i = 0; i < checkers.length; i++) {
+
+                if (ENABLE_PHYSICAL_CLOCK) {
+                    IDManager idManager = MIPAResource.getIDManager();
+                    try {
+                        String intervalID = idManager.getID(Catalog.Numerical);
+                        content.setIntervalID(intervalID);
+                        hi.setPhysicalClock((new Date()).getTime());
+                        out.println(intervalID + " " + lo.getPhysicalClock()
+                                    + " " + hi.getPhysicalClock());
+                        out.flush();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                for (int i = 0; i < checkers.length; i++) {
                     String checker = checkers[i];
                     send(MessageType.Detection, checker, content);
                 }
@@ -110,12 +157,13 @@ public class OGANormalProcess extends AbstractNormalProcess {
     @Override
     public void application() {
         // TODO Auto-generated method stub
-        
+
     }
-    
-    private void send(MessageType type, String receiverName, OGAMessageContent content) {
-        
-        if(DEBUG) {
+
+    private void send(MessageType type, String receiverName,
+                      OGAMessageContent content) {
+
+        if (DEBUG) {
             System.out.println("In OGANormalProcess::send.");
             System.out.println("receiver: " + receiverName);
         }
@@ -126,28 +174,28 @@ public class OGANormalProcess extends AbstractNormalProcess {
         VectorClock current = new OGAVectorClock(currentClock);
         m.setTimestamp(current);
         m.setOgaMessageContent(content);
-        
-        if(currentMessageCount.containsKey(receiverName) == true) {
+
+        if (currentMessageCount.containsKey(receiverName) == true) {
             long currentCount = currentMessageCount.get(receiverName);
             m.setMessageID(currentCount);
             currentMessageCount.put(receiverName, new Long(currentCount + 1));
         } else {
-            assert(false);
+            assert (false);
         }
-        
+
         try {
             messageDispatcher.send(m);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         currentClock.increment(id);
     }
-    
+
     private void groupBroadcast(MessageType type, OGAMessageContent content) {
-        for(int i = 0; i < groupNormalProcesses.length; i++) {
-            if(! name.equals(groupNormalProcesses[i])) {
-                if(DEBUG) {
+        for (int i = 0; i < groupNormalProcesses.length; i++) {
+            if (!name.equals(groupNormalProcesses[i])) {
+                if (DEBUG) {
                     System.out.println("In OGANormalProcess::groupBroadcast.");
                     System.out.println("receiver: " + groupNormalProcesses[i]);
                 }
@@ -155,11 +203,11 @@ public class OGANormalProcess extends AbstractNormalProcess {
             }
         }
     }
-    
+
     private void broadcast(MessageType type, OGAMessageContent content) {
-        for(int i = 0; i < normalProcesses.length; i++) {
-            if(! name.equals(normalProcesses[i])) {
-                if(DEBUG) {
+        for (int i = 0; i < normalProcesses.length; i++) {
+            if (!name.equals(normalProcesses[i])) {
+                if (DEBUG) {
                     System.out.println("In OGANormalProcess::broadcast.");
                     System.out.println("receiver: " + normalProcesses[i]);
                 }

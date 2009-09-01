@@ -34,6 +34,8 @@ public class OGAMessageContent implements Serializable {
     
     private OGAVectorClock hi;
     
+    private String intervalID;
+    
     // information used between top checker and sub checker.
     private ArrayList<OGAVectorClock> SetLo;
     private ArrayList<OGAVectorClock> SetHi;
@@ -84,5 +86,19 @@ public class OGAMessageContent implements Serializable {
      */
     public ArrayList<OGAVectorClock> getSetHi() {
         return SetHi;
+    }
+
+    /**
+     * @param intervalID the intervalID to set
+     */
+    public void setIntervalID(String intervalID) {
+        this.intervalID = intervalID;
+    }
+
+    /**
+     * @return the intervalID
+     */
+    public String getIntervalID() {
+        return intervalID;
     }
 }

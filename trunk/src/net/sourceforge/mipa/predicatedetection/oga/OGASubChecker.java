@@ -19,6 +19,9 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
+import static config.Config.ENABLE_PHYSICAL_CLOCK;
+import static config.Config.LOG_DIRECTORY;
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -37,76 +40,93 @@ import net.sourceforge.mipa.predicatedetection.AbstractChecker;
 public class OGASubChecker extends AbstractChecker {
 
     private static final long serialVersionUID = -8872862161054484454L;
-    
+
     private ArrayList<ArrayList<OGAMessageContent>> queues;
-    
+
     private ArrayList<ArrayList<Message>> msgBuffer;
-    
+
     private String[] topCheckers;
-    
+
     private long[] currentMessageCount;
-    
-    public OGASubChecker(ResultCallback application, String checkerName, String[] topCheckers, String[] children) {
+
+    private PrintWriter out;
+
+    public OGASubChecker(ResultCallback application, String checkerName,
+                         String[] topCheckers, String[] children) {
         super(application, checkerName, children);
-        
+
         this.topCheckers = topCheckers;
-        
+
         currentMessageCount = new long[children.length];
-        
+
         queues = new ArrayList<ArrayList<OGAMessageContent>>();
         msgBuffer = new ArrayList<ArrayList<Message>>();
-        
-        for(int i = 0; i < children.length; i++) {
+
+        for (int i = 0; i < children.length; i++) {
             queues.add(new ArrayList<OGAMessageContent>());
             msgBuffer.add(new ArrayList<Message>());
             currentMessageCount[i] = 0;
         }
-        
+
+        if (ENABLE_PHYSICAL_CLOCK) {
+            try {
+                out = new PrintWriter(LOG_DIRECTORY + "/" + name);
+                for (int i = 0; i < topCheckers.length; i++) {
+                    out.print(topCheckers[i]);
+                    if (i != topCheckers.length - 1)
+                        out.print(" ");
+                }
+                out.println();
+                out.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
-    public void receive(Message message) throws RemoteException {
+    public synchronized void receive(Message message) throws RemoteException {
         ArrayList<Message> messages = new ArrayList<Message>();
         String child = message.getSenderID();
         int id = nameToID.get(child).intValue();
-        
+
         long messageID = message.getMessageID();
         add(msgBuffer.get(id), message);
-        
-        if(messageID == currentMessageCount[id]) {
-            
-            if(isContinuous(msgBuffer.get(id), id) == true) {
+
+        if (messageID == currentMessageCount[id]) {
+
+            if (isContinuous(msgBuffer.get(id), id) == true) {
                 ArrayList<Message> buffer = msgBuffer.get(id);
                 int size = buffer.size();
-                for(int i = 0; i < size; i++) {
+                for (int i = 0; i < size; i++) {
                     messages.add(buffer.remove(0));
                 }
                 check(messages);
             }
         }
-        
+
     }
 
     private void add(ArrayList<Message> messages, Message msg) {
         long msgID = msg.getMessageID();
-        
-        for(int i = 0; i < messages.size(); i++) {
+
+        for (int i = 0; i < messages.size(); i++) {
             long tempID = messages.get(i).getMessageID();
-            
-            if(msgID < tempID) {
+
+            if (msgID < tempID) {
                 messages.add(i, msg);
                 return;
             }
         }
         messages.add(msg);
     }
-    
+
     private boolean isContinuous(ArrayList<Message> messages, int id) {
-        assert(messages.size() > 0);
-        
+        assert (messages.size() > 0);
+
         long pre = messages.get(0).getMessageID();
-        for(int i = 1; i < messages.size(); i++) {
-            if(messages.get(i).getMessageID() != ++pre) {
+        for (int i = 1; i < messages.size(); i++) {
+            if (messages.get(i).getMessageID() != ++pre) {
                 currentMessageCount[id] = pre;
                 return false;
             }
@@ -114,21 +134,22 @@ public class OGASubChecker extends AbstractChecker {
         currentMessageCount[id] = pre + 1;
         return true;
     }
-    
+
     private void check(ArrayList<Message> messages) {
         String child = messages.get(0).getSenderID();
         int id = nameToID.get(child).intValue();
-        
-        ArrayList<OGAMessageContent> contents = new ArrayList<OGAMessageContent> ();
-        for(int i = 0; i < messages.size(); i++)
+
+        ArrayList<OGAMessageContent> contents = new ArrayList<OGAMessageContent>();
+        for (int i = 0; i < messages.size(); i++)
             contents.add(messages.get(i).getOgaMessageContent());
 
         ArrayList<OGAMessageContent> queue = queues.get(id);
-        //queue.add(content);
+        // queue.add(content);
 
         if (queue.size() == 0) {
-            for(int i = 0; i < contents.size(); i++) queue.add(contents.get(i));
-            
+            for (int i = 0; i < contents.size(); i++)
+                queue.add(contents.get(i));
+
             ArrayList<Integer> changed = new ArrayList<Integer>();
             changed.add(new Integer(id));
             while (true) {
@@ -149,7 +170,7 @@ public class OGASubChecker extends AbstractChecker {
                                           .notLessThan(
                                                        qiHead
                                                              .getHi())) {
-                                    
+
                                     newchanged.add(new Integer(elem));
                                 }
                                 if (qiHead
@@ -157,7 +178,7 @@ public class OGASubChecker extends AbstractChecker {
                                           .notLessThan(
                                                        qjHead
                                                              .getHi())) {
-                                    
+
                                     newchanged.add(new Integer(j));
                                 }
                             }
@@ -177,53 +198,67 @@ public class OGASubChecker extends AbstractChecker {
                     }
                 }
                 /*
-                if (found == true) {
-                    try {
-                        application.callback(String.valueOf(true));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else
+                 * if (found == true) { try {
+                 * application.callback(String.valueOf(true)); } catch
+                 * (Exception e) { e.printStackTrace(); } } else break;
+                 */
+                if (found == false)
                     break;
-                */
-                if(found == false) break;
-                
+
                 // detection found
-                //TODO we will implement or-activity in future. Currently only and-activity
+                // TODO we will implement or-activity in future. Currently only
+                // and-activity
                 ArrayList<OGAVectorClock> SetLo = new ArrayList<OGAVectorClock>();
                 ArrayList<OGAVectorClock> SetHi = new ArrayList<OGAVectorClock>();
                 for (int i = 0; i < children.length; i++) {
                     changed.add(new Integer(i));
-                    
+
                     OGAMessageContent foundContent = queues.get(i).remove(0);
                     SetLo.add(foundContent.getLo());
                     SetHi.add(foundContent.getHi());
+
+                    if (ENABLE_PHYSICAL_CLOCK) {
+                        String intervalID = foundContent.getIntervalID();
+                        long lo = foundContent.getLo().getPhysicalClock();
+                        long hi = foundContent.getHi().getPhysicalClock();
+                        try {
+                            String end = i + 1 != children.length ? " " : "\n";
+                            out.print(intervalID + " " + lo + " " + hi + end);
+                            out.flush();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 /* prune result in SetLo and SetHi */
                 // prune SetLo
-                for(int i = 0; i < SetLo.size(); i++) {
+                for (int i = 0; i < SetLo.size(); i++) {
                     OGAVectorClock clock_i = SetLo.get(i);
-                    for(int j = 0; j < SetLo.size(); j++) {
-                        if(i == j) continue;
+                    for (int j = 0; j < SetLo.size(); j++) {
+                        if (i == j)
+                            continue;
                         OGAVectorClock clock_j = SetLo.get(j);
                         // clock_i > clock_j
-                        if(OGAVectorClock.compare(clock_i, clock_j) == 1) {
+                        if (OGAVectorClock.compare(clock_i, clock_j) == 1) {
                             SetLo.remove(j);
-                            if(i > j) i--;
+                            if (i > j)
+                                i--;
                             j--;
                         }
                     }
                 }
                 // prune SetHi
-                for(int i = 0; i < SetHi.size(); i++) {
+                for (int i = 0; i < SetHi.size(); i++) {
                     OGAVectorClock clock_i = SetHi.get(i);
-                    for(int j = 0; j < SetHi.size(); j++) {
-                        if(i == j) continue;
+                    for (int j = 0; j < SetHi.size(); j++) {
+                        if (i == j)
+                            continue;
                         OGAVectorClock clock_j = SetHi.get(j);
                         // clock_i < clock_j
-                        if(OGAVectorClock.compare(clock_i, clock_j) == -1) {
+                        if (OGAVectorClock.compare(clock_i, clock_j) == -1) {
                             SetHi.remove(j);
-                            if(i > j) i--;
+                            if (i > j)
+                                i--;
                             j--;
                         }
                     }
@@ -232,27 +267,30 @@ public class OGASubChecker extends AbstractChecker {
                 OGAMessageContent content = new OGAMessageContent();
                 content.setSetHi(SetHi);
                 content.setSetLo(SetLo);
-                
-                for(int i = 0; i < topCheckers.length; i++)
+
+                for (int i = 0; i < topCheckers.length; i++)
                     send(MessageType.Detection, topCheckers[i], content);
             }
         } // :end if(queue.size() == 0)
         else {
-            for(int i = 0; i < contents.size(); i++) queue.add(contents.get(i));
+            for (int i = 0; i < contents.size(); i++)
+                queue.add(contents.get(i));
         }
     }
-    
-    private void send(MessageType type, String receiverName, OGAMessageContent content) {
+
+    private void send(MessageType type, String receiverName,
+                      OGAMessageContent content) {
         Message m = new Message();
         m.setType(type);
         m.setSenderID(name);
         m.setReceiverID(receiverName);
         m.setOgaMessageContent(content);
-        
+
         try {
-            MessageDispatcher messageDispatcher = MIPAResource.getMessageDispatcher();
+            MessageDispatcher messageDispatcher = MIPAResource
+                                                              .getMessageDispatcher();
             messageDispatcher.send(m);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -40,6 +40,9 @@ public class OGATopChecker extends AbstractChecker {
 
     private int m;
 
+    /** index --> Message queue */
+    private Map<Integer, ArrayList<Message>> messageQueues;
+    
     private Map<String, Integer> indexMap;
     private Map<String, ArrayList<OGAVectorClock>> preQueHiMap;
 
@@ -52,16 +55,35 @@ public class OGATopChecker extends AbstractChecker {
         m = children.length;
 
         indexMap = new HashMap<String, Integer>();
+        messageQueues = new HashMap<Integer, ArrayList<Message>>();
         preQueHiMap = new HashMap<String, ArrayList<OGAVectorClock>>();
 
         for(int i = 0; i < children.length; i++) {
             indexMap.put(children[i], new Integer(i + 1));
+            messageQueues.put(new Integer(i + 1), new ArrayList<Message>());
             preQueHiMap.put(children[i], null);
         }
     }
 
     @Override
-    public void receive(Message message) throws RemoteException {
+    public synchronized void receive(Message message) throws RemoteException {
+        
+        String senderName = message.getSenderID();
+        Integer messageSenderIndex = indexMap.get(senderName);
+        
+        ArrayList<Message> queue = messageQueues.get(messageSenderIndex);
+        queue.add(message);
+        
+        queue = messageQueues.get(new Integer(index));
+        
+        while(queue.size() != 0) {
+            detect(queue.remove(0));
+            // index will change in detect().
+            queue = messageQueues.get(new Integer(index));
+        }
+    }
+    
+    private void detect(Message message) {
         OGAMessageContent content = message.getOgaMessageContent();
         String senderName = message.getSenderID();
         ArrayList<OGAVectorClock> curQueLo = content.getSetLo();
@@ -77,7 +99,7 @@ public class OGATopChecker extends AbstractChecker {
             return;
         }
         
-        if(messageSenderIndex != index) return;
+        assert(messageSenderIndex == index);
         
         outer: 
             for (int i = 0; i < preQueHi.size(); i++) {
