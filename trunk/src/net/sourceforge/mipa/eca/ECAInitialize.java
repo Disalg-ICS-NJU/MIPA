@@ -80,6 +80,8 @@ public class ECAInitialize {
 
             // start sensor agent in threads.
             // TODO sensor name should read from config file.
+			//--------------------------------------------------------------
+			//--------------------------------------------------------------
             String eventName = "temperature";
             String valueType = "Double";
             SensorAgent temperature = new TemperatureAgent(dataSourceStub,
@@ -111,7 +113,9 @@ public class ECAInitialize {
             SensorAgent RFID_1 = new RFIDAgent(dataSourceStub, eventName, valueType);
             t = new Thread(RFID_1);
             t.start();
-            
+			//--------------------------------------------------------------
+			//--------------------------------------------------------------
+
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
             resources.add(temperature);

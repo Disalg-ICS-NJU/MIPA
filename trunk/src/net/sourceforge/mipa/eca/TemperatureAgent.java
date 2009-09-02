@@ -33,6 +33,7 @@ public class TemperatureAgent extends SensorAgent {
     /** the sensor which sensor agent manages */
     private Sensor sensor;
     
+    
     public TemperatureAgent(DataSource source, String name, String valueType) {
         super(source, name, valueType);
         sensor = new Temperature();
@@ -57,9 +58,15 @@ public class TemperatureAgent extends SensorAgent {
                 Thread.sleep(1000);
                 String[] values = sensor.getData();
                 if(DEBUG) {
-                    System.out.println("temperature sensor list:\n\t" + values[0]);
+                    if(values != null)
+                        System.out.println("temperature sensor list:\n\t" + values[0]);
+                    else
+                        System.out.println("temperature sensor has no data now.");
                 }
-                dataSource.update(this.name, values);
+                
+                if(values != null) dataSource.update(this.name, values);
+                
+                
             }
         } catch(Exception e) {
             e.printStackTrace();
