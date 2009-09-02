@@ -39,5 +39,9 @@ public class RFID implements Sensor {
         String[] empty = {""};
         return empty;
     }
+    
+    public long getGap() {
+        return 0;
+    }
 
 }

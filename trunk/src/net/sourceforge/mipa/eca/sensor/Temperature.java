@@ -34,4 +34,8 @@ public class Temperature implements Sensor {
         String[] results = {String.valueOf(value)}; 
         return results;
     }
+    
+    public long getGap() {
+        return 0;
+    }
 }
