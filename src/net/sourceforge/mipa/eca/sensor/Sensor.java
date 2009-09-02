@@ -31,4 +31,11 @@ public interface Sensor {
      * @return sensor data
      */
     public String[] getData();
+    
+    /**
+     * provide for push type sensor agent.
+     * 
+     * @return time gap in millisecond
+     */
+    public long getGap();
 }
