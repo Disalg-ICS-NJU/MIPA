@@ -82,7 +82,6 @@ public class PushSensorAgent extends SensorAgent {
         } catch(Exception e) {
             e.printStackTrace();
         }
-
     }
 
 }
