@@ -61,8 +61,10 @@ public class FileDelayMessageDispatcher extends GenericMessageDispatcher {
      * (net.sourceforge.mipa.components.Message)
      */
     @Override
-    public void addDispatchTime(Message message) {
-        int delay = delays.get(indicator++).intValue();
+    public void addDispatchTime(Message message) {        
+        int delay = delays.get(indicator).intValue();
+        indicator++;
+        indicator %= delays.size();
         message.setDispatchTime(message.getReachTime() + delay);
     }
 
