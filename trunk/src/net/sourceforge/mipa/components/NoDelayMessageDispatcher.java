@@ -19,7 +19,6 @@
  */
 package net.sourceforge.mipa.components;
 
-import net.sourceforge.mipa.naming.Naming;
 
 /**
  * 
