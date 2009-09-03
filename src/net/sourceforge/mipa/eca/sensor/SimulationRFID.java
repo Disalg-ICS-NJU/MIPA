@@ -92,11 +92,10 @@ public class SimulationRFID implements Sensor {
             String source = sources.get(i);
             if (source.length() <= indicators[i])
                 continue;
-            if(DEBUG) {
-                System.out.println("RFID reads data: " + source.charAt(indicators[i]));
-            }
+            
             if (source.charAt(indicators[i]) != '0')
                 detectedTags.add(tags.get(i));
+            
             
             indicators[i]++;
         }
@@ -105,8 +104,18 @@ public class SimulationRFID implements Sensor {
             String[] detectedTagsArray = new String[detectedTags.size()];
             detectedTags.toArray(detectedTagsArray);
             return detectedTagsArray;
-        } else
-            return null;
+        } else {
+            boolean end = true;
+            for(int i = 0; i < indicators.length; i++) {
+                if(sources.get(i).length() > indicators[i]) {
+                    end = false;
+                    break;
+                }
+            }
+            String[] results = {""};
+            if (end == true) results = null;
+            return results;
+        }
     }
 
     /*
@@ -118,5 +127,4 @@ public class SimulationRFID implements Sensor {
     public long getGap() {
         return gap;
     }
-
 }
