@@ -19,26 +19,50 @@
  */
 package net.sourceforge.mipa.components;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 /**
- *
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class RandomDelayMessageDispatcher extends GenericMessageDispatcher {
+public class FileDelayMessageDispatcher extends GenericMessageDispatcher {
+
+    /** delay in millisecond */
+    ArrayList<Long> delays;
+
+    int indicator;
 
     /**
-     *
+     * 
      */
-    public RandomDelayMessageDispatcher() {
+    public FileDelayMessageDispatcher(String delayFile) {
         super();
+        indicator = 0;
+        delays = new ArrayList<Long>();
+        try {
+            BufferedReader reader = new BufferedReader(
+                                                       new FileReader(delayFile));
+            String str;
+            while ((str = reader.readLine()) != null) {
+                delays.add(new Long(Long.parseLong(str)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    /* (non-Javadoc)
-     * @see net.sourceforge.mipa.components.GenericMessageDispatcher#addDispatchTime(net.sourceforge.mipa.components.Message)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * net.sourceforge.mipa.components.GenericMessageDispatcher#addDispatchTime
+     * (net.sourceforge.mipa.components.Message)
      */
     @Override
     public void addDispatchTime(Message message) {
-        int delay = (int) (Math.random() * 20) * heartBeat;
+        int delay = delays.get(indicator++).intValue();
         message.setDispatchTime(message.getReachTime() + delay);
     }
 
