@@ -30,6 +30,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.eca.sensor.Sensor;
+import net.sourceforge.mipa.eca.sensor.SimulationRFID;
+import net.sourceforge.mipa.eca.sensor.SimulationTemperature;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
@@ -80,8 +83,8 @@ public class ECAInitialize {
 
             // start sensor agent in threads.
             // TODO sensor name should read from config file.
-			//--------------------------------------------------------------
-			//--------------------------------------------------------------
+            // --------------------------------------------------------------
+            // --------------------------------------------------------------
             String eventName = "temperature";
             String valueType = "Double";
             SensorAgent temperature = new TemperatureAgent(dataSourceStub,
@@ -92,29 +95,49 @@ public class ECAInitialize {
             if (DEBUG) {
                 System.out.println("temperature sensor running...");
             }
-            
+
             eventName = "RFID";
             valueType = "String";
-            SensorAgent RFID = new RFIDAgent(dataSourceStub, eventName, valueType);
-            
+            SensorAgent RFID = new RFIDAgent(dataSourceStub, eventName,
+                                             valueType);
+
             t = new Thread(RFID);
             t.start();
-            
+
             eventName = "temperature_1";
             valueType = "Double";
-            
-            SensorAgent temperature_1 = new TemperatureAgent(dataSourceStub, eventName, valueType);
+
+            SensorAgent temperature_1 = new TemperatureAgent(dataSourceStub,
+                                                             eventName,
+                                                             valueType);
             t = new Thread(temperature_1);
             t.start();
-            
+
             eventName = "RFID_1";
             valueType = "String";
-            
-            SensorAgent RFID_1 = new RFIDAgent(dataSourceStub, eventName, valueType);
+
+            SensorAgent RFID_1 = new RFIDAgent(dataSourceStub, eventName,
+                                               valueType);
             t = new Thread(RFID_1);
             t.start();
-			//--------------------------------------------------------------
-			//--------------------------------------------------------------
+            // --------------------------------------------------------------
+            // --------------------------------------------------------------
+
+            Sensor simulateTemperature = new SimulationTemperature(
+                                                                   "data/temperature");
+            SensorAgent pushSensorAgent = new PushSensorAgent(
+                                                              dataSourceStub,
+                                                              "temp1",
+                                                              "Double",
+                                                              simulateTemperature);
+            t = new Thread(pushSensorAgent);
+            t.start();
+
+            Sensor simulationRFID = new SimulationRFID("data/RFID");
+            SensorAgent pushRFID = new PushSensorAgent(dataSourceStub, "RFID1",
+                                                       "String", simulationRFID);
+            t = new Thread(pushRFID);
+            t.start();
 
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
@@ -159,7 +182,7 @@ public class ECAInitialize {
             e.printStackTrace();
         }
     }
-    
+
     public static void main(String[] args) {
         new ECAInitialize().initialize();
     }

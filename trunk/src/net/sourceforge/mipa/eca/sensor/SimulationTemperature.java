@@ -34,6 +34,7 @@ public class SimulationTemperature implements Sensor {
 	/** time gap between continuous data generations. */
 	private long gap;
 	
+	/** sensor stop flag */
 	private boolean stoped;
 	
 	public SimulationTemperature(String fileName) {
