@@ -111,11 +111,12 @@ public class OGANormalProcess extends AbstractNormalProcess {
 
             if (flagMsgAct) {
                 lo = new OGAVectorClock(currentClock);
-                groupBroadcast(MessageType.Control, null);
+                
                 if (ENABLE_PHYSICAL_CLOCK) {
                     lo.setPhysicalClock((new Date()).getTime());
                 }
             }
+            groupBroadcast(MessageType.Control, null);
         } else if (changed == true && currentState == true) {
             // interval ends. Sending control message to all processes.
             ////////////
@@ -143,9 +144,10 @@ public class OGANormalProcess extends AbstractNormalProcess {
                     String checker = checkers[i];
                     send(MessageType.Detection, checker, content);
                 }
-                broadcast(MessageType.Control, null);
+                
                 flagMsgAct = false;
             }
+            broadcast(MessageType.Control, null);
         }
         currentState = value;
     }
