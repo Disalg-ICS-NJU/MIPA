@@ -122,7 +122,7 @@ public class ECAInitialize {
             t.start();
             // --------------------------------------------------------------
             // --------------------------------------------------------------
-
+            /*
             Sensor simulateTemperature = new SimulationTemperature(
                                                                    "data/temperature");
             SensorAgent pushSensorAgent = new PushSensorAgent(
@@ -138,7 +138,7 @@ public class ECAInitialize {
                                                        "String", simulationRFID);
             t = new Thread(pushRFID);
             t.start();
-
+            */
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
             resources.add(temperature);

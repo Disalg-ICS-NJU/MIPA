@@ -132,10 +132,9 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                     String checker = checkers[i];
                     send(MessageType.Detection, checker, content);
                 }
-                
                 broadcast(MessageType.Control, null);
-
                 firstflag = false;
+
                 
                 if(DEBUG) {
                     System.out.println(name + " firstflag: false");
