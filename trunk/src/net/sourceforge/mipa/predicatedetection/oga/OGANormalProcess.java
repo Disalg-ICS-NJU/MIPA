@@ -117,6 +117,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
                 }
             }
             groupBroadcast(MessageType.Control, null);
+            
         } else if (changed == true && currentState == true) {
             // interval ends. Sending control message to all processes.
             ////////////
@@ -147,6 +148,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
                 
                 flagMsgAct = false;
             }
+            
             broadcast(MessageType.Control, null);
         }
         currentState = value;
