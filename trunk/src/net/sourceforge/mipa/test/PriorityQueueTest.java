@@ -45,7 +45,7 @@ public class PriorityQueueTest {
         queue.add(new Integer(2));
         queue.add(new Integer(3));
         queue.offer(new Integer(4));
-        queue.offer(new Integer(5));
+        queue.offer(null);
         System.out.println(queue.size());
         
         int size = queue.size();
