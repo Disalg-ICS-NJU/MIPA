@@ -36,7 +36,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
         MessageDispatcher {
 
     /** heart beat time (ms) */
-    protected final static int heartBeat = 30;
+    protected final static int heartBeat = 5;
 
     /** current time of message dispatcher */
     protected long currentTime;
@@ -85,6 +85,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
                     if (m == null || m.getDispatchTime() > currentTime)
                         break;
                     m = dispatchQueue.poll();
+                    
                     dispatch(m);
                 }
             } catch (Exception e) {
@@ -128,7 +129,9 @@ public abstract class GenericMessageDispatcher implements Runnable,
      * net.sourceforge.mipa.components.Message)
      */
     @Override
-    public void send(Message message) throws RemoteException {
+    public synchronized void send(Message message) throws RemoteException {
+        assert(message != null);
+        
         message.setReachTime(currentTime);
 
         addDispatchTime(message);

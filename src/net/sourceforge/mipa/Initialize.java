@@ -34,7 +34,7 @@ import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.CoordinatorImp;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.MessageDispatcher;
-import net.sourceforge.mipa.components.RandomDelayMessageDispatcher;
+import net.sourceforge.mipa.components.NoDelayMessageDispatcher;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.IDManagerImp;
 import net.sourceforge.mipa.naming.Naming;
@@ -88,7 +88,8 @@ public class Initialize {
                                                                                                      0);
             server.bind("ContextRegister", contextRegisterStub);
 
-            RandomDelayMessageDispatcher messageDispatcher = new RandomDelayMessageDispatcher();
+            //RandomDelayMessageDispatcher messageDispatcher = new RandomDelayMessageDispatcher();
+            NoDelayMessageDispatcher messageDispatcher = new NoDelayMessageDispatcher();
             MessageDispatcher messageDispatcherStub = (MessageDispatcher) UnicastRemoteObject
                                                                                              .exportObject(
                                                                                                            messageDispatcher,
