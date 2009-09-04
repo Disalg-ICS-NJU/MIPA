@@ -20,12 +20,11 @@
 package net.sourceforge.mipa.components;
 
 import static config.Debug.DEBUG;
-
 import java.rmi.RemoteException;
-import java.util.Comparator;
+//import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
+//import java.util.PriorityQueue;
 
 import net.sourceforge.mipa.naming.Naming;
 
@@ -43,7 +42,8 @@ public abstract class GenericMessageDispatcher implements Runnable,
     protected long currentTime;
 
     /** dispatch queue */
-    private PriorityQueue<Message> dispatchQueue;
+    //private PriorityQueue<Message> dispatchQueue;
+    private MyPriorityQueue dispatchQueue;
 
     /** mapping table */
     private Map<String, Communication> comTable;
@@ -53,6 +53,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
     public GenericMessageDispatcher() {
         currentTime = 0;
         // FIXME find why PriorityQueue must have initial capacity.
+        /*
         dispatchQueue = new PriorityQueue<Message>(100,
                                                    new Comparator<Message>() {
                                                    public int compare(
@@ -60,15 +61,14 @@ public abstract class GenericMessageDispatcher implements Runnable,
                                                                       Message j) {
                                                        // sun jdk has a bug 6495524. <PriorityQueue>.
                                                        // sometimes j will be null.
-                                                       //if(j == null) {
-                                                       //    System.out.println("j is null.");
-                                                       //    System.exit(1);
-                                                       //}
+                                                       //if(j == null) return 1;
                                                    return (int) (i
                                                                   .getDispatchTime()
                                                    - j.getDispatchTime());
                                                    }
                                                            });
+        */
+        dispatchQueue = new MyPriorityQueue(10000);
         comTable = new HashMap<String, Communication>();
         this.server = MIPAResource.getNamingServer();
     }
@@ -88,10 +88,12 @@ public abstract class GenericMessageDispatcher implements Runnable,
                     //System.out.println("current time is " + currentTime);
                 }
                 while (true) {
-                    Message m = dispatchQueue.peek();
+                    //Message m = dispatchQueue.peek();
+                    Message m = (Message) dispatchQueue.top();
                     if (m == null || m.getDispatchTime() > currentTime)
                         break;
-                    m = dispatchQueue.poll();
+                    //m = dispatchQueue.poll();
+                    m = (Message) dispatchQueue.pop();
                     
                     dispatch(m);
                 }
@@ -143,7 +145,8 @@ public abstract class GenericMessageDispatcher implements Runnable,
 
         addDispatchTime(message);
         
-        dispatchQueue.offer(message);
+        //dispatchQueue.offer(message);
+        dispatchQueue.put(message);
     }
 
     public abstract void addDispatchTime(Message message);
