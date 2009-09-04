@@ -20,6 +20,7 @@
 package net.sourceforge.mipa.components;
 
 import static config.Debug.DEBUG;
+
 import java.rmi.RemoteException;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -57,12 +58,12 @@ public abstract class GenericMessageDispatcher implements Runnable,
                                                    public int compare(
                                                                       Message i,
                                                                       Message j) {
-                                                       // sun jdk has a bug. <PriorityQueue>.
+                                                       // sun jdk has a bug 6495524. <PriorityQueue>.
                                                        // sometimes j will be null.
-                                                       /*if(j == null) {
-                                                           System.out.println("j is null.");
-                                                           System.exit(1);
-                                                       }*/
+                                                       //if(j == null) {
+                                                       //    System.out.println("j is null.");
+                                                       //    System.exit(1);
+                                                       //}
                                                    return (int) (i
                                                                   .getDispatchTime()
                                                    - j.getDispatchTime());
