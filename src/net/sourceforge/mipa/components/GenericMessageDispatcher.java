@@ -52,11 +52,17 @@ public abstract class GenericMessageDispatcher implements Runnable,
     public GenericMessageDispatcher() {
         currentTime = 0;
         // FIXME find why PriorityQueue must have initial capacity.
-        dispatchQueue = new PriorityQueue<Message>(1,
+        dispatchQueue = new PriorityQueue<Message>(100,
                                                    new Comparator<Message>() {
                                                    public int compare(
                                                                       Message i,
                                                                       Message j) {
+                                                       // sun jdk has a bug. <PriorityQueue>.
+                                                       // sometimes j will be null.
+                                                       /*if(j == null) {
+                                                           System.out.println("j is null.");
+                                                           System.exit(1);
+                                                       }*/
                                                    return (int) (i
                                                                   .getDispatchTime()
                                                    - j.getDispatchTime());
@@ -135,8 +141,8 @@ public abstract class GenericMessageDispatcher implements Runnable,
         message.setReachTime(currentTime);
 
         addDispatchTime(message);
-
-        dispatchQueue.add(message);
+        
+        dispatchQueue.offer(message);
     }
 
     public abstract void addDispatchTime(Message message);
