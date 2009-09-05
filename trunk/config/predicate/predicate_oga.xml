@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE predicate SYSTEM "dtd/predicate.dtd">
+<!DOCTYPE predicate SYSTEM "predicate.dtd">
 <predicate type="OGA">
   <prefix value="def" />
   <GSE value="conjunction">

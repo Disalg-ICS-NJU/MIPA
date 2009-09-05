@@ -46,7 +46,7 @@ public class Application extends AbstractApplication {
     }
 
     public static void main(String[] args) {
-        Application app = new Application("predicate_oga.xml");
-        app.start("config.xml");
+        Application app = new Application("config/predicate/predicate_oga.xml");
+        app.start("config/config.xml");
     }
 }

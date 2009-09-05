@@ -30,9 +30,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.MIPAResource;
-import net.sourceforge.mipa.eca.sensor.Sensor;
-import net.sourceforge.mipa.eca.sensor.SimulationRFID;
-import net.sourceforge.mipa.eca.sensor.SimulationTemperature;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
@@ -49,7 +46,7 @@ public class ECAInitialize {
      * initialize method.
      */
     public void initialize() {
-        parseConfig("config.xml");
+        parseConfig("config/config.xml");
 
         String namingAddress = MIPAResource.getNamingAddress();
         try {
