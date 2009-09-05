@@ -57,7 +57,7 @@ public class Initialize {
      */
     public boolean initialize() {
 
-        parseConfig("config.xml");
+        parseConfig("config/config.xml");
 
         try {
             // binds predicate parser
