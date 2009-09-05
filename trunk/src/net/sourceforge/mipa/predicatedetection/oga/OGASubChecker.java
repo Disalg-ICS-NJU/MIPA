@@ -21,6 +21,7 @@ package net.sourceforge.mipa.predicatedetection.oga;
 
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
+
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class OGASubChecker extends AbstractChecker {
 
     @Override
     public synchronized void receive(Message message) throws RemoteException {
+
         ArrayList<Message> messages = new ArrayList<Message>();
         String child = message.getSenderID();
         int id = nameToID.get(child).intValue();
@@ -104,7 +106,6 @@ public class OGASubChecker extends AbstractChecker {
                 check(messages);
             }
         }
-
     }
 
     private void add(ArrayList<Message> messages, Message msg) {
@@ -136,6 +137,7 @@ public class OGASubChecker extends AbstractChecker {
     }
 
     private void check(ArrayList<Message> messages) {
+
         String child = messages.get(0).getSenderID();
         int id = nameToID.get(child).intValue();
 
