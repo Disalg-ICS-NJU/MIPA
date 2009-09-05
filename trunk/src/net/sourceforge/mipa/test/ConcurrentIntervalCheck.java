@@ -20,6 +20,7 @@
 
 package net.sourceforge.mipa.test;
 
+import static config.Debug.DEBUG;
 import java.util.*;
 import java.io.*;
 
@@ -71,6 +72,9 @@ public class ConcurrentIntervalCheck {
 	public void read() {
 		try {
 			for (int i = 0; i < numOfChecker; i++) {
+			    if(DEBUG) {
+				System.out.println(checkerArray[i]);
+			    }
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 						new FileInputStream(checkerArray[i] + "interval")));
 				while (br.ready()) {
@@ -83,7 +87,8 @@ public class ConcurrentIntervalCheck {
 				}
 			}
 		} catch (Exception ex) {
-			System.out.println("read from file error " + ex);
+			//System.out.println("read from file error " + ex);
+		    ex.printStackTrace();
 		}
 
 	}
@@ -132,8 +137,8 @@ public class ConcurrentIntervalCheck {
 	}
 
 	public static void main(String args[]) {
-		String checkerList = "Checker1,Checker2";
-		String fileList = "NormalProcess0,NormalProcess1,NormalProcess2,NormalProcess3";
+		String checkerList = "log/Checker1,log/Checker2";
+		String fileList = "log/NormalProcess0,log/NormalProcess1,log/NormalProcess2,log/NormalProcess3";
 
 		ConcurrentIntervalExtract cie = new ConcurrentIntervalExtract(
 				checkerList, fileList);
