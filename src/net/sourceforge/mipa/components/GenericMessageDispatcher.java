@@ -43,7 +43,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
 
     /** dispatch queue */
     //private PriorityQueue<Message> dispatchQueue;
-    private MyPriorityQueue dispatchQueue;
+    private PriorityQueue dispatchQueue;
 
     /** mapping table */
     private Map<String, Communication> comTable;
@@ -68,7 +68,8 @@ public abstract class GenericMessageDispatcher implements Runnable,
                                                    }
                                                            });
         */
-        dispatchQueue = new MyPriorityQueue(10000);
+        //dispatchQueue = new MyPriorityQueue(10000);
+        dispatchQueue = new PriorityQueue();
         comTable = new HashMap<String, Communication>();
         this.server = MIPAResource.getNamingServer();
     }
@@ -88,14 +89,15 @@ public abstract class GenericMessageDispatcher implements Runnable,
                     //System.out.println("current time is " + currentTime);
                 }
                 while (true) {
-                    //Message m = dispatchQueue.peek();
-                    Message m = (Message) dispatchQueue.top();
-                    if (m == null || m.getDispatchTime() > currentTime)
-                        break;
-                    //m = dispatchQueue.poll();
-                    m = (Message) dispatchQueue.pop();
+                        Message m = dispatchQueue.peek();
+                        //Message m = (Message) dispatchQueue.top();
+                        if (m == null || m.getDispatchTime() > currentTime)
+                            break;
+                        m = dispatchQueue.poll();
+                        //m = (Message) dispatchQueue.pop();
                     
-                    dispatch(m);
+                        dispatch(m);
+                    
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -145,8 +147,8 @@ public abstract class GenericMessageDispatcher implements Runnable,
 
         addDispatchTime(message);
         
-        //dispatchQueue.offer(message);
-        dispatchQueue.put(message);
+        dispatchQueue.offer(message);
+        //dispatchQueue.put(message);
     }
 
     public abstract void addDispatchTime(Message message);
