@@ -101,7 +101,10 @@ public class ConcurrentIntervalExtract {
 				
 				String checkerName = br.readLine();
 				for (int j = 0; j < numOfChecker; j++) {
-					if (checkerName.compareTo(checkerArray[j]) == 0) {
+				    String[] checkerActualNames = checkerArray[j].split("/");
+				    String checkerActualName = checkerActualNames[checkerActualNames.length - 1];
+				    
+					if (checkerName.compareTo(checkerActualName) == 0) {
 						fileArrayList.get(j).add(new Integer(i));
 						numOfFile[j]++;
 					}
@@ -110,7 +113,7 @@ public class ConcurrentIntervalExtract {
 				String s = null;
 				while ((s = br.readLine()) != null) {
 					if (DEBUG) {
-						System.out.println(s);
+						//System.out.println(s);
 					}
 					String[] str = s.split(" ");
 					long lo = Long.valueOf(str[1]);
@@ -123,7 +126,8 @@ public class ConcurrentIntervalExtract {
 				br.close();
 			}
 		} catch (Exception ex) {
-			System.out.println("read file error! " + ex);
+			//System.out.println("read file error! " + ex);
+		    ex.printStackTrace();
 		}
 	}
 
@@ -143,6 +147,9 @@ public class ConcurrentIntervalExtract {
 		boolean result = false;
 		int index = 0;
 		try {
+		    if(DEBUG) {
+			System.out.println(checkerArray[id]);
+		    }
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(checkerArray[id])));
 			BufferedWriter bwc = new BufferedWriter(new OutputStreamWriter(
@@ -186,7 +193,7 @@ public class ConcurrentIntervalExtract {
 							}
 						}
 						
-						if(smallestHi-largestLo>1000){
+						if(smallestHi-largestLo>0){
 							sequence.get(id).add(
 									new PhysicalTimeInterval(" ", largestLo,
 											smallestHi));
@@ -220,7 +227,8 @@ public class ConcurrentIntervalExtract {
 			bwc.close();
 			bw.close();
 		} catch (Exception ex) {
-			System.out.println("output file error! " + ex);
+			//System.out.println("output file error! " + ex);
+		    ex.printStackTrace();
 		}
 
 	}
