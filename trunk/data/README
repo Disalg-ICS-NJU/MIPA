@@ -3,6 +3,8 @@ temperature data source format:
 first line: time gap.
 temperature data per line by following.
 
+//This line is departed due to specific experiment.//
+///////////temperature data is disposed as a stream contains 0 and 1.
 
 
 
