@@ -68,7 +68,7 @@ public class NamingServer {
 
             Naming stub = (Naming) UnicastRemoteObject.exportObject(server, 0);
 
-            java.rmi.Naming.rebind(address + ":" + port + "/Naming", stub);
+            java.rmi.Naming.rebind("rmi://" + address + ":" + port + "/Naming", stub);
         } catch (Exception e) {
             e.printStackTrace();
         }
