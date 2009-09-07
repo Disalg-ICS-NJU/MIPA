@@ -116,8 +116,8 @@ public class Group implements Serializable {
     }
 
     /**
-     * @param numberOfFinishedNormalProcesses
-     *            the numberOfFinishedNormalProcesses to set
+     * @param numberOfFinishedMembers
+     *            the numberOfFinishedMembers to set
      */
     public void setNumberOfFinishedMembers(int numberOfFinishedMembers) {
         this.numberOfFinishedMembers = numberOfFinishedMembers;

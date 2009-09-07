@@ -45,49 +45,61 @@ public class CheckerFactory {
             e.printStackTrace();
         }
     }
-    //FIXME checker factory should contain different predicate type checker generating functions.
+
+    // FIXME checker factory should contain different predicate type checker
+    // generating functions.
     /**
      * 
-     * @level the level of checker in OGA, 0 represents top.
+     * @param level the level of checker in OGA, 0 represents top.
      */
-    public static void ogaChecker(String callback, String checkerName, String[] fathers, String[] children, int level) {
-        if(DEBUG) {
+    public static void ogaChecker(String callback, String checkerName,
+                                  String[] fathers, String[] children, int level) {
+        if (DEBUG) {
             System.out.println("CHeckerFactory: ogaChecker\n\tlevel: " + level);
         }
         try {
             ResultCallback application = null;
-            if(level == 0) {
+            if (level == 0) {
                 application = (ResultCallback) server.lookup(callback);
-                OGATopChecker checker = new OGATopChecker(application, checkerName, children);
-                Communication checkerStub = (Communication) UnicastRemoteObject.exportObject(checker, 0);
+                OGATopChecker checker = new OGATopChecker(application,
+                                                          checkerName, children);
+                Communication checkerStub = (Communication) UnicastRemoteObject
+                                                                               .exportObject(
+                                                                                             checker,
+                                                                                             0);
                 server.bind(checkerName, checkerStub);
-                
-                if(DEBUG) {
+
+                if (DEBUG) {
                     System.out.println("binding checker " + checkerName);
                 }
-            } else if(level == 1) {
-                OGASubChecker checker = new OGASubChecker(application, checkerName, fathers, children);
-                Communication checkerStub = (Communication) UnicastRemoteObject.exportObject(checker, 0);
+            } else if (level == 1) {
+                OGASubChecker checker = new OGASubChecker(application,
+                                                          checkerName, fathers,
+                                                          children);
+                Communication checkerStub = (Communication) UnicastRemoteObject
+                                                                               .exportObject(
+                                                                                             checker,
+                                                                                             0);
                 server.bind(checkerName, checkerStub);
-                
-                if(DEBUG) {
+
+                if (DEBUG) {
                     System.out.println("binding checker " + checkerName);
                 }
             } else {
                 System.out.println("invalid level.");
             }
-            
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //FIXME this function should split to scpChecker, wcpChecker, LPChecker, etc. 
+    // FIXME this function should split to scpChecker, wcpChecker, LPChecker,
+    // etc.
     public static void newChecker(String callback, String checkerName,
                                   String[] normalProcesses,
                                   PredicateType type) {
-        if(DEBUG) {
+        if (DEBUG) {
             System.out.println("CheckerFactory: newChecker");
         }
         try {
@@ -103,7 +115,7 @@ public class CheckerFactory {
                                                                                              checker,
                                                                                              0);
                 server.bind(checkerName, checkerStub);
-                if(DEBUG) {
+                if (DEBUG) {
                     System.out.println("binding checker " + checkerName);
                 }
                 break;
