@@ -89,6 +89,11 @@ public class PushSensorAgent extends SensorAgent {
                 
                 if(values != null) {
                     dataSource.update(this.name, values);
+                } else {
+                    if(DEBUG) {
+                        System.out.println("Sensor Stopped!");
+                    }
+                    return;   
                 }
             }
         } catch(Exception e) {
