@@ -103,6 +103,19 @@ public class SCPChecker extends AbstractChecker {
         }
         messages.add(msg);
     }
+    
+    // FIX bug of issue 8 at http://mipa.googlecode.com
+    private void addOnce(ArrayList<Integer> list, Integer num) {
+        boolean already = false;
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i).intValue() == num.intValue()) {
+                already = true;
+                break;
+            }
+        }
+        if(already == false) list.add(num);
+    }
+
     /*
      * -------------------------------------------------------
      */
@@ -165,7 +178,8 @@ public class SCPChecker extends AbstractChecker {
                                                        qiHead
                                                              .getHi())) {
                                     
-                                    newchanged.add(new Integer(elem));
+                                    //newchanged.add(new Integer(elem));
+                                    addOnce(newchanged, new Integer(elem));
                                 }
                                 if (qiHead
                                           .getLo()
@@ -173,7 +187,8 @@ public class SCPChecker extends AbstractChecker {
                                                        qjHead
                                                              .getHi())) {
                                     
-                                    newchanged.add(new Integer(j));
+                                    //newchanged.add(new Integer(j));
+                                    addOnce(newchanged, new Integer(j));
                                 }
                             }
                         } // end for j

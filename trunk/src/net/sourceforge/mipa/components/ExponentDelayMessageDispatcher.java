@@ -46,7 +46,7 @@ public class ExponentDelayMessageDispatcher extends GenericMessageDispatcher {
      */
     @Override
     public void addDispatchTime(Message message) {
-        double lambda = 0.0005;
+        double lambda = 0.0002;
         int delay = (int) ExponentDistribution.exponent(lambda);
         out.println(delay);
         out.flush();
