@@ -104,12 +104,6 @@ public class OGASubChecker extends AbstractChecker {
                 for (int i = 0; i < size; i++) {
                     Message elem = buffer.remove(0);
                     messages.add(elem);
-                    if(DEBUG) {
-                        System.out.print(elem.getMessageID() + " ");
-                    }
-                }
-                if(DEBUG) {
-                    System.out.println();
                 }
                 check(messages);
             }
