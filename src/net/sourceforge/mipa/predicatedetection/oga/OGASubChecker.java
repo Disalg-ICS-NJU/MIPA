@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
+import static config.Debug.DEBUG;
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
 
@@ -101,7 +102,14 @@ public class OGASubChecker extends AbstractChecker {
                 ArrayList<Message> buffer = msgBuffer.get(id);
                 int size = buffer.size();
                 for (int i = 0; i < size; i++) {
-                    messages.add(buffer.remove(0));
+                    Message elem = buffer.remove(0);
+                    messages.add(elem);
+                    if(DEBUG) {
+                        System.out.print(elem.getMessageID() + " ");
+                    }
+                }
+                if(DEBUG) {
+                    System.out.println();
                 }
                 check(messages);
             }
@@ -135,6 +143,18 @@ public class OGASubChecker extends AbstractChecker {
         currentMessageCount[id] = pre + 1;
         return true;
     }
+    
+    // FIX bug of issue 8 at http://mipa.googlecode.com
+    private void addOnce(ArrayList<Integer> list, Integer num) {
+        boolean already = false;
+        for(int i = 0; i < list.size(); i++) {
+            if(list.get(i).intValue() == num.intValue()) {
+                already = true;
+                break;
+            }
+        }
+        if(already == false) list.add(num);
+    }
 
     private void check(ArrayList<Message> messages) {
 
@@ -148,7 +168,11 @@ public class OGASubChecker extends AbstractChecker {
         ArrayList<OGAMessageContent> queue = queues.get(id);
         // queue.add(content);
 
-        if (queue.size() == 0) {
+        if(queue.size() != 0) {
+            for (int i = 0; i < contents.size(); i++)
+                queue.add(contents.get(i));
+            
+        } else {    // queue.size() == 0
             for (int i = 0; i < contents.size(); i++)
                 queue.add(contents.get(i));
 
@@ -173,7 +197,8 @@ public class OGASubChecker extends AbstractChecker {
                                                        qiHead
                                                              .getHi())) {
 
-                                    newchanged.add(new Integer(elem));
+                                    //newchanged.add(new Integer(elem));
+                                    addOnce(newchanged, new Integer(elem));
                                 }
                                 if (qiHead
                                           .getLo()
@@ -181,7 +206,8 @@ public class OGASubChecker extends AbstractChecker {
                                                        qjHead
                                                              .getHi())) {
 
-                                    newchanged.add(new Integer(j));
+                                    //newchanged.add(new Integer(j));
+                                    addOnce(newchanged, new Integer(j));
                                 }
                             }
                         } // end for j
@@ -190,7 +216,6 @@ public class OGASubChecker extends AbstractChecker {
                     for (int i = 0; i < changed.size(); i++) {
                         int elem = changed.get(i).intValue();
                         
-                        //FIXME why queues(elem) will be empty.
                         assert(queues.get(elem).size() != 0);
                         queues.get(elem).remove(0);
                     }
@@ -276,11 +301,7 @@ public class OGASubChecker extends AbstractChecker {
                 for (int i = 0; i < topCheckers.length; i++)
                     send(MessageType.Detection, topCheckers[i], content);
             }
-        } // :end if(queue.size() == 0)
-        else {
-            for (int i = 0; i < contents.size(); i++)
-                queue.add(contents.get(i));
-        }
+        } // :end else (queue.size() == 0)
     }
 
     private void send(MessageType type, String receiverName,
