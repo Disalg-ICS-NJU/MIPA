@@ -91,7 +91,7 @@ public class NamingImp implements Naming {
      * Formats registry address.
      */
     public void formatAddress() {
-        formatAddress = registryAddress + ":" + port + "/";
+        formatAddress = "rmi://" + registryAddress + ":" + port + "/";
         System.out.println(formatAddress);
     }
 
