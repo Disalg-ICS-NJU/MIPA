@@ -49,8 +49,6 @@ public class StructureParser {
      * 
      * @param predicate
      *            a document
-     * @param type
-     *            predicate type
      */
     public Structure parseStructure(Document predicate) {
         Structure result = null;

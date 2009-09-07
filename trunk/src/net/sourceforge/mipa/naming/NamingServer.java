@@ -45,7 +45,7 @@ public class NamingServer {
     /**
      * <code>NamingServer</code> construction.
      * 
-     * @param port
+     * @param configFile config file.
      */
     public NamingServer(String configFile) {
         parseConfig(configFile);
