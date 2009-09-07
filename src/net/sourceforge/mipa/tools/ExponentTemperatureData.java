@@ -28,23 +28,23 @@ import java.io.PrintWriter;
 public class ExponentTemperatureData {
 
     public static void main(String[] args) {
-        int timeGap = 1000;
+        int timeGap = 200;
         
         String outputFile = "data/temperature_temp";
         PrintWriter output = null;
-        double intervalLambda = 0.1;
-        double intervalGapLambda = 0.1;
+        double intervalLambda = 1.0 / 6;
+        double intervalGapLambda = 1.0 / 10;
         
-        double threshold = 20;
+        double threshold = 40;
         // The two values should be auto adaptive.
-        double falseValue = 19;
-        double trueValue = 21;
+        double falseValue = 39;
+        double trueValue = 41;
         
         try {
             output = new PrintWriter(outputFile);
             output.println(timeGap);
             
-            int count = 100;
+            int count = 200;
             for(int i = 0; i < count; i++) {
                 double gapLength = ExponentDistribution.exponent(intervalGapLambda);
                 for(int j = 0; j < (int) gapLength; j++) 

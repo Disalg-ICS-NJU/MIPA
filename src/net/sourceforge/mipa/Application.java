@@ -28,6 +28,7 @@ import java.rmi.RemoteException;
  */
 public class Application extends AbstractApplication {
     
+    int count;
     /**
      * <code>Application</code> construction.
      * 
@@ -36,6 +37,7 @@ public class Application extends AbstractApplication {
      */
     public Application(String fileName) {
         super(fileName);
+        count = 0;
     }
     
     @Override
@@ -43,6 +45,8 @@ public class Application extends AbstractApplication {
         //TODO implements application logic
         System.out.println("Result returns:");
         System.out.println("\t" + value);
+        count++;
+        System.out.println("count is " + count);
     }
 
     public static void main(String[] args) {

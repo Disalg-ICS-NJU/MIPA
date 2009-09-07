@@ -189,6 +189,9 @@ public class OGASubChecker extends AbstractChecker {
                     changed = newchanged;
                     for (int i = 0; i < changed.size(); i++) {
                         int elem = changed.get(i).intValue();
+                        
+                        //FIXME why queues(elem) will be empty.
+                        assert(queues.get(elem).size() != 0);
                         queues.get(elem).remove(0);
                     }
                 }// end while

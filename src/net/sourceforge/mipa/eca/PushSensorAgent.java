@@ -76,14 +76,15 @@ public class PushSensorAgent extends SensorAgent {
                 
                 String[] values = sensor.getData();
                 if(DEBUG) {
+                    System.out.println("------------------------------");
                     if(values != null) {
                         System.out.println(name + " sensor list:");
                         for(int i = 0; i < values.length; i++) {
                             System.out.println("\t" + values[i]);
                         }
                     }
-                    else
-                        System.out.println(name + " sensor has no data now.");
+                    //else
+                        //System.out.println(name + " sensor has no data now.");
                 }
                 
                 if(values != null) {

@@ -35,12 +35,12 @@ public class ExponentRfidData {
         // TODO Auto-generated method stub
         ArrayList<String> tags = new ArrayList<String>();
         
-        int timeGap = 1000;
+        int timeGap = 200;
         String concernedTag = "tag_00001";
         String outputFile = "data/RFID_temp";
         PrintWriter output = null;
-        double intervalLambda = 0.1;
-        double intervalGapLambda = 0.1;
+        double intervalLambda = 1.0 / 10;
+        double intervalGapLambda = 1.0 / 6;
         
         
         tags.add(concernedTag);
@@ -53,7 +53,7 @@ public class ExponentRfidData {
                 output.println(tags.get(i));
             }
             for(int i = 0; i < tags.size(); i++) {
-                int count = 100;
+                int count = 200;
                 String stream = "";
                 for(int j = 0; j < count; j++) {
                     double gapLength = ExponentDistribution.exponent(intervalGapLambda);
