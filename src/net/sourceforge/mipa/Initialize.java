@@ -57,6 +57,7 @@ public class Initialize {
      */
     public boolean initialize() {
 
+      //TODO parse config will move into MIPAResource.
         parseConfig("config/config.xml");
 
         try {

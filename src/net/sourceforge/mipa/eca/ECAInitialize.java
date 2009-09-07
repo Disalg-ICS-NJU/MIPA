@@ -49,6 +49,7 @@ public class ECAInitialize {
      * initialize method.
      */
     public void initialize() {
+        //TODO parse config will move into MIPAResource.
         parseConfig("config/config.xml");
 
         String namingAddress = MIPAResource.getNamingAddress();

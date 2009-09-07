@@ -20,8 +20,14 @@
 
 package net.sourceforge.mipa.naming;
 
+import java.io.File;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
 
 /**
  * This class <code>NamingServer</code> provides Naming resolving.
@@ -41,9 +47,8 @@ public class NamingServer {
      * 
      * @param port
      */
-    public NamingServer(String address, int port) {
-        this.address = address;
-        this.port = port;
+    public NamingServer(String configFile) {
+        parseConfig(configFile);
     }
 
     /**
@@ -68,16 +73,34 @@ public class NamingServer {
             e.printStackTrace();
         }
     }
+    
+    private void parseConfig(String fileName) {
+        try {
+            File f = new File(fileName);
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory
+                                                                   .newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(f);
+
+            address = doc.getElementsByTagName("address").item(0)
+                                .getFirstChild().getNodeValue();
+
+            port = Integer.parseInt(doc.getElementsByTagName("port").item(0)
+                             .getFirstChild().getNodeValue());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param args
      */
     public static void main(String[] args) {
 
-        String address = "rmi://127.0.0.1";
-        int port = 1099;
-
-        NamingServer server = new NamingServer(address, port);
+        //TODO parse config will move into MIPAResource.
+        NamingServer server = new NamingServer("config/config.xml");
         System.out.println("Naming server is running...");
         server.startServer();
     }

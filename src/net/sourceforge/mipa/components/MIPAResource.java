@@ -30,7 +30,9 @@ import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
  */
 public class MIPAResource {
     /** naming server address */
-    private static String namingAddress;
+    private static String namingAddress = null;
+    
+    private static int port = 0;
 
     private static Naming server = null;
 
@@ -44,6 +46,8 @@ public class MIPAResource {
     
     private static MessageDispatcher messageDispatcher = null;
 
+    //TODO parse config will move into MIPAResource.
+    
     /**
      * returns naming server address.
      * 
