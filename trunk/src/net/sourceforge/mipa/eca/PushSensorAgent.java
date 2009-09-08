@@ -75,17 +75,6 @@ public class PushSensorAgent extends SensorAgent {
                 Thread.sleep(gap);
                 
                 String[] values = sensor.getData();
-                if(DEBUG) {
-                    System.out.println("------------------------------");
-                    if(values != null) {
-                        System.out.println(name + " sensor list:");
-                        for(int i = 0; i < values.length; i++) {
-                            System.out.println("\t" + values[i]);
-                        }
-                    }
-                    //else
-                        //System.out.println(name + " sensor has no data now.");
-                }
                 
                 if(values != null) {
                     dataDisseminate.update(this.name, values);
@@ -93,7 +82,7 @@ public class PushSensorAgent extends SensorAgent {
                     if(DEBUG) {
                         System.out.println("Sensor Stopped!");
                     }
-                    return;   
+                    return;
                 }
             }
         } catch(Exception e) {
