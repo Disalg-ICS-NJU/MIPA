@@ -144,8 +144,9 @@ public class ECAInitialize {
             */
             String eventName = "temperature";
             String valueType = "Double";
+            DataDisseminate temperatureDataDisseminate = new DataDisseminate(dataSourceStub, 1);
             Sensor simulateTemperature = new SimulationTemperature("data/temperature");
-            SensorAgent temperature = new PushSensorAgent(dataSourceStub, 
+            SensorAgent temperature = new PushSensorAgent(temperatureDataDisseminate, 
                                                                 eventName, 
                                                                 valueType, 
                                                                 simulateTemperature);
@@ -154,8 +155,9 @@ public class ECAInitialize {
             
             eventName = "RFID";
             valueType = "String";
+            DataDisseminate RFIDDataDisseminate = new DataDisseminate(dataSourceStub, 1);
             Sensor simulateRFID = new SimulationRFID("data/RFID");
-            SensorAgent RFID = new PushSensorAgent(dataSourceStub,
+            SensorAgent RFID = new PushSensorAgent(RFIDDataDisseminate,
                                                          eventName,
                                                          valueType,
                                                          simulateRFID);
@@ -165,7 +167,8 @@ public class ECAInitialize {
             eventName = "temperature_1";
             valueType = "Double";
             Sensor simulateTemperature_1 = new SimulationTemperature("data/temperature_1");
-            SensorAgent temperature_1 = new PushSensorAgent(dataSourceStub,
+            DataDisseminate temperatureDataDisseminate_1 = new DataDisseminate(dataSourceStub, 1);
+            SensorAgent temperature_1 = new PushSensorAgent(temperatureDataDisseminate_1,
                                                                    eventName,
                                                                    valueType,
                                                                    simulateTemperature_1);
@@ -175,7 +178,8 @@ public class ECAInitialize {
             eventName = "RFID_1";
             valueType = "String";
             Sensor simulateRFID_1 = new SimulationRFID("data/RFID_1");
-            SensorAgent RFID_1 = new PushSensorAgent(dataSourceStub,
+            DataDisseminate RFIDDataDisseminate_1 = new DataDisseminate(dataSourceStub, 1);
+            SensorAgent RFID_1 = new PushSensorAgent(RFIDDataDisseminate_1,
                                                            eventName,
                                                            valueType,
                                                            simulateRFID_1);
