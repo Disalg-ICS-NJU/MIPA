@@ -28,7 +28,7 @@ package net.sourceforge.mipa.eca;
 public abstract class SensorAgent implements Runnable {
     
     /** data source of ECA mechanism. */
-    protected DataSource dataSource;
+    protected DataDisseminate dataDisseminate;
     
     /** sensor agent's name */
     protected String name;
@@ -36,8 +36,8 @@ public abstract class SensorAgent implements Runnable {
     /** sensor agent's value type */
     protected String valueType;
     
-    public SensorAgent(DataSource dataSource, String name, String valueType) {
-        this.dataSource = dataSource;
+    public SensorAgent(DataDisseminate dataDisseminate, String name, String valueType) {
+        this.dataDisseminate = dataDisseminate;
         this.name = name;
         this.valueType = valueType;
     }

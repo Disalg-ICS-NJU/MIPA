@@ -34,8 +34,8 @@ public class TemperatureAgent extends SensorAgent {
     private Sensor sensor;
     
     
-    public TemperatureAgent(DataSource source, String name, String valueType) {
-        super(source, name, valueType);
+    public TemperatureAgent(DataDisseminate disseminate, String name, String valueType) {
+        super(disseminate, name, valueType);
         sensor = new Temperature();
     }
     
@@ -64,7 +64,7 @@ public class TemperatureAgent extends SensorAgent {
                         System.out.println("temperature sensor has no data now.");
                 }
                 
-                if(values != null) dataSource.update(this.name, values);
+                if(values != null) dataDisseminate.update(this.name, values);
                 
                 
             }

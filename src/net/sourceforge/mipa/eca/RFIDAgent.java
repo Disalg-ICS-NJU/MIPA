@@ -33,8 +33,8 @@ public class RFIDAgent extends SensorAgent {
     /** the sensor which sensor agent manages */
     protected Sensor sensor;
     
-    public RFIDAgent(DataSource dataSource, String name, String valueType) {
-        super(dataSource, name, valueType);
+    public RFIDAgent(DataDisseminate dataDisseminate, String name, String valueType) {
+        super(dataDisseminate, name, valueType);
         sensor = new RFID();
     }
     
@@ -78,7 +78,7 @@ public class RFIDAgent extends SensorAgent {
                         System.out.println("RFID sensor has no data now.");
                 }
 
-                if(values != null) dataSource.update(this.name, values);
+                if(values != null) dataDisseminate.update(this.name, values);
             }
         } catch(Exception e) {
             e.printStackTrace();
