@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.eca;
 
+import static config.Debug.DEBUG;
 import java.util.ArrayList;
 
 /**
@@ -48,7 +49,19 @@ public class DataDisseminate {
         dataPool.add(data);
         
         if(count >= pushFreq) {
+            if(DEBUG) {
+                System.out.println("====================================================");
+                System.out.println(sensorAgentName + " sensor list:");
+            }
             while(dataPool.size() > 0) {
+                if(DEBUG) {
+                    String[] values = dataPool.get(0);
+                    System.out.println("-----------------------------");
+                    
+                    for(int i = 0; i < values.length; i++) {
+                        System.out.println("\t" + values[i]);
+                    }
+                }
                 try {
                     dataSource.update(sensorAgentName, dataPool.remove(0));
                 } catch(Exception e) {

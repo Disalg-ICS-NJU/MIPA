@@ -142,9 +142,10 @@ public class ECAInitialize {
             t = new Thread(pushRFID);
             t.start();
             */
+            int freq = 7;
             String eventName = "temperature";
             String valueType = "Double";
-            DataDisseminate temperatureDataDisseminate = new DataDisseminate(dataSourceStub, 1);
+            DataDisseminate temperatureDataDisseminate = new DataDisseminate(dataSourceStub, freq);
             Sensor simulateTemperature = new SimulationTemperature("data/temperature");
             SensorAgent temperature = new PushSensorAgent(temperatureDataDisseminate, 
                                                                 eventName, 
@@ -155,7 +156,7 @@ public class ECAInitialize {
             
             eventName = "RFID";
             valueType = "String";
-            DataDisseminate RFIDDataDisseminate = new DataDisseminate(dataSourceStub, 1);
+            DataDisseminate RFIDDataDisseminate = new DataDisseminate(dataSourceStub, freq);
             Sensor simulateRFID = new SimulationRFID("data/RFID");
             SensorAgent RFID = new PushSensorAgent(RFIDDataDisseminate,
                                                          eventName,
@@ -167,7 +168,7 @@ public class ECAInitialize {
             eventName = "temperature_1";
             valueType = "Double";
             Sensor simulateTemperature_1 = new SimulationTemperature("data/temperature_1");
-            DataDisseminate temperatureDataDisseminate_1 = new DataDisseminate(dataSourceStub, 1);
+            DataDisseminate temperatureDataDisseminate_1 = new DataDisseminate(dataSourceStub, freq);
             SensorAgent temperature_1 = new PushSensorAgent(temperatureDataDisseminate_1,
                                                                    eventName,
                                                                    valueType,
@@ -178,7 +179,7 @@ public class ECAInitialize {
             eventName = "RFID_1";
             valueType = "String";
             Sensor simulateRFID_1 = new SimulationRFID("data/RFID_1");
-            DataDisseminate RFIDDataDisseminate_1 = new DataDisseminate(dataSourceStub, 1);
+            DataDisseminate RFIDDataDisseminate_1 = new DataDisseminate(dataSourceStub, freq);
             SensorAgent RFID_1 = new PushSensorAgent(RFIDDataDisseminate_1,
                                                            eventName,
                                                            valueType,
