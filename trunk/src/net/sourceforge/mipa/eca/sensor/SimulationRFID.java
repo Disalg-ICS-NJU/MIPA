@@ -66,12 +66,13 @@ public class SimulationRFID implements Sensor {
             for (int i = 0; i < num; i++) {
                 indicators[i] = 0;
             }
-            
+            /*
             if(DEBUG) {
                 for(int i = 0; i < sources.size(); i++) {
                     System.out.println(sources.get(i));
                 }
             }
+            */
 
         } catch (Exception e) {
             e.printStackTrace();

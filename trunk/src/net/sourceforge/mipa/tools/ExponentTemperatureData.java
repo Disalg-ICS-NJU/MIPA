@@ -31,20 +31,24 @@ public class ExponentTemperatureData {
         int timeGap = 200;
         
         String outputFile = "data/temperature_temp";
+        String outputFile_1 = "data/temperature_1_temp";
         PrintWriter output = null;
-        double intervalLambda = 1.0 / 6;
-        double intervalGapLambda = 1.0 / 10;
+        PrintWriter output_1 = null;
+        double intervalLambda = 1.0 / 10;
+        double intervalGapLambda = 1.0 / 5;
         
-        double threshold = 40;
+        double threshold = 30;
         // The two values should be auto adaptive.
-        double falseValue = 39;
-        double trueValue = 41;
+        double falseValue = 25;
+        double trueValue = 35;
         
         try {
             output = new PrintWriter(outputFile);
+            output_1 = new PrintWriter(outputFile_1);
             output.println(timeGap);
+            output_1.println(timeGap);
             
-            int count = 200;
+            int count = 2000;
             for(int i = 0; i < count; i++) {
                 double gapLength = ExponentDistribution.exponent(intervalGapLambda);
                 for(int j = 0; j < (int) gapLength; j++) 
@@ -55,6 +59,18 @@ public class ExponentTemperatureData {
             }
             output.flush();
             output.close();
+            for(int i = 0; i < count; i++) {
+                double intervalLength = ExponentDistribution.exponent(intervalGapLambda);
+                for(int j = 0; j < (int) intervalLength; j++) {
+                    output_1.println(trueValue);
+                }
+                double gapLength = ExponentDistribution.exponent(intervalLambda);
+                for(int j = 0; j < (int) gapLength; j++) {
+                    output_1.println(falseValue);
+                }
+            }
+            output_1.flush();
+            output_1.close();
             
         } catch(Exception e) {
             e.printStackTrace();

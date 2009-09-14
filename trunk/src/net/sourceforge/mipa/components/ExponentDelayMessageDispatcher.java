@@ -19,34 +19,52 @@
  */
 package net.sourceforge.mipa.components;
 
+import static config.Debug.DEBUG;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.PrintWriter;
 
 import net.sourceforge.mipa.tools.ExponentDistribution;
 
 /**
- *
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class ExponentDelayMessageDispatcher extends GenericMessageDispatcher {
-    
+
     PrintWriter out;
+    
+    double lambda;
     
     public ExponentDelayMessageDispatcher() {
         super();
-        
+
         try {
             out = new PrintWriter("log/MessageDispatcherDelay");
-        } catch(Exception e) {
+            BufferedReader rd = new BufferedReader(
+                                                   new FileReader(
+                                                                  "config/message_dispatcher_exponent"));
+            lambda = Double.parseDouble(rd.readLine());
+            
+            if(DEBUG) {
+                System.out.println("message dispatcher lambda is " + lambda);
+            }
+            
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /* (non-Javadoc)
-     * @see net.sourceforge.mipa.components.GenericMessageDispatcher#addDispatchTime(net.sourceforge.mipa.components.Message)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * net.sourceforge.mipa.components.GenericMessageDispatcher#addDispatchTime
+     * (net.sourceforge.mipa.components.Message)
      */
     @Override
     public void addDispatchTime(Message message) {
-        double lambda = 0.001;
+        //double lambda = 0.01;
         int delay = (int) ExponentDistribution.exponent(lambda);
         out.println(delay);
         out.flush();
