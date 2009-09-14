@@ -21,7 +21,9 @@ package net.sourceforge.mipa.eca;
 
 import static config.Debug.DEBUG;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
@@ -142,10 +144,16 @@ public class ECAInitialize {
             t = new Thread(pushRFID);
             t.start();
             */
-            int freq = 7;
+            int freq = 1;
+            if(DEBUG) {
+                BufferedReader rd = new BufferedReader(new FileReader("config/update_interval"));
+                freq = Integer.parseInt(rd.readLine());
+                System.out.println("update interval is " + freq);
+            }
+            
             String eventName = "temperature";
             String valueType = "Double";
-            DataDisseminate temperatureDataDisseminate = new DataDisseminate(dataSourceStub, freq);
+            DataDisseminate temperatureDataDisseminate = new DataDisseminate(dataSourceStub, freq, true);
             Sensor simulateTemperature = new SimulationTemperature("data/temperature");
             SensorAgent temperature = new PushSensorAgent(temperatureDataDisseminate, 
                                                                 eventName, 
@@ -165,10 +173,11 @@ public class ECAInitialize {
             t = new Thread(RFID);
             t.start();
             
+            
             eventName = "temperature_1";
             valueType = "Double";
             Sensor simulateTemperature_1 = new SimulationTemperature("data/temperature_1");
-            DataDisseminate temperatureDataDisseminate_1 = new DataDisseminate(dataSourceStub, freq);
+            DataDisseminate temperatureDataDisseminate_1 = new DataDisseminate(dataSourceStub, freq, true);
             SensorAgent temperature_1 = new PushSensorAgent(temperatureDataDisseminate_1,
                                                                    eventName,
                                                                    valueType,

@@ -19,7 +19,6 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
-import static config.Debug.DEBUG;
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
 

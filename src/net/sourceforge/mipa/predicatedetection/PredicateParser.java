@@ -293,6 +293,7 @@ public class PredicateParser implements PredicateParserMethod {
      * @param s
      */
 
+    @SuppressWarnings("unused")
     private void parseOGAPStructure(String fatherID, Structure s) {
 
         ArrayList<Structure> children = s.getChildren();

@@ -36,7 +36,7 @@ public abstract class GenericMessageDispatcher implements Runnable,
         MessageDispatcher {
 
     /** heart beat time (ms) */
-    protected final static int heartBeat = 5;
+    protected final static int heartBeat = 1;
 
     /** current time of message dispatcher */
     protected long currentTime;

@@ -6,19 +6,19 @@
     <CGS value="conjunction">
       <LP>
 	<formula>
-	  <atom operator="great-than" name="temperature" value="27" />
+	  <atom operator="great-than" name="temperature" value="30" />
 	</formula>
       </LP>
       <LP>
 	<formula>
-	  <atom operator="not-contain" name="RFID" value="tag_00001" />
+	  <atom operator="contain" name="RFID" value="tag_00001" />
 	</formula>
       </LP>
     </CGS>
     <CGS value="conjunction">
     	<LP>
     		<formula>
-    			<atom operator="less-than" name="temperature_1" value="40" />
+    			<atom operator="great-than" name="temperature_1" value="30" />
     		</formula>
     	</LP>
     	<LP>

@@ -44,6 +44,14 @@ public class DataDisseminate {
         dataPool = new ArrayList<String[]>();
     }
     
+    public DataDisseminate(DataSource dataSource, int freq, boolean overlap) {
+        this(dataSource, freq);
+        if(overlap == true) {
+            count = freq / 2;
+            if(count < 1) count = 1;
+        }
+    }
+    
     public void update(String sensorAgentName, String[] data) {
         count++;
         dataPool.add(data);

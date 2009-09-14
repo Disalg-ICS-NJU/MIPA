@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa;
 
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 
 /**
@@ -29,6 +30,8 @@ import java.rmi.RemoteException;
 public class Application extends AbstractApplication {
     
     int count;
+    
+    PrintWriter out;
     /**
      * <code>Application</code> construction.
      * 
@@ -38,6 +41,11 @@ public class Application extends AbstractApplication {
     public Application(String fileName) {
         super(fileName);
         count = 0;
+        try {
+            out = new PrintWriter("log/application_count");
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -47,6 +55,12 @@ public class Application extends AbstractApplication {
         System.out.println("\t" + value);
         count++;
         System.out.println("count is " + count);
+        try {
+            out.println(count);
+            out.flush();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
