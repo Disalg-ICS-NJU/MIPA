@@ -15,6 +15,8 @@ Eclipse.
     3. Select MIPA checkout directory as the root.
 
 
+HOW TO GENERATE DOCUMENTS?
+    Run `ant javadoc` under mipa home directory.
 
 
 HOW TO RUN MIPA SYSTEM?
