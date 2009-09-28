@@ -7,6 +7,7 @@
   <property name="src.dir" value="src" />
   <property name="build.dir" value="build" />
   <property name="classes.dir" value="${build.dir}/classes" />
+  <property name="doc.dir" value="doc" />
 
   <target name="init" depends="clean">
 	<mkdir dir="${classes.dir}" />
@@ -18,6 +19,22 @@
 
   <target name="clean">
 	<delete dir="${build.dir}" />
+  </target>
+  
+  <target name="javadoc">
+	<delete dir="${doc.dir}" />
+	<mkdir dir="${doc.dir}" />
+
+	<javadoc destdir="${doc.dir}"
+			 additionalparam="-J-Duser.language=en_US"
+			 encoding="UTF-8"
+			 author="true"
+			 doctitle="MIPA">
+	  
+	  <packageset dir="${src.dir}">
+		<!--<exclude name="${exclude.classes}" />-->
+	  </packageset>
+	</javadoc>
   </target>
 
 </project>
