@@ -81,13 +81,13 @@ public abstract class AbstractNormalProcess implements Serializable, Runnable,
 
     // public abstract void broadcast(MessageType type, MessageContent content);
 
-    public void receive(Message message) throws RemoteException {
+    public synchronized void receive(Message message) throws RemoteException {
         // if(finished) {
         receiveMsg(message);
         // }
     }
 
-    public void update(String eventName, String value) {
+    public synchronized void update(String eventName, String value) {
         if (finished) {
             boolean newValue = Boolean.parseBoolean(value);
             action(newValue);
