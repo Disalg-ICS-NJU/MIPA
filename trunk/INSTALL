@@ -21,11 +21,22 @@ HOW TO GENERATE DOCUMENTS?
 
 HOW TO RUN MIPA SYSTEM?
 
-    run the demo which MIPA provides in bin/ directory. There are four steps to
-start the demo:
-    1. run naming.sh to start naming server.
-    2. run initialize.sh to initialize MIPA system.
-    3. run ECAInitialize.sh to start ECA resource in MIPA system. ECA resources 
+* RUN IN COMMAND LINE:
+    run the demo which MIPA provides in bin/<platform> directory. There are four steps
+ to start the demo (Make sure you are in bin/<platform> directory):
+    1. run naming.sh<bat> to start naming server.
+    2. run initialize.sh<bat> to initialize MIPA system.
+    3. run ECAInitialize.sh<bat> to start ECA resource in MIPA system. ECA resources 
 could run in different platforms.
-    4. start MIPA application through application.sh, you can run many applications
-in one time.
+    4. start MIPA application through application.sh<bat>, you can run many 
+applications in one time.
+
+* RUN IN ECLIPSE:
+    1. run net.sourceforge.mipa.naming.NamingServer
+    2. run net.sourceforge.mipa.Initialize
+    3. run net.sourceforge.mipa.eca.ECAInitialize
+    4. run net.sourceforge.mipa.Application
+
+
+ABOUT SENSORS' DATA IN mipa-1.2
+
