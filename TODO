@@ -1,4 +1,3 @@
 * sensors' settings read from xml file, like plugins.
 * refines start script
 * VectorClock classify
-* refines control message of Normal Process (send control message to checker is not nessary)
