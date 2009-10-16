@@ -22,20 +22,8 @@ package net.sourceforge.mipa.predicatedetection;
 import static config.Debug.DEBUG;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import net.sourceforge.mipa.components.ContextModeling;
-import net.sourceforge.mipa.components.ContextRetrieving;
-import net.sourceforge.mipa.components.Coordinator;
-import net.sourceforge.mipa.components.Group;
 import net.sourceforge.mipa.components.GroupManager;
-import net.sourceforge.mipa.components.MIPAResource;
-import net.sourceforge.mipa.eca.ECAManager;
-import net.sourceforge.mipa.naming.Catalog;
-import net.sourceforge.mipa.naming.IDManager;
-import net.sourceforge.mipa.naming.Naming;
 
 import org.w3c.dom.Document;
 
@@ -60,7 +48,6 @@ public class PredicateParser implements PredicateParserMethod {
     public PredicateParser(GroupManager groupManager) {
         structureParser = new StructureParser();
         this.groupManager = groupManager;
-        // checkerParser = new CheckerParser();
     }
 
     public synchronized void parsePredicate(String applicationName,
@@ -85,27 +72,5 @@ public class PredicateParser implements PredicateParserMethod {
             System.out
                       .println("This predicate type have not been implemented yet.");
         }
-
-        // checkerParser.parseChecker(predicate, applicationName, type);
     }
-
-
-    /*
-    private void registerLocalPredicate(LocalPredicate lp, String name, Group g) {
-        try {
-            String lowContext = contextModeling.getLowContext(lp.getName());
-            String ecaManagerID = contextRetrieving.getEntityId(lowContext);
-            lp.setValueType(contextModeling.getValueType(lowContext));
-
-            Naming server = MIPAResource.getNamingServer();
-            ECAManager ecaManager = (ECAManager) server.lookup(ecaManagerID);
-
-            System.out.println("find eca manager successfully.");
-            System.out.println(ecaManagerID);
-            ecaManager.registerLocalPredicate(lp, name, g);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    */
 }
