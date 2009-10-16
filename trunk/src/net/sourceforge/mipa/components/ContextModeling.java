@@ -23,18 +23,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The <code>ContextMapping</code> manages mapping between local predicate and
+ * The <code>ContextModeling</code> manages mapping between local predicate and
  * context.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class ContextMapping {
+public class ContextModeling {
     /** mapping event name to entity id */
     private Map<String, String> mapEntityId;
 
     private Map<String, String> mapValueType;
 
-    public ContextMapping() {
+    public ContextModeling() {
         mapEntityId = new HashMap<String, String>();
         mapValueType = new HashMap<String, String>();
     }
