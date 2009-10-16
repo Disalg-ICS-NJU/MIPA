@@ -55,6 +55,7 @@ public class GroupManager {
         this.broker = broker;
     }
     
+    //TODO should remove in future.
     public void setCallback(String callback) {
         this.callback = callback;
     }

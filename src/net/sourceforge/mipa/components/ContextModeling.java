@@ -42,12 +42,12 @@ public class ContextModeling {
     /**
      * maps eventName to entityId.
      * 
-     * @param eventName
-     *            event name
+     * @param highContext
+     *            a high level context
+     * @param lowContext
+     *            a low level context
      * @param valueType
      *            value type of event name
-     * @param entityId
-     *            entity id
      */
     public synchronized void map(String highContext, String lowContext, String valueType)
                                                  throws EventNameBoundTwiceException {
