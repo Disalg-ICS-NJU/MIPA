@@ -1,7 +1,14 @@
-<!ELEMENT sensor (name, id, class, location, SensorType, ValueType)>
+<!ELEMENT sensor (name, id, class, location, ValueType, DataSchema, DataDisseminate, arguments)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT id (#PCDATA)>
 <!ELEMENT class (#PCDATA)>
 <!ELEMENT location (#PCDATA)>
-<!ELEMENT SensorType (#PCDATA)>
 <!ELEMENT ValueType (#PCDATA)>
+<!ELEMENT DataSchema EMPTY>
+<!ATTLIST DataSchema type (push|pull) #REQUIRED>
+<!ELEMENT DataDisseminate EMPTY>
+<!ATTLIST DataDisseminate time CDATA #REQUIRED>
+<!ATTLIST DataDisseminate lazy (true|false) #REQUIRED>
+<!ELEMENT arguments (argument, ArgumentType)+>
+<!ELEMENT argument (#PCDATA)>
+<!ELEMENT ArgumentType (#PCDATA)>
