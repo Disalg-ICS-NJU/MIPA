@@ -144,6 +144,9 @@ public class ECAInitialize {
             t = new Thread(pushRFID);
             t.start();
             */
+            
+            SensorPlugin sensorPlugin = new SensorPlugin(dataSourceStub);
+            /*
             int freq = 1;
             if(DEBUG) {
                 BufferedReader rd = new BufferedReader(new FileReader("config/update_interval"));
@@ -161,7 +164,8 @@ public class ECAInitialize {
                                                                 simulateTemperature);
             Thread t = new Thread(temperature);
             t.start();
-            
+            */
+            /*
             eventName = "RFID";
             valueType = "String";
             DataDisseminate RFIDDataDisseminate = new DataDisseminate(dataSourceStub, freq);
@@ -172,8 +176,8 @@ public class ECAInitialize {
                                                          simulateRFID);
             t = new Thread(RFID);
             t.start();
-            
-            
+            */
+            /*
             eventName = "temperature_1";
             valueType = "Double";
             Sensor simulateTemperature_1 = new SimulationTemperature("data/temperature_1");
@@ -184,7 +188,8 @@ public class ECAInitialize {
                                                                    simulateTemperature_1);
             t = new Thread(temperature_1);
             t.start();
-            
+            */
+            /*
             eventName = "RFID_1";
             valueType = "String";
             Sensor simulateRFID_1 = new SimulationRFID("data/RFID_1");
@@ -195,13 +200,18 @@ public class ECAInitialize {
                                                            simulateRFID_1);
             t = new Thread(RFID_1);
             t.start();
-            
+            */
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
-            resources.add(temperature);
-            resources.add(RFID);
-            resources.add(temperature_1);
-            resources.add(RFID_1);
+            //resources.add(temperature);
+            //resources.add(RFID);
+            //resources.add(temperature_1);
+            //resources.add(RFID_1);
+            
+            resources.add(sensorPlugin.load("config/sensors/temperature.xml"));
+            resources.add(sensorPlugin.load("config/sensors/RFID.xml"));
+            resources.add(sensorPlugin.load("config/sensors/temperature_1.xml"));
+            resources.add(sensorPlugin.load("config/sensors/RFID_1.xml"));
 
             if (DEBUG) {
                 System.out.println("resources value: ");
