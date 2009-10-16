@@ -37,7 +37,7 @@ public class ExponentTemperatureData {
         double intervalLambda = 1.0 / 55;
         double intervalGapLambda = 1.0 / 5;
         
-        double threshold = 30;
+        // double threshold = 30;
         // The two values should be auto adaptive.
         double falseValue = 25;
         double trueValue = 35;

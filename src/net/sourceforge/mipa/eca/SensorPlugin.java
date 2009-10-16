@@ -81,21 +81,6 @@ public class SensorPlugin {
                 }
             }
             
-            /*
-            System.out.println("name: " + name);
-            System.out.println("id: " + id);
-            System.out.println("class_name: " + class_name);
-            System.out.println("location: " + location);
-            System.out.println("value type: " + valueType);
-            System.out.println("data schema: " + dataSchema);
-            System.out.println("data disseminate: " + dataDisseminateTime);
-            
-            for(int i = 0; i < args.size(); i++) {
-                System.out.println("arg " + i + ": " + args.get(i));
-                System.out.println("arg type " + i + ": " + args_type.get(i));
-            }
-            */
-            
             Class cons = Class.forName(class_name);
             
             // get the constructor of sensor.
