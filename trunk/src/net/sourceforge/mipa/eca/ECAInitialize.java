@@ -21,9 +21,7 @@ package net.sourceforge.mipa.eca;
 
 import static config.Debug.DEBUG;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
@@ -32,9 +30,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.MIPAResource;
-import net.sourceforge.mipa.eca.sensor.Sensor;
-import net.sourceforge.mipa.eca.sensor.SimulationRFID;
-import net.sourceforge.mipa.eca.sensor.SimulationTemperature;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
@@ -84,129 +79,11 @@ public class ECAInitialize {
                                                                                       0);
             server.bind(ecaManagerId, ecaManagerStub);
 
-            // start sensor agent in threads.
-            // TODO sensor name should read from config file.
-            // --------------------------------------------------------------
-            // --------------------------------------------------------------
-            /*
-            String eventName = "temperature";
-            String valueType = "Double";
-            SensorAgent temperature = new TemperatureAgent(dataSourceStub,
-                                                           eventName, valueType);
-            Thread t = new Thread(temperature);
-            t.start();
-            // temperature.start();
-            if (DEBUG) {
-                System.out.println("temperature sensor running...");
-            }
-
-            eventName = "RFID";
-            valueType = "String";
-            SensorAgent RFID = new RFIDAgent(dataSourceStub, eventName,
-                                             valueType);
-
-            t = new Thread(RFID);
-            t.start();
-
-            eventName = "temperature_1";
-            valueType = "Double";
-
-            SensorAgent temperature_1 = new TemperatureAgent(dataSourceStub,
-                                                             eventName,
-                                                             valueType);
-            t = new Thread(temperature_1);
-            t.start();
-
-            eventName = "RFID_1";
-            valueType = "String";
-
-            SensorAgent RFID_1 = new RFIDAgent(dataSourceStub, eventName,
-                                               valueType);
-            t = new Thread(RFID_1);
-            t.start();
-            */
-            // --------------------------------------------------------------
-            // --------------------------------------------------------------
-            /*
-            Sensor simulateTemperature = new SimulationTemperature(
-                                                                   "data/temperature");
-            SensorAgent pushSensorAgent = new PushSensorAgent(
-                                                              dataSourceStub,
-                                                              "temp1",
-                                                              "Double",
-                                                              simulateTemperature);
-            t = new Thread(pushSensorAgent);
-            t.start();
-
-            Sensor simulationRFID = new SimulationRFID("data/RFID");
-            SensorAgent pushRFID = new PushSensorAgent(dataSourceStub, "RFID1",
-                                                       "String", simulationRFID);
-            t = new Thread(pushRFID);
-            t.start();
-            */
             
             SensorPlugin sensorPlugin = new SensorPlugin(dataSourceStub);
-            /*
-            int freq = 1;
-            if(DEBUG) {
-                BufferedReader rd = new BufferedReader(new FileReader("config/update_interval"));
-                freq = Integer.parseInt(rd.readLine());
-                System.out.println("update interval is " + freq);
-            }
-            
-            String eventName = "temperature";
-            String valueType = "Double";
-            DataDisseminate temperatureDataDisseminate = new DataDisseminate(dataSourceStub, freq, true);
-            Sensor simulateTemperature = new SimulationTemperature("data/temperature");
-            SensorAgent temperature = new PushSensorAgent(temperatureDataDisseminate, 
-                                                                eventName, 
-                                                                valueType, 
-                                                                simulateTemperature);
-            Thread t = new Thread(temperature);
-            t.start();
-            */
-            /*
-            eventName = "RFID";
-            valueType = "String";
-            DataDisseminate RFIDDataDisseminate = new DataDisseminate(dataSourceStub, freq);
-            Sensor simulateRFID = new SimulationRFID("data/RFID");
-            SensorAgent RFID = new PushSensorAgent(RFIDDataDisseminate,
-                                                         eventName,
-                                                         valueType,
-                                                         simulateRFID);
-            t = new Thread(RFID);
-            t.start();
-            */
-            /*
-            eventName = "temperature_1";
-            valueType = "Double";
-            Sensor simulateTemperature_1 = new SimulationTemperature("data/temperature_1");
-            DataDisseminate temperatureDataDisseminate_1 = new DataDisseminate(dataSourceStub, freq, true);
-            SensorAgent temperature_1 = new PushSensorAgent(temperatureDataDisseminate_1,
-                                                                   eventName,
-                                                                   valueType,
-                                                                   simulateTemperature_1);
-            t = new Thread(temperature_1);
-            t.start();
-            */
-            /*
-            eventName = "RFID_1";
-            valueType = "String";
-            Sensor simulateRFID_1 = new SimulationRFID("data/RFID_1");
-            DataDisseminate RFIDDataDisseminate_1 = new DataDisseminate(dataSourceStub, freq);
-            SensorAgent RFID_1 = new PushSensorAgent(RFIDDataDisseminate_1,
-                                                           eventName,
-                                                           valueType,
-                                                           simulateRFID_1);
-            t = new Thread(RFID_1);
-            t.start();
-            */
+
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
-            //resources.add(temperature);
-            //resources.add(RFID);
-            //resources.add(temperature_1);
-            //resources.add(RFID_1);
             
             resources.add(sensorPlugin.load("config/sensors/temperature.xml"));
             resources.add(sensorPlugin.load("config/sensors/RFID.xml"));

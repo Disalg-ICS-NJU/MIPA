@@ -19,7 +19,6 @@
  */
 package net.sourceforge.mipa.eca.sensor;
 
-import static config.Debug.DEBUG;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
