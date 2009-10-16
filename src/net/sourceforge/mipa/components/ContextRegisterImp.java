@@ -29,9 +29,9 @@ import java.rmi.RemoteException;
 public class ContextRegisterImp implements ContextRegister {
 
     /** context mapping */
-    private ContextMapping mapping;
+    private ContextModeling mapping;
 
-    public ContextRegisterImp(ContextMapping mapping) {
+    public ContextRegisterImp(ContextModeling mapping) {
         this.mapping = mapping;
     }
 

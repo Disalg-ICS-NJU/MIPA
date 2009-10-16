@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.mipa.components.ContextMapping;
+import net.sourceforge.mipa.components.ContextModeling;
 import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.Group;
 import net.sourceforge.mipa.components.MIPAResource;
@@ -49,14 +49,14 @@ public class PredicateParser implements PredicateParserMethod {
     /** checker logic parser reference */
     // private CheckerParser checkerParser;
 
-    private ContextMapping contextMapping;
+    private ContextModeling contextMapping;
 
     private String callback;
 
     /**
      * default construction.
      */
-    public PredicateParser(ContextMapping contextMapping) {
+    public PredicateParser(ContextModeling contextMapping) {
         structureParser = new StructureParser();
         this.contextMapping = contextMapping;
         // checkerParser = new CheckerParser();

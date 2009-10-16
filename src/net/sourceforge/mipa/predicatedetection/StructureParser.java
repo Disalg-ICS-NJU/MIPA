@@ -31,14 +31,14 @@ import org.w3c.dom.NodeList;
 public class StructureParser {
 
     /** context mapping */
-    // private ContextMapping contextMapping;
+    // private ContextModeling contextMapping;
 
     public StructureParser() {
         System.out.println("Testing constructor of STRUCTUREPARSER.");
     }
 
     /*
-     * public StructureParser(ContextMapping contextMapping) {
+     * public StructureParser(ContextModeling contextMapping) {
      * this.contextMapping = contextMapping; }
      */
 

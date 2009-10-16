@@ -27,7 +27,7 @@ import java.rmi.server.UnicastRemoteObject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import net.sourceforge.mipa.components.ContextMapping;
+import net.sourceforge.mipa.components.ContextModeling;
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.ContextRegisterImp;
 import net.sourceforge.mipa.components.Coordinator;
@@ -79,7 +79,7 @@ public class Initialize {
                 System.out.println("Creating ContextRegister...");
             }
 
-            ContextMapping contextMapping = new ContextMapping();
+            ContextModeling contextMapping = new ContextModeling();
 
             ContextRegisterImp contextRegister = new ContextRegisterImp(
                                                                         contextMapping);
