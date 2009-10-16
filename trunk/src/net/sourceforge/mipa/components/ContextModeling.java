@@ -23,19 +23,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The <code>ContextModeling</code> manages mapping between local predicate and
- * context.
+ * The <code>ContextModeling</code> manages mapping between high context and
+ * low context.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class ContextModeling {
     /** mapping event name to entity id */
-    private Map<String, String> mapEntityId;
+    private Map<String, String> mapContext;
 
     private Map<String, String> mapValueType;
 
     public ContextModeling() {
-        mapEntityId = new HashMap<String, String>();
+        mapContext = new HashMap<String, String>();
         mapValueType = new HashMap<String, String>();
     }
 
@@ -49,44 +49,42 @@ public class ContextModeling {
      * @param entityId
      *            entity id
      */
-    public synchronized void map(String eventName, String valueType,
-                                 String entityId)
+    public synchronized void map(String highContext, String lowContext, String valueType)
                                                  throws EventNameBoundTwiceException {
-        if (mapEntityId.containsKey(eventName) == true)
-            throw new EventNameBoundTwiceException(eventName);
+        if (mapContext.containsKey(highContext) == true)
+            throw new EventNameBoundTwiceException(highContext);
 
-        mapEntityId.put(eventName, entityId);
-        mapValueType.put(eventName, valueType);
+        mapContext.put(highContext, lowContext);
+        mapValueType.put(lowContext, valueType);
     }
 
     /**
-     * gets mapping entity id.
+     * gets mapping low context.
      * 
-     * @param eventName
-     *            event name
-     * @return mapping result: entity id(a <code>String</code>)
+     * @param highContext
+     *            high context
+     * @return mapping result: low context(a <code>String</code>)
      * @throws EventNameNotFoundException
      */
-    public String getEntityId(String eventName)
+    public String getLowContext(String highContext)
                                               throws EventNameNotFoundException {
-        if (mapEntityId.containsKey(eventName) == false)
-            throw new EventNameNotFoundException(eventName);
+        if (mapContext.containsKey(highContext) == false)
+            throw new EventNameNotFoundException(highContext);
         
-        return mapEntityId.get(eventName);
-        
+        return mapContext.get(highContext);
     }
     
     /**
      * gets mapping value type.
      * 
-     * @param eventName
-     * @return value type of event name.
+     * @param lowContext low context
+     * @return value type of low context.
      * @throws EventNameNotFoundException
      */
-    public String getValueType(String eventName) throws EventNameNotFoundException {
-        if(mapValueType.containsKey(eventName) == false)
-            throw new EventNameNotFoundException(eventName);
+    public String getValueType(String lowContext) throws EventNameNotFoundException {
+        if(mapValueType.containsKey(lowContext) == false)
+            throw new EventNameNotFoundException(lowContext);
         
-        return mapValueType.get(eventName);
+        return mapValueType.get(lowContext);
     }
 }
