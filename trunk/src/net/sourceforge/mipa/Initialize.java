@@ -27,6 +27,7 @@ import java.rmi.server.UnicastRemoteObject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import net.sourceforge.mipa.components.Broker;
 import net.sourceforge.mipa.components.ContextModeling;
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.ContextRegisterImp;
@@ -34,6 +35,7 @@ import net.sourceforge.mipa.components.ContextRetrieving;
 import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.CoordinatorImp;
 import net.sourceforge.mipa.components.ExponentDelayMessageDispatcher;
+import net.sourceforge.mipa.components.GroupManager;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.MessageDispatcher;
 import net.sourceforge.mipa.naming.IDManager;
@@ -107,8 +109,12 @@ public class Initialize {
             if (DEBUG) {
                 System.out.println("Creating PredicateParser...");
             }
-            PredicateParser predicateParser = new PredicateParser(
-                                                                  contextModeling, contextRetrieving);
+            
+            Broker broker = new Broker(contextModeling, contextRetrieving);
+            
+            GroupManager groupManager = new GroupManager(contextModeling, contextRetrieving, broker);
+            
+            PredicateParser predicateParser = new PredicateParser(groupManager);
             PredicateParserMethod predicateParserStub = (PredicateParserMethod) UnicastRemoteObject
                                                                                                    .exportObject(
                                                                                                                  predicateParser,
