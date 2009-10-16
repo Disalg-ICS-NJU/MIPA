@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sourceforge.mipa.components.ContextModeling;
+import net.sourceforge.mipa.components.ContextRetrieving;
 import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.Group;
 import net.sourceforge.mipa.components.MIPAResource;
@@ -49,16 +50,19 @@ public class PredicateParser implements PredicateParserMethod {
     /** checker logic parser reference */
     // private CheckerParser checkerParser;
 
-    private ContextModeling contextMapping;
+    private ContextModeling contextModeling;
+    
+    private ContextRetrieving contextRetrieving;
 
     private String callback;
 
     /**
      * default construction.
      */
-    public PredicateParser(ContextModeling contextMapping) {
+    public PredicateParser(ContextModeling contextModeling, ContextRetrieving contextRetrieving) {
         structureParser = new StructureParser();
-        this.contextMapping = contextMapping;
+        this.contextModeling = contextModeling;
+        this.contextRetrieving = contextRetrieving;
         // checkerParser = new CheckerParser();
     }
 
@@ -368,8 +372,9 @@ public class PredicateParser implements PredicateParserMethod {
 
     private void registerLocalPredicate(LocalPredicate lp, String name, Group g) {
         try {
-            String ecaManagerID = contextMapping.getEntityId(lp.getName());
-            lp.setValueType(contextMapping.getValueType(lp.getName()));
+            String lowContext = contextModeling.getLowContext(lp.getName());
+            String ecaManagerID = contextRetrieving.getEntityId(lowContext);
+            lp.setValueType(contextModeling.getValueType(lowContext));
 
             Naming server = MIPAResource.getNamingServer();
             ECAManager ecaManager = (ECAManager) server.lookup(ecaManagerID);

@@ -28,11 +28,15 @@ import java.rmi.RemoteException;
  */
 public class ContextRegisterImp implements ContextRegister {
 
-    /** context mapping */
+    /** context modeling */
     private ContextModeling mapping;
+    
+    /** context retrieving */
+    private ContextRetrieving retrieving;
 
-    public ContextRegisterImp(ContextModeling mapping) {
+    public ContextRegisterImp(ContextModeling mapping, ContextRetrieving retrieving) {
         this.mapping = mapping;
+        this.retrieving = retrieving;
     }
 
     /*
@@ -47,7 +51,8 @@ public class ContextRegisterImp implements ContextRegister {
                                               String valueType, String entityId)
                                                                                 throws RemoteException {
         try {
-            mapping.map(resourceName, valueType, entityId);
+            mapping.map(resourceName, resourceName, valueType);
+            retrieving.setEntityID(resourceName, entityId);
         } catch (Exception e) {
             e.printStackTrace();
         }

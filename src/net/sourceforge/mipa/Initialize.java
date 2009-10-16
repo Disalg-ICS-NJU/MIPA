@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import net.sourceforge.mipa.components.ContextModeling;
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.ContextRegisterImp;
+import net.sourceforge.mipa.components.ContextRetrieving;
 import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.CoordinatorImp;
 import net.sourceforge.mipa.components.ExponentDelayMessageDispatcher;
@@ -79,10 +80,12 @@ public class Initialize {
                 System.out.println("Creating ContextRegister...");
             }
 
-            ContextModeling contextMapping = new ContextModeling();
+            ContextModeling contextModeling = new ContextModeling();
+            
+            ContextRetrieving contextRetrieving = new ContextRetrieving();
 
             ContextRegisterImp contextRegister = new ContextRegisterImp(
-                                                                        contextMapping);
+                                                                        contextModeling, contextRetrieving);
             ContextRegister contextRegisterStub = (ContextRegister) UnicastRemoteObject
                                                                                        .exportObject(
                                                                                                      contextRegister,
@@ -105,7 +108,7 @@ public class Initialize {
                 System.out.println("Creating PredicateParser...");
             }
             PredicateParser predicateParser = new PredicateParser(
-                                                                  contextMapping);
+                                                                  contextModeling, contextRetrieving);
             PredicateParserMethod predicateParserStub = (PredicateParserMethod) UnicastRemoteObject
                                                                                                    .exportObject(
                                                                                                                  predicateParser,
