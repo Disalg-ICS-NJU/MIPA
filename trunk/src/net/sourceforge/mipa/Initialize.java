@@ -73,9 +73,8 @@ public class Initialize {
 
             IDManagerImp idManager = new IDManagerImp();
             IDManager managerStub = (IDManager) UnicastRemoteObject
-                                                                   .exportObject(
-                                                                                 idManager,
-                                                                                 0);
+                                                         .exportObject(idManager,
+                                                                       0);
             server.bind("IDManager", managerStub);
 
             if (DEBUG) {
@@ -86,21 +85,24 @@ public class Initialize {
             
             ContextRetrieving contextRetrieving = new ContextRetrieving();
 
-            ContextRegisterImp contextRegister = new ContextRegisterImp(
-                                                                        contextModeling, contextRetrieving);
-            ContextRegister contextRegisterStub = (ContextRegister) UnicastRemoteObject
-                                                                                       .exportObject(
-                                                                                                     contextRegister,
-                                                                                                     0);
+            ContextRegisterImp contextRegister 
+                                    = new ContextRegisterImp(contextModeling, 
+                                                               contextRetrieving);
+            ContextRegister contextRegisterStub 
+                                    = (ContextRegister) UnicastRemoteObject
+                                                             .exportObject(contextRegister,
+                                                                            0);
             server.bind("ContextRegister", contextRegisterStub);
 
             //RandomDelayMessageDispatcher messageDispatcher = new RandomDelayMessageDispatcher();
             //NoDelayMessageDispatcher messageDispatcher = new NoDelayMessageDispatcher();
             ExponentDelayMessageDispatcher messageDispatcher = new ExponentDelayMessageDispatcher();
-            MessageDispatcher messageDispatcherStub = (MessageDispatcher) UnicastRemoteObject
-                                                                                             .exportObject(
-                                                                                                           messageDispatcher,
-                                                                                                           0);
+            
+            MessageDispatcher messageDispatcherStub 
+                                    = (MessageDispatcher) UnicastRemoteObject
+                                                                .exportObject(messageDispatcher,
+                                                                              0);
+            
             server.bind("MessageDispatcher", messageDispatcherStub);
             
             Thread t = new Thread(messageDispatcher);
@@ -112,13 +114,15 @@ public class Initialize {
             
             Broker broker = new Broker(contextModeling, contextRetrieving);
             
-            GroupManager groupManager = new GroupManager(contextModeling, contextRetrieving, broker);
+            GroupManager groupManager 
+                                = new GroupManager(contextModeling, contextRetrieving, broker);
             
             PredicateParser predicateParser = new PredicateParser(groupManager);
-            PredicateParserMethod predicateParserStub = (PredicateParserMethod) UnicastRemoteObject
-                                                                                                   .exportObject(
-                                                                                                                 predicateParser,
-                                                                                                                 0);
+            
+            PredicateParserMethod predicateParserStub 
+                                        = (PredicateParserMethod) UnicastRemoteObject
+                                                                        .exportObject(predicateParser,
+                                                                                      0);
 
             server.bind("PredicateParser", predicateParserStub);
             

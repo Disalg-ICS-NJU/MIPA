@@ -45,8 +45,8 @@ public class SimulationRFID implements Sensor {
 
         try {
             BufferedReader source = new BufferedReader(
-                                                       new FileReader(
-                                                                      sourceFile));
+                                               new FileReader(sourceFile));
+            
             gap = Long.parseLong(source.readLine());
             int num = Integer.parseInt(source.readLine());
             tags = new ArrayList<String>();

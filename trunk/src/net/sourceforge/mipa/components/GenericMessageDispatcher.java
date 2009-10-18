@@ -32,8 +32,8 @@ import net.sourceforge.mipa.naming.Naming;
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public abstract class GenericMessageDispatcher implements Runnable,
-        MessageDispatcher {
+public abstract class GenericMessageDispatcher 
+            implements Runnable, MessageDispatcher {
 
     /** heart beat time (ms) */
     protected final static int heartBeat = 1;

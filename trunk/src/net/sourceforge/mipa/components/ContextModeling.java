@@ -49,8 +49,10 @@ public class ContextModeling {
      * @param valueType
      *            value type of event name
      */
-    public synchronized void map(String highContext, String lowContext, String valueType)
-                                                 throws EventNameBoundTwiceException {
+    public synchronized void map(String highContext, 
+                                      String lowContext, 
+                                      String valueType)
+                                          throws EventNameBoundTwiceException {
         if (mapContext.containsKey(highContext) == true)
             throw new EventNameBoundTwiceException(highContext);
 
@@ -67,7 +69,7 @@ public class ContextModeling {
      * @throws EventNameNotFoundException
      */
     public String getLowContext(String highContext)
-                                              throws EventNameNotFoundException {
+                                     throws EventNameNotFoundException {
         if (mapContext.containsKey(highContext) == false)
             throw new EventNameNotFoundException(highContext);
         
@@ -81,7 +83,8 @@ public class ContextModeling {
      * @return value type of low context.
      * @throws EventNameNotFoundException
      */
-    public String getValueType(String lowContext) throws EventNameNotFoundException {
+    public String getValueType(String lowContext) 
+                                    throws EventNameNotFoundException {
         if(mapValueType.containsKey(lowContext) == false)
             throw new EventNameNotFoundException(lowContext);
         

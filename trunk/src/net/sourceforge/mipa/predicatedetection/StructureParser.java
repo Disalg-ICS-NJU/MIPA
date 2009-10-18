@@ -61,8 +61,9 @@ public class StructureParser {
             for (int i = 0; i < elements.getLength(); i++) {
                 Node GSE = elements.item(i);
 
-                for (Node node = GSE.getFirstChild(); node != null; node = node
-                                                                               .getNextSibling()) {
+                for (Node node = GSE.getFirstChild(); 
+                      node != null; 
+                      node = node.getNextSibling()) {
 
                     if (node.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -71,8 +72,10 @@ public class StructureParser {
                                                               "CGS");
                             result.add(CGSNode);
 
-                            for (Node LP = node.getFirstChild(); LP != null; LP = LP
-                                                                                    .getNextSibling()) {
+                            for (Node LP = node.getFirstChild(); 
+                                  LP != null; 
+                                  LP = LP.getNextSibling()) {
+                                
                                 if (LP.getNodeType() == Node.ELEMENT_NODE) {
 
                                     if (LP.getNodeName().equals("LP"))
@@ -90,13 +93,16 @@ public class StructureParser {
     private LocalPredicate parseLocalPredicate(Node localPredicate) {
         LocalPredicate LP = new LocalPredicate();
 
-        for (Node node = localPredicate.getFirstChild(); node != null; node = node
-                                                                                  .getNextSibling()) {
+        for (Node node = localPredicate.getFirstChild(); 
+              node != null; 
+              node = node.getNextSibling()) {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (node.getNodeName().equals("formula")) {
-                    for (Node atom = node.getFirstChild(); atom != null; atom = atom
-                                                                                    .getNextSibling()) {
+                    for (Node atom = node.getFirstChild(); 
+                          atom != null; 
+                          atom = atom.getNextSibling()) {
+                        
                         if (atom.getNodeType() == Node.ELEMENT_NODE) {
                             if (atom.getNodeName().equals("atom")) {
                                 String operator = atom.getAttributes()

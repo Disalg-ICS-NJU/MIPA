@@ -52,8 +52,11 @@ public class CheckerFactory {
      * 
      * @param level the level of checker in OGA, 0 represents top.
      */
-    public static void ogaChecker(String callback, String checkerName,
-                                  String[] fathers, String[] children, int level) {
+    public static void ogaChecker(String callback, 
+                                     String checkerName,
+                                     String[] fathers, 
+                                     String[] children, 
+                                     int level) {
         if (DEBUG) {
             System.out.println("CHeckerFactory: ogaChecker\n\tlevel: " + level);
         }
@@ -63,10 +66,10 @@ public class CheckerFactory {
                 application = (ResultCallback) server.lookup(callback);
                 OGATopChecker checker = new OGATopChecker(application,
                                                           checkerName, children);
-                Communication checkerStub = (Communication) UnicastRemoteObject
-                                                                               .exportObject(
-                                                                                             checker,
-                                                                                             0);
+                Communication checkerStub 
+                                    = (Communication) UnicastRemoteObject
+                                                            .exportObject(checker,
+                                                                           0);
                 server.bind(checkerName, checkerStub);
 
                 if (DEBUG) {
@@ -76,10 +79,10 @@ public class CheckerFactory {
                 OGASubChecker checker = new OGASubChecker(application,
                                                           checkerName, fathers,
                                                           children);
-                Communication checkerStub = (Communication) UnicastRemoteObject
-                                                                               .exportObject(
-                                                                                             checker,
-                                                                                             0);
+                Communication checkerStub 
+                                    = (Communication) UnicastRemoteObject
+                                                            .exportObject(checker,
+                                                                           0);
                 server.bind(checkerName, checkerStub);
 
                 if (DEBUG) {
@@ -110,10 +113,10 @@ public class CheckerFactory {
             case SCP:
                 SCPChecker checker = new SCPChecker(application, checkerName,
                                                     normalProcesses);
-                Communication checkerStub = (Communication) UnicastRemoteObject
-                                                                               .exportObject(
-                                                                                             checker,
-                                                                                             0);
+                Communication checkerStub 
+                                    = (Communication) UnicastRemoteObject
+                                                            .exportObject(checker,
+                                                                           0);
                 server.bind(checkerName, checkerStub);
                 if (DEBUG) {
                     System.out.println("binding checker " + checkerName);

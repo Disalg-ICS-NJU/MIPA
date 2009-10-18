@@ -43,7 +43,8 @@ public class ContextRetrieving {
      * @throws EventNameBoundTwiceException
      */
     
-    public synchronized void setEntityID(String context, String entityId) throws EventNameBoundTwiceException {
+    public synchronized void setEntityID(String context, String entityId) 
+                                                throws EventNameBoundTwiceException {
         if(mapEntityId.containsKey(context)) {
             throw new EventNameBoundTwiceException(context);
         }

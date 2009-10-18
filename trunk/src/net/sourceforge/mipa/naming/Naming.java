@@ -47,8 +47,10 @@ public interface Naming extends Remote {
      * @throws NotBoundException
      * @throws MalformedURLException
      */
-    public Remote lookup(String name) throws AccessException, RemoteException,
-                                     NotBoundException, MalformedURLException;
+    public Remote lookup(String name) throws AccessException, 
+                                                  RemoteException,
+                                                  NotBoundException, 
+                                                  MalformedURLException;
 
     /**
      * Binds the specified <code>name</code> to a remote object.
@@ -64,9 +66,9 @@ public interface Naming extends Remote {
      * @throws MalformedURLException
      */
     public void bind(String name, Remote obj) throws AccessException,
-                                             RemoteException,
-                                             AlreadyBoundException,
-                                             MalformedURLException;
+                                                          RemoteException,
+                                                          AlreadyBoundException,
+                                                          MalformedURLException;
 
     /**
      * Rebinds the specified <code>name</code> to a new object.
@@ -81,8 +83,8 @@ public interface Naming extends Remote {
      * @throws MalformedURLException
      */
     public void rebind(String name, Remote obj) throws AccessException,
-                                               RemoteException,
-                                               MalformedURLException;
+                                                            RemoteException,
+                                                            MalformedURLException;
 
     /**
      * Destroys the binding for the specified <code>name</code> that is
@@ -96,6 +98,8 @@ public interface Naming extends Remote {
      * @throws NotBoundException
      * @throws MalformedURLException
      */
-    public void unbind(String name) throws AccessException, RemoteException,
-                                   NotBoundException, MalformedURLException;
+    public void unbind(String name) throws AccessException, 
+                                               RemoteException,
+                                               NotBoundException, 
+                                               MalformedURLException;
 }

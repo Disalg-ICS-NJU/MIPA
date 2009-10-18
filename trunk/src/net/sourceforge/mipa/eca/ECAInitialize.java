@@ -52,31 +52,32 @@ public class ECAInitialize {
         String namingAddress = MIPAResource.getNamingAddress();
         try {
             Naming server = (Naming) java.rmi.Naming.lookup(namingAddress
-                                                            + "Naming");
+                                                                + "Naming");
 
             IDManager idManager = (IDManager) server.lookup("IDManager");
-            ContextRegister contextRegister = (ContextRegister) server
-                                                                      .lookup("ContextRegister");
+            ContextRegister contextRegister 
+                                = (ContextRegister) server
+                                                         .lookup("ContextRegister");
 
             // binding data source
             String dataSourceId = idManager.getID(Catalog.DataSource);
             DataSourceImp dataSource = new DataSourceImp();
-            DataSource dataSourceStub = (DataSource) UnicastRemoteObject
-                                                                        .exportObject(
-                                                                                      dataSource,
-                                                                                      0);
+            DataSource dataSourceStub 
+                            = (DataSource) UnicastRemoteObject
+                                                 .exportObject(dataSource,
+                                                                0);
             server.bind(dataSourceId, dataSourceStub);
 
             String ecaManagerId = idManager.getID(Catalog.ECAManager);
             ECAManagerImp ecaManager = new ECAManagerImp(contextRegister,
-                                                         dataSource,
-                                                         ecaManagerId);
+                                                                 dataSource,
+                                                                 ecaManagerId);
             // ecaManager.setECAManagerName(ecaManagerId);
 
-            ECAManager ecaManagerStub = (ECAManager) UnicastRemoteObject
-                                                                        .exportObject(
-                                                                                      ecaManager,
-                                                                                      0);
+            ECAManager ecaManagerStub 
+                            = (ECAManager) UnicastRemoteObject
+                                                  .exportObject(ecaManager,
+                                                                0);
             server.bind(ecaManagerId, ecaManagerStub);
 
             

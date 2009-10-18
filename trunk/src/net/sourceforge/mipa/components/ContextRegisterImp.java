@@ -48,8 +48,9 @@ public class ContextRegisterImp implements ContextRegister {
      */
     @Override
     public synchronized void registerResource(String resourceName,
-                                              String valueType, String entityId)
-                                                                                throws RemoteException {
+                                                  String valueType, 
+                                                  String entityId)
+                                                      throws RemoteException {
         try {
             mapping.map(resourceName, resourceName, valueType);
             retrieving.setEntityID(resourceName, entityId);
