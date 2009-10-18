@@ -41,12 +41,14 @@ public class PredicateParser implements PredicateParserMethod {
     
     private GroupManager groupManager;
 
+    private PredicateValidation predicateValidation;
 
     /**
      * default construction.
      */
     public PredicateParser(GroupManager groupManager) {
         structureParser = new StructureParser();
+        predicateValidation = new PredicateValidation();
         this.groupManager = groupManager;
     }
 
@@ -64,6 +66,10 @@ public class PredicateParser implements PredicateParserMethod {
 
         Structure predicateStructure = structureParser
                                                       .parseStructure(predicate);
+        
+        if (! predicateValidation.validate(predicateStructure)) {
+            return;
+        }
         
         groupManager.createGroups(predicateStructure, type, applicationName);
     }
