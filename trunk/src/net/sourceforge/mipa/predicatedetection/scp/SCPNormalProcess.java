@@ -75,7 +75,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         
         if(ENABLE_PHYSICAL_CLOCK) {
             try {
-                out = new PrintWriter(LOG_DIRECTORY + "/" + name);
+                out = new PrintWriter(LOG_DIRECTORY + "/" + name + ".log");
             } catch(Exception e) {
                 e.printStackTrace();
             }

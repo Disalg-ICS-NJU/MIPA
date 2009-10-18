@@ -71,7 +71,7 @@ public class OGASubChecker extends AbstractChecker {
 
         if (ENABLE_PHYSICAL_CLOCK) {
             try {
-                out = new PrintWriter(LOG_DIRECTORY + "/" + name);
+                out = new PrintWriter(LOG_DIRECTORY + "/" + name + ".log");
                 for (int i = 0; i < topCheckers.length; i++) {
                     out.print(topCheckers[i]);
                     if (i != topCheckers.length - 1)

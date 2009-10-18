@@ -40,7 +40,7 @@ public class ExponentDelayMessageDispatcher extends GenericMessageDispatcher {
         super();
 
         try {
-            out = new PrintWriter("log/MessageDispatcherDelay");
+            out = new PrintWriter("log/MessageDispatcherDelay.log");
             BufferedReader rd = new BufferedReader(
                                                    new FileReader(
                                                                   "config/message_dispatcher_exponent"));

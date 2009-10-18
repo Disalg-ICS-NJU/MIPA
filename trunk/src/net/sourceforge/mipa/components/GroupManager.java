@@ -46,8 +46,6 @@ public class GroupManager {
     
     private Broker broker;
     
-    // only for debug
-    private String callback;
     
     public GroupManager(ContextModeling modeling, ContextRetrieving retrieving, Broker broker) {
         this.modeling = modeling;
@@ -55,12 +53,334 @@ public class GroupManager {
         this.broker = broker;
     }
     
-    //TODO should remove in future.
-    public void setCallback(String callback) {
-        this.callback = callback;
+    
+    public void createGroups(Structure s, PredicateType predicateType, String callback) {
+        Map<String, AbstractGroup> groups = structureGrouping(s);
+        analyzeDistribution(groups);
+        parseGroups(groups, predicateType, callback);
+        /*switch(predicateType) {
+        case OGA:
+            allocateAsOGA(groups, callback);
+            //parseOGAStructure(s, callback);
+            
+            break;
+        case SCP:
+            allocateAsSCP(groups, callback);
+            //parseSCPStructure(s, callback);
+            
+            break;
+        case WCP:
+            
+            break;
+        default:
+            System.out
+                .println("This predicate type have not been implemented yet.");
+        }*/
     }
     
-    public void parseOGAStructure(Structure s) {
+    private Map<String, AbstractGroup> structureGrouping(Structure s) {
+        
+        Map<String, AbstractGroup> groups = new HashMap<String, AbstractGroup>();
+        IDManager idManager = MIPAResource.getIDManager();
+        
+        // parse GSE
+        String topAbstractGroupId = null;
+        try {
+            topAbstractGroupId = idManager.getID(Catalog.AbstractGroup);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        AbstractGroup topAbstractGroup = new AbstractGroup();
+        topAbstractGroup.setGroupId(topAbstractGroupId);
+        topAbstractGroup.setLevel(1);
+        
+        groups.put(topAbstractGroup.getGroupId(), topAbstractGroup);
+        assert(s.getNodeType() == NodeType.GSE);
+        ArrayList<Object> absGroupChildren = new ArrayList<Object>();
+        topAbstractGroup.setChildren(absGroupChildren);
+        ArrayList<Structure> CGSs = s.getChildren();
+        
+        // parse CGS
+        for(int i = 0; i < CGSs.size(); i++) {
+            String subAbstractGroupId = null;
+            try {
+                subAbstractGroupId = idManager.getID(Catalog.AbstractGroup);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            AbstractGroup subAbstractGroup = new AbstractGroup();
+            subAbstractGroup.setGroupId(subAbstractGroupId);
+            subAbstractGroup.setFather(topAbstractGroupId);
+            subAbstractGroup.setLevel(0);
+            absGroupChildren.add(subAbstractGroupId);
+            groups.put(subAbstractGroup.getGroupId(), subAbstractGroup);
+            
+            ArrayList<Object> localPredicates = new ArrayList<Object>();
+            subAbstractGroup.setChildren(localPredicates);
+            // parse LP
+            ArrayList<Structure> LPs = CGSs.get(i).getChildren();
+            for(int j = 0; j < LPs.size(); j++) {
+                
+                assert(LPs.get(j) instanceof LocalPredicate);
+                localPredicates.add(LPs.get(j));
+            }
+            
+        }
+        
+        if(DEBUG) {
+            System.out.println("Groups inforamtion: ");
+            for(String str : groups.keySet()) {
+                AbstractGroup g = groups.get(str);
+                System.out.println("\t" + str + " : " + g.getLevel() + " , " + g.getFather());
+            }
+        }
+        return groups;
+    }
+    
+    private void analyzeDistribution(Map<String, AbstractGroup> groups) {
+        
+    }
+    
+    private void parseGroups(Map<String, AbstractGroup> groups, PredicateType type, String callback) {
+        IDManager idManager = MIPAResource.getIDManager();
+        
+        Map<String, String> groupToChecker = new HashMap<String, String>();
+        Map<LocalPredicate, String> localPredicateToNormalProcess = new HashMap<LocalPredicate, String>();
+        
+        // get maximum level
+        int maxLevel = 0;
+        for(String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if(g.getLevel() > maxLevel) maxLevel = g.getLevel();
+        }
+        
+        if(DEBUG) System.out.println("Max Level: " + maxLevel);
+        
+        // map relevant information
+        for(String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            String groupId = g.getGroupId();
+            if(groupToChecker.containsKey(groupId) == false) {
+                try {
+                    String checker = idManager.getID(Catalog.Checker);
+                    groupToChecker.put(groupId, checker);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            String father = g.getFather();
+            if(father != null && groupToChecker.containsKey(father) == false) {
+                try {
+                    String checker = idManager.getID(Catalog.Checker);
+                    groupToChecker.put(father, checker);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            ArrayList<Object> children = g.getChildren();
+            if(g.getLevel() > 0) {
+                for(int i = 0; i < children.size(); i++) {
+                    String child = (String) children.get(i);
+                    if(groupToChecker.containsKey(child) == false) {
+                        try {
+                            String checker = idManager.getID(Catalog.Checker);
+                            groupToChecker.put(child, checker);
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else {
+                for(int i = 0; i < children.size(); i++) {
+                    LocalPredicate child = (LocalPredicate) children.get(i);
+                    if(localPredicateToNormalProcess.containsKey(child) == false) {
+                        try {
+                            String normalProcess = idManager.getID(Catalog.NormalProcess);
+                            localPredicateToNormalProcess.put(child, normalProcess);
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        if(DEBUG) {
+            System.out.println("Debugging message: ");
+            System.out.println("\tGroup To Checker: ");
+            for(String s : groupToChecker.keySet()) {
+                System.out.println("\t\t" + s + " : " + groupToChecker.get(s));
+            }
+            
+            System.out.println("\t local predicate: ");
+            for(LocalPredicate lp : localPredicateToNormalProcess.keySet()) {
+                System.out.println("\t\t" + lp.getName() + " : " + localPredicateToNormalProcess.get(lp));
+            }
+        }
+        
+        switch(type) {
+        case OGA:
+            allocateAsOGA(groups, 
+                          groupToChecker, 
+                          localPredicateToNormalProcess, 
+                          callback, 
+                          maxLevel);
+            break;
+        case SCP:
+            allocateAsSCP(groups, 
+                          groupToChecker, 
+                          localPredicateToNormalProcess, 
+                          callback, 
+                          maxLevel);
+            break;
+        case WCP:
+            
+            break;
+        default:
+            System.out.println("This predicate type have not been implemented yet.");
+        }
+    }
+    
+    private void allocateAsOGA(Map<String, AbstractGroup> groups, 
+                                  Map<String, String> groupToChecker, 
+                                  Map<LocalPredicate, String> localPredicateToNormalProcess, 
+                                  String callback,
+                                  int maxLevel) {
+        
+        IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+        
+        // start top checker
+        for(int i = maxLevel; i > 0; i--) {
+            for(String s : groups.keySet()) {
+                AbstractGroup g = groups.get(s);
+                if(g.getLevel() == i) {
+                    String father = g.getFather();
+                    String[] fatherArray = null;
+                    if(father != null) {
+                        ArrayList<String> fatherList = new ArrayList<String>();
+                        fatherList.add(groupToChecker.get(father));
+                        fatherArray = new String[fatherList.size()];
+                        fatherList.toArray(fatherArray);
+                    }
+                    
+                    ArrayList<String> childrenList = new ArrayList<String>();
+                    ArrayList<Object> children = g.getChildren();
+                    for(int j = 0; j < children.size(); j++) {
+                        childrenList.add(groupToChecker.get(children.get(j)));
+                    }
+                    String[] childrenArray = new String[childrenList.size()];
+                    childrenList.toArray(childrenArray);
+                    CheckerFactory.ogaChecker(callback, 
+                                                groupToChecker.get(g.getGroupId()), 
+                                                fatherArray, 
+                                                childrenArray, 
+                                                0);
+                }
+            }
+        }
+        // start sub checker, **notice** level = 0
+        for(String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if(g.getLevel() == 0) {
+                String father = g.getFather();
+                assert(father != null);
+                ArrayList<String> fatherList = new ArrayList<String>();
+                fatherList.add(groupToChecker.get(father));
+                String[] fatherArray = new String[fatherList.size()];
+                fatherList.toArray(fatherArray);
+                
+                ArrayList<String> childrenList = new ArrayList<String>();
+                ArrayList<Object> children = g.getChildren();
+                for(int i = 0; i < children.size(); i++) {
+                    childrenList.add(localPredicateToNormalProcess.get(children.get(i)));
+                }
+                String[] childrenArray = new String[childrenList.size()];
+                childrenList.toArray(childrenArray);
+                CheckerFactory.ogaChecker(null, 
+                                            groupToChecker.get(g.getGroupId()), 
+                                            fatherArray, 
+                                            childrenArray, 
+                                            1);
+            }
+        }
+        
+        ArrayList<String> normalProcesses = new ArrayList<String>();
+        for(LocalPredicate lp : localPredicateToNormalProcess.keySet()) {
+            normalProcesses.add(localPredicateToNormalProcess.get(lp));
+        }
+        // set coordinator
+        String groupId = null;
+        try {
+            groupId = idManager.getID(Catalog.Group);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        if(DEBUG) System.out.println("coordinator gid: " + groupId);
+        
+        Group coordinatorGroup = new Group(groupId, 
+                                               null, 
+                                               normalProcesses, 
+                                               PredicateType.OGA);
+        
+        coordinatorGroup.setCoordinatorID(groupId);
+        try{
+            coordinator.newCoordinator(coordinatorGroup);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        // start normal process. 
+
+        for(String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if(g.getLevel() == 0) {
+                String gid = g.getGroupId();
+                String normalProcessGroup = null;
+                try {
+                    normalProcessGroup = idManager.getID(Catalog.Group);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                
+                System.out.println("sub group id: " + normalProcessGroup);
+                ArrayList<String> fatherList = new ArrayList<String>();
+                fatherList.add(groupToChecker.get(gid));
+                
+                Group ng = new Group(normalProcessGroup, 
+                                         fatherList, 
+                                         normalProcesses, 
+                                         PredicateType.OGA);
+                
+                ng.setCoordinatorID(groupId);
+                ArrayList<String> members = new ArrayList<String>();
+                ArrayList<Object> children = g.getChildren();
+                for(int i = 0; i < children.size(); i++) {
+                    members.add(localPredicateToNormalProcess.get(children.get(i)));
+                    if(DEBUG) System.out.println("***********" + localPredicateToNormalProcess.get(children.get(i)));
+                }
+                ng.setSubMembers(members);
+                
+                for(int i = 0; i < children.size(); i++) {
+                    broker.registerLocalPredicate((LocalPredicate) children.get(i), 
+                                                  localPredicateToNormalProcess.get(children.get(i)), 
+                                                  ng);
+                    
+                }
+            }
+        }
+    }
+    
+
+    //private void allocateAsSCP(Map<String, AbstractGroup> groups, String callback) {
+        
+    //}
+    
+    public void parseOGAStructure(Structure s, String callback) {
         ArrayList<Structure> children = s.getChildren();
         
         assert(children != null);
@@ -188,19 +508,81 @@ public class GroupManager {
             for(int j = 0; j < subMembers.size(); j++) {
                 LocalPredicate lp = normalProcessToLocalPredicate.get(subMembers.get(j));
                 broker.registerLocalPredicate(lp, subMembers.get(j), subGroup);
-            }   
+            }
         }
+    }
+    
+    private void allocateAsSCP(Map<String, AbstractGroup> groups, 
+                               Map<String, String> groupToChecker, 
+                               Map<LocalPredicate, String> localPredicateToNormalProcess, 
+                               String callback,
+                               int maxLevel) {
+        IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+        
+        // start checker for level > 0
+        for(int i = maxLevel; i > 0; i--) {
+            
+        }
+        
+        // check the level == 0
+        for(String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if(g.getLevel() == 0) {
+                String gid = g.getGroupId();
+                
+                // current Implementation is that father of SCP checker is null;
+                
+                ArrayList<Object> children = g.getChildren();
+                ArrayList<String> owners = new ArrayList<String>();
+                ArrayList<String> members = new ArrayList<String>();
+                owners.add(groupToChecker.get(gid));
+                for(int i = 0; i < children.size(); i++) {
+                    members.add(localPredicateToNormalProcess.get(children.get(i)));
+                }
+                // create group
+                String groupId = null;
+                try {
+                    groupId = idManager.getID(Catalog.Group);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+                
+                Group ng = new Group(groupId, owners, members, PredicateType.SCP);
+                ng.setCoordinatorID(groupId);
+                
+                try {
+                    coordinator.newCoordinator(ng);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
+                String checkerName = ng.getOwners().get(0);
+                String[] normalProcesses = new String[ng.getMembers().size()];
+                ng.getMembers().toArray(normalProcesses);
+                CheckerFactory.newChecker(callback, checkerName, normalProcesses,
+                                          ng.getType());
+
+                // create Normal Processes.
+                for (int i = 0; i < children.size(); i++) {
+                    broker.registerLocalPredicate((LocalPredicate) children.get(i), 
+                                                  localPredicateToNormalProcess.get(children.get(i)), 
+                                                  ng);
+                }
+            }
+        }
+     
     }
     /**
      * 
      * @param s
      */
-    public void parseSCPStructure(Structure s) {
+    public void parseSCPStructure(Structure s, String callback) {
         ArrayList<Structure> children = s.getChildren();
 
         if (s.getNodeType() == NodeType.GSE) {
             for (int i = 0; i < children.size(); i++) {
-                parseSCPStructure(children.get(i));
+                parseSCPStructure(children.get(i), callback);
             }
         } else if (s.getNodeType() == NodeType.CGS) {
             IDManager idManager = MIPAResource.getIDManager();

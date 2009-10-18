@@ -42,7 +42,7 @@ public class Application extends AbstractApplication {
         super(fileName);
         count = 0;
         try {
-            out = new PrintWriter("log/application_count");
+            out = new PrintWriter("log/application_count.log");
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class Application extends AbstractApplication {
     }
 
     public static void main(String[] args) {
-        Application app = new Application("config/predicate/predicate_oga.xml");
+        Application app = new Application("config/predicate/predicate_scp.xml");
         app.start("config/config.xml");
     }
 }

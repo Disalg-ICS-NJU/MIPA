@@ -84,7 +84,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
 
         if (ENABLE_PHYSICAL_CLOCK) {
             try {
-                out = new PrintWriter(LOG_DIRECTORY + "/" + name);
+                out = new PrintWriter(LOG_DIRECTORY + "/" + name + ".log");
                 for (int i = 0; i < checkers.length; i++) {
                     out.print(checkers[0]);
                     if (i != checkers.length - 1)

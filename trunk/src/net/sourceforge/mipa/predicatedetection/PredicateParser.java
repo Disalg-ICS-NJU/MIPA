@@ -58,19 +58,13 @@ public class PredicateParser implements PredicateParserMethod {
             System.out.println("parsing predicate...");
         }
         //only for debug
-        groupManager.setCallback(applicationName);
+        //groupManager.setCallback(applicationName);
 
         PredicateType type = PredicateIdentify.predicateIdentify(predicate);
 
         Structure predicateStructure = structureParser
                                                       .parseStructure(predicate);
-        if (type == PredicateType.OGA)
-            groupManager.parseOGAStructure(predicateStructure);
-        else if (type == PredicateType.SCP)
-            groupManager.parseSCPStructure(predicateStructure);
-        else {
-            System.out
-                      .println("This predicate type have not been implemented yet.");
-        }
+        
+        groupManager.createGroups(predicateStructure, type, applicationName);
     }
 }
