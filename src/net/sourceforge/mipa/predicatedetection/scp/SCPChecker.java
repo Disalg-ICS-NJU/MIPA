@@ -67,7 +67,7 @@ public class SCPChecker extends AbstractChecker {
         
         if(ENABLE_PHYSICAL_CLOCK) {
             try {
-                out = new PrintWriter(LOG_DIRECTORY + "/found_interval.txt");
+                out = new PrintWriter(LOG_DIRECTORY + "/found_interval.log");
             } catch (Exception e) {
                 e.printStackTrace();
             }

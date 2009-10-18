@@ -31,6 +31,7 @@ public enum Catalog {
     NormalProcess,
     Checker,
     Application,
+    AbstractGroup,
     Group,
     Numerical
 }
