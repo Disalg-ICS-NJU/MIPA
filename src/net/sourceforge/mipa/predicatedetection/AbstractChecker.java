@@ -42,7 +42,9 @@ public abstract class AbstractChecker implements Serializable, Communication {
     
     protected Map<String, Integer> nameToID;
 
-    public AbstractChecker(ResultCallback application, String checkerName, String[] children) {
+    public AbstractChecker(ResultCallback application, 
+                            String checkerName, 
+                            String[] children) {
         this.application = application;
         this.name = checkerName;
         this.children = children;

@@ -34,7 +34,9 @@ public class TemperatureAgent extends SensorAgent {
     private Sensor sensor;
     
     
-    public TemperatureAgent(DataDisseminate disseminate, String name, String valueType) {
+    public TemperatureAgent(DataDisseminate disseminate, 
+                               String name, 
+                               String valueType) {
         super(disseminate, name, valueType);
         sensor = new Temperature();
     }

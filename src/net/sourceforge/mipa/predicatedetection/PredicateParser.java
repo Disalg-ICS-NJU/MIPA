@@ -53,8 +53,8 @@ public class PredicateParser implements PredicateParserMethod {
     }
 
     public synchronized void parsePredicate(String applicationName,
-                                            Document predicate)
-                                                               throws RemoteException {
+                                                Document predicate)
+                                                    throws RemoteException {
 
         if (DEBUG) {
             System.out.println("parsing predicate...");

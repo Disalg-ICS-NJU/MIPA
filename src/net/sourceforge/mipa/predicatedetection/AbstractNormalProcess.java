@@ -35,8 +35,12 @@ import net.sourceforge.mipa.eca.Listener;
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public abstract class AbstractNormalProcess implements Serializable, Runnable,
-        NormalProcess, Communication, Listener {
+public abstract class AbstractNormalProcess 
+                    implements Serializable, 
+                                 Runnable,
+                                 NormalProcess, 
+                                 Communication, 
+                                 Listener {
 
     private static final long serialVersionUID = 7874458145173305245L;
 

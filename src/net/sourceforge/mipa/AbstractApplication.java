@@ -97,9 +97,8 @@ public abstract class AbstractApplication implements ResultCallback {
             applicationName = idManager.getID(Catalog.Application);
 
             ResultCallback stub = (ResultCallback) UnicastRemoteObject
-                                                                      .exportObject(
-                                                                                    this,
-                                                                                    0);
+                                                       .exportObject(this,
+                                                                      0);
             server.bind(applicationName, stub);
 
             if (DEBUG) {
@@ -163,7 +162,7 @@ public abstract class AbstractApplication implements ResultCallback {
             File f = new File(fileName);
 
             DocumentBuilderFactory factory = DocumentBuilderFactory
-                                                                   .newInstance();
+                                                    .newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(f);
 

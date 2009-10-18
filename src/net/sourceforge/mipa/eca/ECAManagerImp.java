@@ -53,11 +53,6 @@ public class ECAManagerImp implements ECAManager {
                          DataSource dataSource, String ecaManagerName) {
         this.setContextRegister(contextRegister);
         this.ecaManagerName = ecaManagerName;
-        /*
-         * try { Naming server = MIPAResource.getNamingServer(); this.dataSource
-         * = (DataSource) server.lookup(dataSourceId); } catch(Exception e) {
-         * e.printStackTrace(); }
-         */
         this.dataSource = dataSource;
     }
 
@@ -93,8 +88,9 @@ public class ECAManagerImp implements ECAManager {
 
     @Override
     public void registerLocalPredicate(LocalPredicate localPredicate,
-                                       String name, Group g)
-                                                            throws RemoteException {
+                                       String name, 
+                                       Group g)
+                                           throws RemoteException {
         try {
             Naming server = MIPAResource.getNamingServer();
 

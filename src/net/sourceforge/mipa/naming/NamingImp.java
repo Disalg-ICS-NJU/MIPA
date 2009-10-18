@@ -96,27 +96,31 @@ public class NamingImp implements Naming {
     }
 
     public void bind(String name, Remote obj) throws AccessException,
-                                             RemoteException,
-                                             AlreadyBoundException,
-                                             MalformedURLException {
+                                                          RemoteException,
+                                                          AlreadyBoundException,
+                                                          MalformedURLException {
 
         java.rmi.Naming.bind(formatAddress + name, obj);
 
     }
 
-    public Remote lookup(String name) throws AccessException, RemoteException,
-                                     NotBoundException, MalformedURLException {
+    public Remote lookup(String name) throws AccessException, 
+                                                  RemoteException,
+                                                  NotBoundException, 
+                                                  MalformedURLException {
         return java.rmi.Naming.lookup(formatAddress + name);
     }
 
     public void rebind(String name, Remote obj) throws AccessException,
-                                               RemoteException,
-                                               MalformedURLException {
+                                                            RemoteException,
+                                                            MalformedURLException {
         java.rmi.Naming.rebind(formatAddress + name, obj);
     }
 
-    public void unbind(String name) throws AccessException, RemoteException,
-                                   NotBoundException, MalformedURLException {
+    public void unbind(String name) throws AccessException, 
+                                               RemoteException,
+                                               NotBoundException, 
+                                               MalformedURLException {
         java.rmi.Naming.unbind(formatAddress + name);
     }
 }

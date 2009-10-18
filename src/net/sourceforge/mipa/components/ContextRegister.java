@@ -40,7 +40,8 @@ public interface ContextRegister extends Remote {
      *            ECA manager ID(name)
      * @throws RemoteException
      */
-    public void registerResource(String resourceName, String valueType,
-                                 String entityId)
-                                                 throws RemoteException;
+    public void registerResource(String resourceName, 
+                                  String valueType,
+                                  String entityId)
+                                      throws RemoteException;
 }

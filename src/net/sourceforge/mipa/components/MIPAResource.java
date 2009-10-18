@@ -72,8 +72,8 @@ public class MIPAResource {
         if (server == null) {
             try {
                 server = (Naming) java.rmi.Naming
-                                                 .lookup(MIPAResource
-                                                                     .getNamingAddress()
+                                                .lookup(MIPAResource
+                                                             .getNamingAddress()
                                                          + "Naming");
             } catch (Exception e) {
                 e.printStackTrace();

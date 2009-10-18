@@ -43,7 +43,7 @@ public class FileDelayMessageDispatcher extends GenericMessageDispatcher {
         delays = new ArrayList<Long>();
         try {
             BufferedReader reader = new BufferedReader(
-                                                       new FileReader(delayFile));
+                                               new FileReader(delayFile));
             String str;
             while ((str = reader.readLine()) != null) {
                 delays.add(new Long(Long.parseLong(str)));

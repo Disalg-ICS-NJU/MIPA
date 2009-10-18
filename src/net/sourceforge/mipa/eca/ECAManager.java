@@ -42,5 +42,8 @@ public interface ECAManager extends Remote {
      *            group
      * @throws RemoteException
      */
-    public void registerLocalPredicate(LocalPredicate localPredicate, String name, Group g) throws RemoteException;
+    public void registerLocalPredicate(LocalPredicate localPredicate, 
+                                       String name, 
+                                       Group g) 
+                                           throws RemoteException;
 }

@@ -47,7 +47,9 @@ public class GroupManager {
     private Broker broker;
     
     
-    public GroupManager(ContextModeling modeling, ContextRetrieving retrieving, Broker broker) {
+    public GroupManager(ContextModeling modeling, 
+                          ContextRetrieving retrieving, 
+                          Broker broker) {
         this.modeling = modeling;
         this.retrieving = retrieving;
         this.broker = broker;
@@ -58,24 +60,7 @@ public class GroupManager {
         Map<String, AbstractGroup> groups = structureGrouping(s);
         analyzeDistribution(groups);
         parseGroups(groups, predicateType, callback);
-        /*switch(predicateType) {
-        case OGA:
-            allocateAsOGA(groups, callback);
-            //parseOGAStructure(s, callback);
-            
-            break;
-        case SCP:
-            allocateAsSCP(groups, callback);
-            //parseSCPStructure(s, callback);
-            
-            break;
-        case WCP:
-            
-            break;
-        default:
-            System.out
-                .println("This predicate type have not been implemented yet.");
-        }*/
+        
     }
     
     private Map<String, AbstractGroup> structureGrouping(Structure s) {
@@ -124,7 +109,6 @@ public class GroupManager {
                 assert(LPs.get(j) instanceof LocalPredicate);
                 localPredicates.add(LPs.get(j));
             }
-            
         }
         
         if(DEBUG) {
@@ -141,11 +125,16 @@ public class GroupManager {
         
     }
     
-    private void parseGroups(Map<String, AbstractGroup> groups, PredicateType type, String callback) {
+    private void parseGroups(Map<String, 
+                                AbstractGroup> groups, 
+                                PredicateType type, 
+                                String callback) {
+        
         IDManager idManager = MIPAResource.getIDManager();
         
         Map<String, String> groupToChecker = new HashMap<String, String>();
-        Map<LocalPredicate, String> localPredicateToNormalProcess = new HashMap<LocalPredicate, String>();
+        Map<LocalPredicate, String> localPredicateToNormalProcess 
+                                        = new HashMap<LocalPredicate, String>();
         
         // get maximum level
         int maxLevel = 0;
@@ -153,8 +142,6 @@ public class GroupManager {
             AbstractGroup g = groups.get(s);
             if(g.getLevel() > maxLevel) maxLevel = g.getLevel();
         }
-        
-        if(DEBUG) System.out.println("Max Level: " + maxLevel);
         
         // map relevant information
         for(String s : groups.keySet()) {
@@ -170,7 +157,8 @@ public class GroupManager {
             }
             
             String father = g.getFather();
-            if(father != null && groupToChecker.containsKey(father) == false) {
+            if(father != null 
+                    && groupToChecker.containsKey(father) == false) {
                 try {
                     String checker = idManager.getID(Catalog.Checker);
                     groupToChecker.put(father, checker);
@@ -320,8 +308,6 @@ public class GroupManager {
             e.printStackTrace();
         }
         
-        if(DEBUG) System.out.println("coordinator gid: " + groupId);
-        
         Group coordinatorGroup = new Group(groupId, 
                                                null, 
                                                normalProcesses, 
@@ -351,8 +337,8 @@ public class GroupManager {
                 ArrayList<String> fatherList = new ArrayList<String>();
                 fatherList.add(groupToChecker.get(gid));
                 
-                Group ng = new Group(normalProcessGroup, 
-                                         fatherList, 
+                Group ng = new Group(normalProcessGroup,
+                                         fatherList,
                                          normalProcesses, 
                                          PredicateType.OGA);
                 
@@ -361,7 +347,6 @@ public class GroupManager {
                 ArrayList<Object> children = g.getChildren();
                 for(int i = 0; i < children.size(); i++) {
                     members.add(localPredicateToNormalProcess.get(children.get(i)));
-                    if(DEBUG) System.out.println("***********" + localPredicateToNormalProcess.get(children.get(i)));
                 }
                 ng.setSubMembers(members);
                 
@@ -375,10 +360,6 @@ public class GroupManager {
         }
     }
     
-
-    //private void allocateAsSCP(Map<String, AbstractGroup> groups, String callback) {
-        
-    //}
     
     public void parseOGAStructure(Structure s, String callback) {
         ArrayList<Structure> children = s.getChildren();
@@ -517,6 +498,7 @@ public class GroupManager {
                                Map<LocalPredicate, String> localPredicateToNormalProcess, 
                                String callback,
                                int maxLevel) {
+        
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
         
@@ -571,7 +553,6 @@ public class GroupManager {
                 }
             }
         }
-     
     }
     /**
      * 
@@ -720,5 +701,4 @@ public class GroupManager {
             assert (false);
         }
     }
-    
 }

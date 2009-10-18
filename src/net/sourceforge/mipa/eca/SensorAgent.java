@@ -36,7 +36,9 @@ public abstract class SensorAgent implements Runnable {
     /** sensor agent's value type */
     protected String valueType;
     
-    public SensorAgent(DataDisseminate dataDisseminate, String name, String valueType) {
+    public SensorAgent(DataDisseminate dataDisseminate, 
+                         String name, 
+                         String valueType) {
         this.dataDisseminate = dataDisseminate;
         this.name = name;
         this.valueType = valueType;

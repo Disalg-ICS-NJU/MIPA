@@ -33,7 +33,9 @@ public class RFIDAgent extends SensorAgent {
     /** the sensor which sensor agent manages */
     protected Sensor sensor;
     
-    public RFIDAgent(DataDisseminate dataDisseminate, String name, String valueType) {
+    public RFIDAgent(DataDisseminate dataDisseminate, 
+                       String name, 
+                       String valueType) {
         super(dataDisseminate, name, valueType);
         sensor = new RFID();
     }

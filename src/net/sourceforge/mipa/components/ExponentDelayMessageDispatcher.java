@@ -41,9 +41,9 @@ public class ExponentDelayMessageDispatcher extends GenericMessageDispatcher {
 
         try {
             out = new PrintWriter("log/MessageDispatcherDelay.log");
-            BufferedReader rd = new BufferedReader(
-                                                   new FileReader(
-                                                                  "config/message_dispatcher_exponent"));
+            BufferedReader rd 
+                = new BufferedReader(
+                            new FileReader("config/message_dispatcher_exponent"));
             lambda = Double.parseDouble(rd.readLine());
             
             if(DEBUG) {

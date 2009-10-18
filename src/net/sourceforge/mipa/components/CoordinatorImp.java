@@ -51,7 +51,7 @@ public class CoordinatorImp implements Coordinator {
 
     @Override
     public synchronized void memberFinished(String groupID, String memberID)
-                                                                            throws RemoteException {
+                                                    throws RemoteException {
         // TODO Auto-generated method stub
         assert (groupMap.containsKey(groupID));
 

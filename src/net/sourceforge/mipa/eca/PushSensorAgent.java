@@ -34,8 +34,11 @@ public class PushSensorAgent extends SensorAgent {
     /** time gap between two data generations. */
     private long gap;
 
-    public PushSensorAgent(DataDisseminate dataDisseminate, String name,
-                           String valueType, Sensor sensor) {
+    public PushSensorAgent(DataDisseminate dataDisseminate, 
+                             String name,
+                             String valueType, 
+                             Sensor sensor) {
+        
         super(dataDisseminate, name, valueType);
         this.sensor = sensor;
         gap = sensor.getGap();
