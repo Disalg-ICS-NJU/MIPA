@@ -43,7 +43,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
 
     private static final long serialVersionUID = -663144941748622894L;
 
-    private boolean currentState;
+    private boolean prevState;
 
     private boolean flagMsgAct;
 
@@ -77,7 +77,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
             currentMessageCount.put(checkers[i], new Long(0));
         }
 
-        currentState = false;
+        prevState = false;
         flagMsgAct = true;
 
         groupNormalProcesses = subNormalProcesses;
@@ -101,10 +101,10 @@ public class OGANormalProcess extends AbstractNormalProcess {
     @Override
     public void action(boolean value) {
         boolean changed = false;
-        if (currentState != value)
+        if (prevState != value)
             changed = true;
 
-        if (changed == true && currentState == false) {
+        if (changed == true && prevState == false) {
             // interval begins. Sending control message to GA group.
             //////////////
 
@@ -117,7 +117,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
             }
             groupBroadcast(MessageType.Control, null);
             
-        } else if (changed == true && currentState == true) {
+        } else if (changed == true && prevState == true) {
             // interval ends. Sending control message to all processes.
             ////////////
             if (flagMsgAct) {
@@ -150,7 +150,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
             
             broadcast(MessageType.Control, null);
         }
-        currentState = value;
+        prevState = value;
     }
 
     @Override

@@ -25,5 +25,6 @@ package config;
  */
 public class Config {
     public final static boolean ENABLE_PHYSICAL_CLOCK = true;
+    public final static boolean EXPERIMENT = true;
     public final static String LOG_DIRECTORY = "log";
 }

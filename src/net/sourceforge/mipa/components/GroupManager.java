@@ -61,6 +61,7 @@ public class GroupManager {
         analyzeDistribution(groups);
         parseGroups(groups, predicateType, callback);
         
+        Runtime.getRuntime().gc();
     }
     
     private Map<String, AbstractGroup> structureGrouping(Structure s) {
