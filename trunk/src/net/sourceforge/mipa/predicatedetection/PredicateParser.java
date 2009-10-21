@@ -19,11 +19,16 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
+import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 
 import net.sourceforge.mipa.components.GroupManager;
+import net.sourceforge.mipa.test.TimeCost;
+import net.sourceforge.mipa.test.TimeInfo;
 
 import org.w3c.dom.Document;
 
@@ -59,6 +64,12 @@ public class PredicateParser implements PredicateParserMethod {
         if (DEBUG) {
             System.out.println("parsing predicate...");
         }
+        
+        if (EXPERIMENT) {
+            TimeInfo t = new TimeInfo();
+            TimeCost.put(applicationName, t);
+            t.item_1_begin = System.nanoTime();
+        }
         //only for debug
         //groupManager.setCallback(applicationName);
 
@@ -67,10 +78,32 @@ public class PredicateParser implements PredicateParserMethod {
         Structure predicateStructure = structureParser
                                                       .parseStructure(predicate);
         
+        if(EXPERIMENT) {
+            TimeInfo t = TimeCost.get(applicationName);
+            t.item_1_end = System.nanoTime();
+            
+            t.item_2_begin = System.nanoTime();
+        }
+        
         if (! predicateValidation.validate(predicateStructure)) {
             return;
         }
         
         groupManager.createGroups(predicateStructure, type, applicationName);
+        
+        if(EXPERIMENT) {
+            TimeInfo t = TimeCost.get(applicationName);
+            t.item_2_end = System.nanoTime();
+        }
+        
+        if(EXPERIMENT) {
+            TimeInfo t = TimeCost.get(applicationName);
+            try {
+                PrintWriter out = new PrintWriter(new FileWriter("log/time_cost", true), true);
+                out.println((t.item_1_end - t.item_1_begin) + " " + " " + (t.item_2_end - t.item_2_begin));
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

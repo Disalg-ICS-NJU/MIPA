@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa;
 
+import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
 
 import java.io.File;
@@ -43,6 +44,7 @@ import net.sourceforge.mipa.naming.IDManagerImp;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.PredicateParser;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
+import net.sourceforge.mipa.tools.GCRunner;
 
 import org.w3c.dom.Document;
 
@@ -61,6 +63,11 @@ public class Initialize {
     public boolean initialize() {
 
       //TODO parse config will move into MIPAResource.
+        if(EXPERIMENT) {
+            GCRunner r = new GCRunner();
+            Thread t = new Thread(r);
+            t.start();
+        }
         parseConfig("config/config.xml");
 
         try {
