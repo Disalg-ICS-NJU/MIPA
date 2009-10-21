@@ -2,4 +2,4 @@
 
 MIPA_HOME="."
 cd ../..
-java -cp $MIPA_HOME/build/classes/:$CLASSPATH net.sourceforge.mipa.naming.NamingServer
+java -verbose:gc -cp $MIPA_HOME/build/classes/:$CLASSPATH net.sourceforge.mipa.naming.NamingServer

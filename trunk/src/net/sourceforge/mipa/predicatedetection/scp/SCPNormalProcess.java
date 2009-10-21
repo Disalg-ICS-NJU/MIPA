@@ -44,7 +44,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
 
     private static final long serialVersionUID = -2040352661249255553L;
 
-    private boolean currentState;
+    private boolean prevState;
     
     private boolean firstflag;
     
@@ -70,7 +70,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
             currentMessageCount.put(checkers[i], new Long(0));
         }
         
-        currentState = false;
+        prevState = false;
         firstflag = true;
         
         if(ENABLE_PHYSICAL_CLOCK) {
@@ -96,8 +96,8 @@ public class SCPNormalProcess extends AbstractNormalProcess {
     @Override
     public void action(boolean value) {
         // TODO Auto-generated method stub
-        if(currentState != value && firstflag) {
-            if(currentState == false) {
+        if(prevState != value && firstflag) {
+            if(prevState == false) {
                 //interval begins
                 lo = new SCPVectorClock(currentClock);
                 
@@ -143,7 +143,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                 
             }
         }
-        currentState = value;
+        prevState = value;
     }
     
     private void send(MessageType type, String receiverName, SCPMessageContent content) {
