@@ -21,6 +21,7 @@ package net.sourceforge.mipa.eca.sensor;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -41,11 +42,11 @@ public class SimulationRFID implements Sensor {
     /** data source indicator per tag. */
     private int[] indicators;
 
-    public SimulationRFID(String sourceFile) {
+    public SimulationRFID(Object args) {
 
         try {
             BufferedReader source = new BufferedReader(
-                                               new FileReader(sourceFile));
+                                               new FileReader((String) Array.get(args, 0)));
             
             gap = Long.parseLong(source.readLine());
             int num = Integer.parseInt(source.readLine());

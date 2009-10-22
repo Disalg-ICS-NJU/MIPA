@@ -20,6 +20,7 @@
 package net.sourceforge.mipa.eca;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
@@ -101,13 +102,17 @@ public class SensorPlugin {
                 }
             }
             
-            Class cons = Class.forName(class_name);
+            Class<?> cons = Class.forName(class_name);
             
             // get the constructor of sensor.
             //TODO should check very argument, we assume there is only
             // one String parameter currently.
-            Constructor constructor = cons.getConstructor(String.class);
-            Sensor sensor = (Sensor) constructor.newInstance(args.get(0));
+            Constructor<?> constructor = cons.getConstructor(Object.class);
+            
+            Object arg = Array.newInstance(String.class, args.size());
+            for(int i = 0; i < args.size(); i++) Array.set(arg, i, args.get(i));
+            Sensor sensor = (Sensor) constructor.newInstance(arg);
+            
             DataDisseminate dataDisseminate 
                                 = new DataDisseminate(dataSource, 
                                                          Integer.parseInt(dataDisseminateTime), 
