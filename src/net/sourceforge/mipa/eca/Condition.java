@@ -92,7 +92,7 @@ public abstract class Condition implements Serializable {
                 System.out.println("The operator of String has not been defined.");
             }
             
-        } else if (localPredicate.getValueType().equals("Double") == true) {
+        } else if (valueType.equals("Double") == true) {
             // Float operators
             double sensorValue = Double.parseDouble(values[0]);
             double threshold = Double.parseDouble(value);
@@ -106,7 +106,16 @@ public abstract class Condition implements Serializable {
             } else {
                 System.out.println("The operator of Float has not been defined.");
             }
-        } else {
+        } /*else if(valueType.equals("Boolean") == true) {
+            
+          else if(valueType.equals("Integer") ==  true) {
+          
+          }
+          
+          else if (valueType.equals("") == true) {
+          
+          }
+        } */else {
             System.out.println("value type is undefined.");
         }
 
