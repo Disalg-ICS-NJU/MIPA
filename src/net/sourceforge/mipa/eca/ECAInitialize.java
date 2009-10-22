@@ -86,12 +86,13 @@ public class ECAInitialize {
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
             
-            //resources.add(sensorPlugin.load("config/sensors/temperature.xml"));
-            //resources.add(sensorPlugin.load("config/sensors/RFID.xml"));
-            //resources.add(sensorPlugin.load("config/sensors/temperature_1.xml"));
-            //resources.add(sensorPlugin.load("config/sensors/RFID_1.xml"));
+            resources.add(sensorPlugin.load("config/sensors/temperature.xml"));
+            resources.add(sensorPlugin.load("config/sensors/RFID.xml"));
+            resources.add(sensorPlugin.load("config/sensors/temperature_1.xml"));
+            resources.add(sensorPlugin.load("config/sensors/RFID_1.xml"));
             resources.add(sensorPlugin.load("config/sensors/light.xml"));
             resources.add(sensorPlugin.load("config/sensors/light_1.xml"));
+            
             if (DEBUG) {
                 System.out.println("resources value: ");
                 for (int i = 0; i < resources.size(); i++) {
