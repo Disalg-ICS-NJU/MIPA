@@ -5,7 +5,7 @@
   <id>light_1</id>
   <class>net.sourceforge.mipa.eca.sensor.SimulationLight</class>
   <location>nju</location>
-  <ValueType>String</ValueType>
+  <ValueType>Double</ValueType>
   <DataSchema type="push" />
   <DataDisseminate time="1" lazy="true" />
   <arguments>
