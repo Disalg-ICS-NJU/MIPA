@@ -21,6 +21,7 @@ package net.sourceforge.mipa.eca.sensor;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 /**
  * simulation temperature sensor.
  *
@@ -37,9 +38,9 @@ public class SimulationTemperature implements Sensor {
 	/** sensor stop flag */
 	private boolean stoped;
 	
-	public SimulationTemperature(String fileName) {
+	public SimulationTemperature(Object args) {
 		try {
-			source = new BufferedReader(new FileReader(fileName));
+			source = new BufferedReader(new FileReader((String) Array.get(args, 0)));
 			gap = Long.parseLong(source.readLine());
 		} catch(Exception e) {
 			e.printStackTrace();
