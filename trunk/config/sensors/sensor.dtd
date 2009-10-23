@@ -10,5 +10,6 @@
 <!ATTLIST DataDisseminate time CDATA #REQUIRED>
 <!ATTLIST DataDisseminate lazy (true|false) #REQUIRED>
 <!ELEMENT arguments (argument, ArgumentType)+>
+<!-- all arguments are string, user can narrow their types in code -->
 <!ELEMENT argument (#PCDATA)>
-<!ELEMENT ArgumentType (#PCDATA)>
+<!--<!ELEMENT ArgumentType (#PCDATA)>-->
