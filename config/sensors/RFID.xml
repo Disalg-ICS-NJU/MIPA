@@ -10,6 +10,5 @@
   <DataDisseminate time="1" lazy="false" />
   <arguments>
 	<argument>data/RFID</argument>
-	<ArgumentType>String</ArgumentType>
   </arguments>
 </sensor>

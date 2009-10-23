@@ -10,6 +10,5 @@
   <DataDisseminate time="1" lazy="true" />
   <arguments>
 	<argument>data/temperature_1</argument>
-	<ArgumentType>String</ArgumentType>
   </arguments>
 </sensor>

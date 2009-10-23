@@ -85,7 +85,7 @@ public class SensorPlugin {
                                               .getAttributes().getNamedItem("lazy").getNodeValue();
             
             ArrayList<String> args = new ArrayList<String>();
-            ArrayList<String> args_type = new ArrayList<String>();
+            //ArrayList<String> args_type = new ArrayList<String>();
             // parse arguments.
             Node arguments = doc.getElementsByTagName("arguments").item(0);
             
@@ -96,9 +96,9 @@ public class SensorPlugin {
                 if(argument.getNodeType() == Node.ELEMENT_NODE) {
                     if(argument.getNodeName().equals("argument")) {
                         args.add(argument.getFirstChild().getNodeValue());
-                    } else if(argument.getNodeName().equals("ArgumentType")) {
+                    }/* else if(argument.getNodeName().equals("ArgumentType")) {
                         args_type.add(argument.getFirstChild().getNodeValue());
-                    }
+                    }*/
                 }
             }
             
