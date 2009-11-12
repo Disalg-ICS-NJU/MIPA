@@ -19,11 +19,13 @@
  */
 package net.sourceforge.mipa.eca;
 
+import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
 
 import java.io.File;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,6 +35,7 @@ import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.tools.GCRunner;
 
 import org.w3c.dom.Document;
 
@@ -47,6 +50,11 @@ public class ECAInitialize {
      */
     public void initialize() {
         //TODO parse config will move into MIPAResource.
+        if(EXPERIMENT) {
+            GCRunner r = new GCRunner();
+            Thread t = new Thread(r);
+            t.start();
+        }
         parseConfig("config/config.xml");
 
         String namingAddress = MIPAResource.getNamingAddress();
@@ -86,12 +94,22 @@ public class ECAInitialize {
             // add resources to list for registering resources.
             ArrayList<SensorAgent> resources = new ArrayList<SensorAgent>();
             
+            String[] files = new File(config.Config.SENSORS_CONFIG_DIRECTORY).list();
+            for(int i = 0; i < files.length; i++) {
+                String pattern = ".*xml";
+                if(Pattern.matches(pattern, files[i])) {
+                    System.out.println(files[i]);
+                    resources.add(sensorPlugin.load(config.Config.SENSORS_CONFIG_DIRECTORY + files[i]));
+                }
+            }
+            /*
             resources.add(sensorPlugin.load("config/sensors/temperature.xml"));
             resources.add(sensorPlugin.load("config/sensors/RFID.xml"));
             resources.add(sensorPlugin.load("config/sensors/temperature_1.xml"));
             resources.add(sensorPlugin.load("config/sensors/RFID_1.xml"));
             resources.add(sensorPlugin.load("config/sensors/light.xml"));
             resources.add(sensorPlugin.load("config/sensors/light_1.xml"));
+            */
             
             if (DEBUG) {
                 System.out.println("resources value: ");

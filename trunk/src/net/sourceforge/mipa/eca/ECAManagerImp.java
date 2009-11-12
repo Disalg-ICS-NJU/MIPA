@@ -19,8 +19,11 @@
  */
 package net.sourceforge.mipa.eca;
 
+import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import net.sourceforge.mipa.predicatedetection.NormalProcess;
 import net.sourceforge.mipa.predicatedetection.PredicateType;
 import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
 import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
+import net.sourceforge.mipa.test.TimeInfo;
 
 /**
  * 
@@ -91,6 +95,12 @@ public class ECAManagerImp implements ECAManager {
                                        String name, 
                                        Group g)
                                            throws RemoteException {
+        // EXPERIMENT
+        TimeInfo timeInfo = new TimeInfo();
+        if (EXPERIMENT) {
+            timeInfo.item_1_begin = System.nanoTime();
+        }
+        
         try {
             Naming server = MIPAResource.getNamingServer();
 
@@ -159,6 +169,19 @@ public class ECAManagerImp implements ECAManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        
+        if(EXPERIMENT) {
+            timeInfo.item_1_end = System.nanoTime();
+        }
+        
+        if(EXPERIMENT) {
+            try {
+                PrintWriter out = new PrintWriter(new FileWriter("log/eca_time_cost", true), true);
+                out.println((timeInfo.item_1_end - timeInfo.item_1_begin));
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }

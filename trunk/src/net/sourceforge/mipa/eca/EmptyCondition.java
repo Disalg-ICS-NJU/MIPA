@@ -46,11 +46,11 @@ public class EmptyCondition extends Condition {
      */
     @Override
     public void notifyListener(String eventName, String value) {
-        if(DEBUG) {
+        /*if(DEBUG) {
             //System.out.println("In EmptyCondition::notifyListener.");
             System.out.println("event name: " + eventName);
             System.out.println("value: " + value);
-        }
+        }*/
         action.update(eventName, value);
     }
 
