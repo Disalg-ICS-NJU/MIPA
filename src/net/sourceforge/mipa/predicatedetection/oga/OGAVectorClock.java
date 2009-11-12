@@ -65,14 +65,14 @@ public class OGAVectorClock extends VectorClock {
         Long clock = getVectorClock().get(id);
         getVectorClock().set(id, new Long(clock.longValue() + 1));
         
-        if(DEBUG) {
+        /*if(DEBUG) {
             System.out.print("Normal Process " + id + ":\n\t");
             ArrayList<Long> list = getVectorClock();
             for(int i = 0; i < list.size(); i++) {
                 System.out.print(list.get(i) + ", ");
             }
             System.out.println();
-        }
+        }*/
     }
 
     @Override

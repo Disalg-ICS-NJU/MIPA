@@ -100,7 +100,7 @@ public class PredicateParser implements PredicateParserMethod {
             TimeInfo t = TimeCost.get(applicationName);
             try {
                 PrintWriter out = new PrintWriter(new FileWriter("log/time_cost", true), true);
-                out.println((t.item_1_end - t.item_1_begin) + " " + " " + (t.item_2_end - t.item_2_begin));
+                out.println((t.item_1_end - t.item_1_begin) + " " + (t.item_2_end - t.item_2_begin) + " " + (t.item_2_end - t.item_1_begin));
             } catch(Exception e) {
                 e.printStackTrace();
             }

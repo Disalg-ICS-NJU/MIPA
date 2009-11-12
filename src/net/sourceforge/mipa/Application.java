@@ -64,7 +64,11 @@ public class Application extends AbstractApplication {
     }
 
     public static void main(String[] args) {
-        Application app = new Application("config/predicate/" + args[0]);
-        app.start("config/config.xml");
+        int count = Integer.parseInt(args[1]);
+        for(int i = 0; i < count; i++) {
+            Application app = new Application("config/predicate/" + args[0]);
+            app.start("config/config.xml");
+            System.out.println(i);
+        }
     }
 }

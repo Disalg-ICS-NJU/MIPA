@@ -83,7 +83,7 @@ public class PushSensorAgent extends SensorAgent {
                     dataDisseminate.update(this.name, values);
                 } else {
                     if(DEBUG) {
-                        System.out.println("Sensor Stopped!");
+                        System.out.println("Sensor " + name + " Stopped!");
                     }
                     return;
                 }
