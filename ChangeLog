@@ -1,13 +1,18 @@
+mipa-1.3
+
+* refactor MIPA system.
+* 
+
 mipa-1.2.1
 
-*support sensors plug-in.
+* support sensors plug-in.
 
 mipa-1.0
 
 
 mipa-0.5
 
-*support OGA checking algorithm.
+* support OGA checking algorithm.
 
 
 mipa-0.2
