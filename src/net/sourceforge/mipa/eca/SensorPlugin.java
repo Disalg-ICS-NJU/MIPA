@@ -120,7 +120,13 @@ public class SensorPlugin {
 
             if(dataSchema.equals("push")) {
                 sensorAgent = new PushSensorAgent(dataDisseminate, id, valueType, sensor);
+            } else if(dataSchema.equals("pull")) {
+                //TODO implements pull sensor agent
+                
+            } else {
+                
             }
+            
             Thread t = new Thread(sensorAgent);
             t.start();
             
