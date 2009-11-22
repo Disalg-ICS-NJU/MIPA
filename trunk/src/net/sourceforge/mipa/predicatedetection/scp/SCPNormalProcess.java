@@ -21,7 +21,6 @@ package net.sourceforge.mipa.predicatedetection.scp;
 
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
-import static config.Debug.DEBUG;
 
 import java.io.PrintWriter;
 import java.util.Date;
@@ -88,9 +87,11 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         VectorClock timestamp = message.getTimestamp();
         currentClock.update(timestamp);
         firstflag = true;
+        /*
         if(DEBUG) {
             System.out.println(name + " firstflag: true.");
         }
+        */
     }
 
     @Override
@@ -136,10 +137,11 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                 broadcast(MessageType.Control, null);
                 firstflag = false;
 
-                
+                /*
                 if(DEBUG) {
                     System.out.println(name + " firstflag: false");
                 }
+                */
                 
             }
         }
