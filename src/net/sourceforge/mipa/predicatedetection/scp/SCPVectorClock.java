@@ -19,7 +19,6 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
-import static config.Debug.DEBUG;
 import java.util.ArrayList;
 
 import net.sourceforge.mipa.predicatedetection.VectorClock;
@@ -79,6 +78,7 @@ public class SCPVectorClock extends VectorClock {
         Long clock = getVectorClock().get(id);
         getVectorClock().set(id, new Long(clock.longValue() + 1));
         
+        /*
         if(DEBUG) {
             System.out.print("Normal Process " + id + ":\n\t");
             ArrayList<Long> list = getVectorClock();
@@ -87,6 +87,7 @@ public class SCPVectorClock extends VectorClock {
             }
             System.out.println();
         }
+        */
     }
 
     
