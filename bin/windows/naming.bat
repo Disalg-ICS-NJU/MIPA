@@ -1,3 +1,3 @@
 set MIPA_HOME=.
 cd ..\..
-java -cp %MIPA_HOME%\build\classes\;%CLASSPATH% net.sourceforge.mipa.naming.NamingServer
+java -cp %MIPA_HOME%\build\classes\ net.sourceforge.mipa.naming.NamingServer
