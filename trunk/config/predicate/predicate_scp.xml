@@ -6,7 +6,6 @@
     <CGS value="conjunction">
       <LP>
 	<formula>
-	<!--	  <atom operator="great-than" name="temperature" value="27" />-->
 	<atom operator="great-than" name="light" value="500" />
 	</formula>
       </LP>
