@@ -23,7 +23,7 @@ import static config.Debug.DEBUG;
 
 import java.rmi.server.UnicastRemoteObject;
 
-import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;

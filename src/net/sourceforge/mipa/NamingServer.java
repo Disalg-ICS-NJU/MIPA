@@ -18,16 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.sourceforge.mipa.naming;
+package net.sourceforge.mipa;
 
-import java.io.File;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
+import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.naming.NamingImp;
 
 /**
  * This class <code>NamingServer</code> provides Naming resolving.
@@ -45,10 +43,10 @@ public class NamingServer {
     /**
      * <code>NamingServer</code> construction.
      * 
-     * @param configFile config file.
      */
-    public NamingServer(String configFile) {
-        parseConfig(configFile);
+    public NamingServer() {
+        address = MIPAResource.getAddress();
+        port = MIPAResource.getPort();
     }
 
     /**
@@ -73,34 +71,13 @@ public class NamingServer {
             e.printStackTrace();
         }
     }
-    
-    private void parseConfig(String fileName) {
-        try {
-            File f = new File(fileName);
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                                                                   .newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(f);
-
-            address = doc.getElementsByTagName("address").item(0)
-                                .getFirstChild().getNodeValue();
-
-            port = Integer.parseInt(doc.getElementsByTagName("port").item(0)
-                             .getFirstChild().getNodeValue());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * @param args
      */
     public static void main(String[] args) {
 
-        //TODO parse config will move into MIPAResource.
-        NamingServer server = new NamingServer("config/config.xml");
+        NamingServer server = new NamingServer();
         //System.out.println("Naming server is running...");
         System.out.println("========== MIPA system Naming Server ==========");
         System.out.println("Naming server information:");

@@ -22,7 +22,7 @@ package net.sourceforge.mipa.test;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;

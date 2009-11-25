@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Communication;
 
 /**

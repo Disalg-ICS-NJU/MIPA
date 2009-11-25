@@ -22,6 +22,8 @@ package net.sourceforge.mipa;
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.application.AbstractApplication;
+
 /**
  * MIPA application.
  *

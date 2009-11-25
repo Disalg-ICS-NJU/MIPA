@@ -19,7 +19,6 @@
  */
 package net.sourceforge.mipa.eca;
 
-import static config.Debug.DEBUG;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 
 /**

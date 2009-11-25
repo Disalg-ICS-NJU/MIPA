@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageDispatcher;

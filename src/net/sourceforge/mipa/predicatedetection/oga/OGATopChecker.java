@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
 
