@@ -34,7 +34,6 @@ public class StructureParser {
     // private ContextModeling contextMapping;
 
     public StructureParser() {
-        System.out.println("Testing constructor of STRUCTUREPARSER.");
     }
 
     /*

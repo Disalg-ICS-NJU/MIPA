@@ -24,18 +24,16 @@ HOW TO RUN MIPA SYSTEM?
 * RUN IN COMMAND LINE:
     run the demo which MIPA provides in bin/<platform> directory. There are four steps
  to start the demo (Make sure you are in bin/<platform> directory):
-    1. run naming.sh<bat> to start naming server.
-    2. run initialize.sh<bat> to initialize MIPA system.
-    3. run ECAInitialize.sh<bat> to start ECA resource in MIPA system. ECA resources 
+    1. run MIPAInitialize.sh<bat> to initialize MIPA system.
+    2. run ECAInitialize.sh<bat> to start ECA resource in MIPA system. ECA resources 
 could run in different platforms.
-    4. start MIPA application through application.sh<bat>, you can run many 
+    3. start MIPA application through application.sh<bat>, you can run many 
 applications in one time.
 
 * RUN IN ECLIPSE:
-    1. run net.sourceforge.mipa.naming.NamingServer
-    2. run net.sourceforge.mipa.Initialize
-    3. run net.sourceforge.mipa.eca.ECAInitialize
-    4. run net.sourceforge.mipa.Application
+    1. run net.sourceforge.mipa.MIPAInitialize
+    2. run net.sourceforge.mipa.ECAInitialize
+    3. run net.sourceforge.mipa.Application
 
 
 ABOUT SENSORS' DATA IN mipa-1.2
