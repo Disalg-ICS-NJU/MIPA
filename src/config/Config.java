@@ -28,4 +28,5 @@ public class Config {
     public final static boolean EXPERIMENT = false;
     public final static String LOG_DIRECTORY = "log";
     public final static String SENSORS_CONFIG_DIRECTORY = "config/sensors/";
+    public final static String CONFIG_FILE = "config/config.xml";
 }

@@ -27,17 +27,12 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.tools.GCRunner;
-
-import org.w3c.dom.Document;
 
 /**
  * initialize ECA mechanism.
@@ -49,13 +44,11 @@ public class ECAInitialize {
      * initialize method.
      */
     public void initialize() {
-        //TODO parse config will move into MIPAResource.
         if(EXPERIMENT) {
             GCRunner r = new GCRunner();
             Thread t = new Thread(r);
             t.start();
         }
-        parseConfig("config/config.xml");
 
         String namingAddress = MIPAResource.getNamingAddress();
         try {
@@ -102,14 +95,6 @@ public class ECAInitialize {
                     resources.add(sensorPlugin.load(config.Config.SENSORS_CONFIG_DIRECTORY + files[i]));
                 }
             }
-            /*
-            resources.add(sensorPlugin.load("config/sensors/temperature.xml"));
-            resources.add(sensorPlugin.load("config/sensors/RFID.xml"));
-            resources.add(sensorPlugin.load("config/sensors/temperature_1.xml"));
-            resources.add(sensorPlugin.load("config/sensors/RFID_1.xml"));
-            resources.add(sensorPlugin.load("config/sensors/light.xml"));
-            resources.add(sensorPlugin.load("config/sensors/light_1.xml"));
-            */
             
             if (DEBUG) {
                 System.out.println("resources value: ");
@@ -126,27 +111,6 @@ public class ECAInitialize {
         }
     }
 
-    private void parseConfig(String fileName) {
-        try {
-            File f = new File(fileName);
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                                                                   .newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(f);
-
-            String address = doc.getElementsByTagName("address").item(0)
-                                .getFirstChild().getNodeValue();
-
-            String port = doc.getElementsByTagName("port").item(0)
-                             .getFirstChild().getNodeValue();
-
-            MIPAResource
-                        .setNamingAddress("rmi://" + address + ":" + port + "/");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void main(String[] args) {
         new ECAInitialize().initialize();

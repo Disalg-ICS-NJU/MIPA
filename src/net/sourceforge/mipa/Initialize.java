@@ -22,11 +22,7 @@ package net.sourceforge.mipa;
 import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
 
-import java.io.File;
 import java.rmi.server.UnicastRemoteObject;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.sourceforge.mipa.components.Broker;
 import net.sourceforge.mipa.components.ContextModeling;
@@ -46,8 +42,6 @@ import net.sourceforge.mipa.predicatedetection.PredicateParser;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
 import net.sourceforge.mipa.tools.GCRunner;
 
-import org.w3c.dom.Document;
-
 /**
  * MIPA platform initialization.
  * 
@@ -62,13 +56,11 @@ public class Initialize {
      */
     public boolean initialize() {
 
-      //TODO parse config will move into MIPAResource.
         if(EXPERIMENT) {
             GCRunner r = new GCRunner();
             Thread t = new Thread(r);
             t.start();
         }
-        parseConfig("config/config.xml");
 
         try {
             // binds predicate parser
@@ -142,29 +134,6 @@ public class Initialize {
             return false;
         }
         return true;
-    }
-
-    private void parseConfig(String fileName) {
-        // TODO parses config file and sets MIPAResource
-        try {
-            File f = new File(fileName);
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                                                                   .newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(f);
-
-            String address = doc.getElementsByTagName("address").item(0)
-                                .getFirstChild().getNodeValue();
-
-            String port = doc.getElementsByTagName("port").item(0)
-                             .getFirstChild().getNodeValue();
-
-            MIPAResource
-                        .setNamingAddress("rmi://" + address + ":" + port + "/");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void main(String[] args) {

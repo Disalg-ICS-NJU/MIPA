@@ -78,7 +78,6 @@ public abstract class AbstractApplication implements ResultCallback {
      *            config file name
      */
     public void start(String configFileName) {
-        parseConfig(configFileName);
 
         String namingAddress = MIPAResource.getNamingAddress();
 
@@ -120,34 +119,6 @@ public abstract class AbstractApplication implements ResultCallback {
         }
     }
 
-    /**
-     * parse config file.
-     * 
-     * @param fileName
-     *            config file name
-     */
-    private void parseConfig(String fileName) {
-
-        try {
-            File f = new File(fileName);
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                                                                   .newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(f);
-
-            String address = doc.getElementsByTagName("address").item(0)
-                                .getFirstChild().getNodeValue();
-
-            String port = doc.getElementsByTagName("port").item(0)
-                             .getFirstChild().getNodeValue();
-
-            MIPAResource
-                        .setNamingAddress("rmi://" + address + ":" + port + "/");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * parse predicate to document.

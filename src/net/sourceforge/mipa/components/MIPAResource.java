@@ -19,6 +19,13 @@
  */
 package net.sourceforge.mipa.components;
 
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
@@ -45,8 +52,45 @@ public class MIPAResource {
     private static PredicateParserMethod predicateParser = null;
     
     private static MessageDispatcher messageDispatcher = null;
+    
+    private static String checkMode = null;
 
-    //TODO parse config will move into MIPAResource.
+    static {
+        parseConfig(config.Config.CONFIG_FILE);
+    }
+    /**
+     * parse config file.
+     * 
+     * @param fileName
+     *            config file name
+     */
+    
+    public static void parseConfig(String fileName) {
+
+        try {
+            File f = new File(fileName);
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory
+                                                                   .newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(f);
+
+            String address = doc.getElementsByTagName("address").item(0)
+                                .getFirstChild().getNodeValue();
+
+            port = Integer.parseInt(doc.getElementsByTagName("port").item(0)
+                             .getFirstChild().getNodeValue());
+            
+            checkMode = doc.getElementsByTagName("checkmode").item(0)
+                                .getFirstChild().getNodeValue();
+            
+            MIPAResource
+                        .setNamingAddress("rmi://" + address + ":" + port + "/");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     /**
      * returns naming server address.
@@ -141,5 +185,12 @@ public class MIPAResource {
             }
         }
         return messageDispatcher;
+    }
+
+    /**
+     * @return the checkMode
+     */
+    public static String getCheckMode() {
+        return checkMode;
     }
 }
