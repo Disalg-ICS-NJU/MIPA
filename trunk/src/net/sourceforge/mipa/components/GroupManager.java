@@ -20,6 +20,7 @@
 package net.sourceforge.mipa.components;
 
 import static config.Debug.DEBUG;
+import static config.Config.EXPERIMENT;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +62,9 @@ public class GroupManager {
         analyzeDistribution(groups);
         parseGroups(groups, predicateType, callback);
         
-        Runtime.getRuntime().gc();
+        if(EXPERIMENT) {
+            Runtime.getRuntime().gc();
+        }
     }
     
     private Map<String, AbstractGroup> structureGrouping(Structure s) {
