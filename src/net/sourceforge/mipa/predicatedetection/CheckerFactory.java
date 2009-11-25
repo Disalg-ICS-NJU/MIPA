@@ -28,6 +28,7 @@ import net.sourceforge.mipa.components.CheckMode;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.oga.OGASubChecker;
 import net.sourceforge.mipa.predicatedetection.oga.OGATopChecker;
 import net.sourceforge.mipa.predicatedetection.scp.SCPChecker;
@@ -137,7 +138,12 @@ public class CheckerFactory {
                 // LATTICE mode code puts here!
                 switch(type) {
                 case WCP:
-                    
+                    WCPLatticeChecker wcpLatticeChecker = new WCPLatticeChecker(application, checkerName,
+                                                                                normalProcesses);
+                    Communication wcpLatticecheckerStub = (Communication) UnicastRemoteObject
+                                                                                        .exportObject(wcpLatticeChecker,
+                                                                                                        0);
+                    server.bind(checkerName, wcpLatticecheckerStub);
                     break;
                 case SCP:
                     
