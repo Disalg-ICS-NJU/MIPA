@@ -36,6 +36,7 @@ import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
+import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNormalProcess;
 import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
 import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
 import net.sourceforge.mipa.predicatedetection.wcp.WCPNormalProcess;
@@ -158,7 +159,11 @@ public class ECAManagerImp implements ECAManager {
                 // LATTICE mode code puts here!
                 switch(g.getType()) {
                 case WCP:
-                    
+                    WCPLatticeNormalProcess wcpNP = new WCPLatticeNormalProcess(name, checkers,
+                                                                             normalProcesses);
+                    npStub = (NormalProcess) UnicastRemoteObject
+                                                            .exportObject(wcpNP, 0);
+                    action = wcpNP;
                     break;
                 case SCP:
                     

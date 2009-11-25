@@ -22,6 +22,7 @@ package net.sourceforge.mipa.components;
 import java.io.Serializable;
 
 import net.sourceforge.mipa.predicatedetection.VectorClock;
+import net.sourceforge.mipa.predicatedetection.lattice.LatticeMessageContent;
 import net.sourceforge.mipa.predicatedetection.oga.OGAMessageContent;
 import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
 import net.sourceforge.mipa.predicatedetection.wcp.WCPMessageContent;
@@ -67,6 +68,8 @@ public class Message implements Serializable {
     
     //TODO other predicate message content types go here.
     
+    /** lattice message content */
+    private LatticeMessageContent latticeMessageContent = null;
 
     /**
      * @param messageID the messageID to set
@@ -208,5 +211,21 @@ public class Message implements Serializable {
      */
     public WCPMessageContent getWcpMessageContent() {
         return wcpMessageContent;
+    }
+    
+    /**
+     * 
+     * @param latticeMessageContent
+     */
+    public void setLatticeMessageContent(LatticeMessageContent latticeMessageContent){
+        this.latticeMessageContent=latticeMessageContent;
+    }
+    
+    /**
+     * 
+     * @return the latticeMessageContent
+     */
+    public LatticeMessageContent getLatticeMessageContent(){
+        return latticeMessageContent;
     }
 }
