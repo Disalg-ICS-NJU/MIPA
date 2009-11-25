@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.sourceforge.mipa;
+package net.sourceforge.mipa.naming;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -28,11 +28,11 @@ import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.naming.NamingImp;
 
 /**
- * This class <code>NamingServer</code> provides Naming resolving.
+ * This class <code>NamingService</code> provides Naming resolving.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class NamingServer {
+public class NamingService {
 
     /** registry port */
     private int port;
@@ -44,7 +44,7 @@ public class NamingServer {
      * <code>NamingServer</code> construction.
      * 
      */
-    public NamingServer() {
+    public NamingService() {
         address = MIPAResource.getAddress();
         port = MIPAResource.getPort();
     }
@@ -52,19 +52,19 @@ public class NamingServer {
     /**
      * starts naming server.
      */
-    public void startServer() {
+    public void startService() {
         try {
             // TODO add security policy
 
             LocateRegistry.createRegistry(port);
 
-            NamingImp server = new NamingImp();
+            NamingImp service = new NamingImp();
 
-            server.setRegistryAddress(address);
-            server.setPort(port);
-            server.formatAddress();
+            service.setRegistryAddress(address);
+            service.setPort(port);
+            service.formatAddress();
 
-            Naming stub = (Naming) UnicastRemoteObject.exportObject(server, 0);
+            Naming stub = (Naming) UnicastRemoteObject.exportObject(service, 0);
 
             java.rmi.Naming.rebind("rmi://" + address + ":" + port + "/Naming", stub);
         } catch (Exception e) {
@@ -77,12 +77,12 @@ public class NamingServer {
      */
     public static void main(String[] args) {
 
-        NamingServer server = new NamingServer();
+        NamingService service = new NamingService();
         //System.out.println("Naming server is running...");
-        System.out.println("========== MIPA system Naming Server ==========");
+        System.out.println("========== MIPA system Naming Service ==========");
         System.out.println("Naming server information:");
-        System.out.println("*\tIP address: " + server.address);
-        System.out.println("*\tport: " + server.port);
-        server.startServer();
+        System.out.println("*\tIP address: " + service.address);
+        System.out.println("*\tport: " + service.port);
+        service.startService();
     }
 }

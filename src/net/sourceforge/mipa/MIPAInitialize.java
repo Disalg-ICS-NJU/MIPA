@@ -38,6 +38,7 @@ import net.sourceforge.mipa.components.MessageDispatcher;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.IDManagerImp;
 import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.naming.NamingService;
 import net.sourceforge.mipa.predicatedetection.PredicateParser;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
 import net.sourceforge.mipa.tools.GCRunner;
@@ -47,7 +48,7 @@ import net.sourceforge.mipa.tools.GCRunner;
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class Initialize {
+public class MIPAInitialize {
 
     /**
      * initialize MIPA Infrastructure.
@@ -63,7 +64,6 @@ public class Initialize {
         }
 
         try {
-            // binds predicate parser
             Naming server = MIPAResource.getNamingServer();
 
             if (DEBUG) {
@@ -137,7 +137,12 @@ public class Initialize {
     }
 
     public static void main(String[] args) {
-        boolean result = new Initialize().initialize();
+        // start naming service
+        NamingService service = new NamingService();
+        System.out.println("MIPA system Naming Service starts sucessfully.");
+        service.startService();
+        
+        boolean result = new MIPAInitialize().initialize();
         if (result == true) {
             System.out.println("Initialization finished.");
         } else {

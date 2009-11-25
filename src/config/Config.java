@@ -24,9 +24,19 @@ package config;
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class Config {
+    /** output physical clock for debugging */
     public final static boolean ENABLE_PHYSICAL_CLOCK = false;
+    
+    /** experiment mode: output memory consumption, latency, etc. */
     public final static boolean EXPERIMENT = false;
+    
+    
+    /** log directory for MIPA component output */
     public final static String LOG_DIRECTORY = "log";
+    
+    /** sensor configuration directory for MIPA */
     public final static String SENSORS_CONFIG_DIRECTORY = "config/sensors/";
+    
+    /** configuration file for MIPA */
     public final static String CONFIG_FILE = "config/config.xml";
 }
