@@ -19,14 +19,14 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
-import static config.Config.LOG_DIRECTORY;
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
+import static config.Config.LOG_DIRECTORY;
 
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import net.sourceforge.mipa.ResultCallback;
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
 

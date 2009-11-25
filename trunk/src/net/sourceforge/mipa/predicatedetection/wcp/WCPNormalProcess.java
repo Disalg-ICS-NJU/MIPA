@@ -21,7 +21,6 @@ package net.sourceforge.mipa.predicatedetection.wcp;
 
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
-import static config.Debug.DEBUG;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
 import net.sourceforge.mipa.predicatedetection.VectorClock;
-import net.sourceforge.mipa.predicatedetection.wcp.WCPVectorClock;
 
 /**
  * 

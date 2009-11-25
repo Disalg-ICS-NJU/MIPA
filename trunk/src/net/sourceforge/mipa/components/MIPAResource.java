@@ -36,10 +36,13 @@ import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class MIPAResource {
-    /** naming server address */
-    private static String namingAddress = null;
+    
+    private static String address = null;
     
     private static int port = 0;
+    
+    /** naming server address */
+    private static String namingAddress = null;
 
     private static Naming server = null;
 
@@ -75,7 +78,7 @@ public class MIPAResource {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(f);
 
-            String address = doc.getElementsByTagName("address").item(0)
+            address = doc.getElementsByTagName("address").item(0)
                                 .getFirstChild().getNodeValue();
 
             port = Integer.parseInt(doc.getElementsByTagName("port").item(0)
@@ -90,6 +93,20 @@ public class MIPAResource {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * @return the address
+     */
+    public static String getAddress() {
+        return address;
+    }
+
+    /**
+     * @return the port
+     */
+    public static int getPort() {
+        return port;
     }
     
     /**
@@ -116,8 +133,8 @@ public class MIPAResource {
         if (server == null) {
             try {
                 server = (Naming) java.rmi.Naming
-                                                .lookup(MIPAResource
-                                                             .getNamingAddress()
+                                            .lookup(MIPAResource
+                                                         .getNamingAddress()
                                                          + "Naming");
             } catch (Exception e) {
                 e.printStackTrace();

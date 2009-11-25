@@ -19,8 +19,6 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
-import static config.Debug.DEBUG;
-
 import java.util.ArrayList;
 
 import net.sourceforge.mipa.predicatedetection.VectorClock;

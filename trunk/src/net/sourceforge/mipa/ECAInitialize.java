@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.eca;
+package net.sourceforge.mipa;
 
 import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
@@ -29,6 +29,12 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.MIPAResource;
+import net.sourceforge.mipa.eca.DataSource;
+import net.sourceforge.mipa.eca.DataSourceImp;
+import net.sourceforge.mipa.eca.ECAManager;
+import net.sourceforge.mipa.eca.ECAManagerImp;
+import net.sourceforge.mipa.eca.SensorAgent;
+import net.sourceforge.mipa.eca.SensorPlugin;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
