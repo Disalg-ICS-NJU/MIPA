@@ -24,6 +24,7 @@ import static config.Debug.DEBUG;
 import java.rmi.server.UnicastRemoteObject;
 
 import net.sourceforge.mipa.application.ResultCallback;
+import net.sourceforge.mipa.components.CheckMode;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
@@ -58,9 +59,6 @@ public class CheckerFactory {
                                      String[] fathers, 
                                      String[] children, 
                                      int level) {
-        if (DEBUG) {
-            System.out.println("CHeckerFactory: ogaChecker\n\tlevel: " + level);
-        }
         try {
             ResultCallback application = null;
             if (level == 0) {
@@ -73,9 +71,6 @@ public class CheckerFactory {
                                                                            0);
                 server.bind(checkerName, checkerStub);
 
-                if (DEBUG) {
-                    System.out.println("binding checker " + checkerName);
-                }
             } else if (level == 1) {
                 OGASubChecker checker = new OGASubChecker(application,
                                                           checkerName, fathers,
@@ -86,9 +81,6 @@ public class CheckerFactory {
                                                                            0);
                 server.bind(checkerName, checkerStub);
 
-                if (DEBUG) {
-                    System.out.println("binding checker " + checkerName);
-                }
             } else {
                 System.out.println("invalid level.");
             }
@@ -103,43 +95,63 @@ public class CheckerFactory {
     public static void newChecker(String callback, String checkerName,
                                   String[] normalProcesses,
                                   PredicateType type) {
-        if (DEBUG) {
-            System.out.println("CheckerFactory: newChecker");
-        }
         try {
             ResultCallback application = (ResultCallback) server
                                                                 .lookup(callback);
+            
+            CheckMode checkMode = MIPAResource.getCheckMode();
+            if(checkMode == CheckMode.NORMAL) {
+                // NORMAL mode code puts here!
+                switch (type) {
+                case SCP:
+                    SCPChecker checker = new SCPChecker(application, checkerName,
+                                                        normalProcesses);
+                    Communication checkerStub 
+                                        = (Communication) UnicastRemoteObject
+                                                                .exportObject(checker,
+                                                                               0);
+                    server.bind(checkerName, checkerStub);
+                    if (DEBUG) {
+                        System.out.println("binding checker " + checkerName);
+                    }
+                    break;
+                case LP:
 
-            switch (type) {
-            case SCP:
-                SCPChecker checker = new SCPChecker(application, checkerName,
-                                                    normalProcesses);
-                Communication checkerStub 
-                                    = (Communication) UnicastRemoteObject
-                                                            .exportObject(checker,
-                                                                           0);
-                server.bind(checkerName, checkerStub);
-                if (DEBUG) {
-                    System.out.println("binding checker " + checkerName);
+                    break;
+                case WCP:
+                    WCPChecker wcpChecker = new WCPChecker(application, checkerName,
+                                                        normalProcesses);
+                    Communication wcpCheckerStub 
+                                        = (Communication) UnicastRemoteObject
+                                                                .exportObject(wcpChecker,
+                                                                               0);
+                    server.bind(checkerName, wcpCheckerStub);
+                    if (DEBUG) {
+                        System.out.println("binding checker " + checkerName);
+                    }
+                    break;
+                default:
+                    System.out.println("Type " + type + " has not been defined.");
                 }
-                break;
-            case LP:
-
-            case WCP:
-                WCPChecker wcpChecker = new WCPChecker(application, checkerName,
-                                                    normalProcesses);
-                Communication wcpCheckerStub 
-                                    = (Communication) UnicastRemoteObject
-                                                            .exportObject(wcpChecker,
-                                                                           0);
-                server.bind(checkerName, wcpCheckerStub);
-                if (DEBUG) {
-                    System.out.println("binding checker " + checkerName);
+            } else if(checkMode == CheckMode.LATTICE) {
+                // LATTICE mode code puts here!
+                switch(type) {
+                case WCP:
+                    
+                    break;
+                case SCP:
+                    
+                    break;
+                case LP:
+                    
+                    break;
+                default:
+                    System.out.println("Type " + type + " has not been defined.");
                 }
-                break;
-            default:
-                System.out.println("Type has not been defined.");
+            } else {
+                System.out.println("Check Mode " + checkMode + "has not been defined.");
             }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

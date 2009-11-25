@@ -207,7 +207,12 @@ public class MIPAResource {
     /**
      * @return the checkMode
      */
-    public static String getCheckMode() {
-        return checkMode;
+    public static CheckMode getCheckMode() {
+        if(checkMode.equals("normal"))
+            return CheckMode.NORMAL;
+        else if(checkMode.equals("lattice"))
+            return CheckMode.LATTICE;
+        else
+            return CheckMode.NORMAL;
     }
 }

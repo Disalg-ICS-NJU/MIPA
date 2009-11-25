@@ -28,6 +28,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+import net.sourceforge.mipa.components.CheckMode;
 import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.Group;
@@ -35,7 +36,6 @@ import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
-import net.sourceforge.mipa.predicatedetection.PredicateType;
 import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
 import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
 import net.sourceforge.mipa.predicatedetection.wcp.WCPNormalProcess;
@@ -118,45 +118,68 @@ public class ECAManagerImp implements ECAManager {
 
             Listener action = null;
             NormalProcess npStub = null;
-            if (g.getType() == PredicateType.SCP) {
-                SCPNormalProcess np = new SCPNormalProcess(name, checkers,
-                                                           normalProcesses);
-                npStub = (NormalProcess) UnicastRemoteObject
-                                                            .exportObject(np, 0);
-                action = np;
-            } else if (g.getType() == PredicateType.OGA) {
-                String[] subMembers = new String[g.getSubMembers().size()];
-                g.getSubMembers().toArray(subMembers);
-                OGANormalProcess np = new OGANormalProcess(name, checkers,
-                                                           normalProcesses,
-                                                           subMembers);
-                npStub = (NormalProcess) UnicastRemoteObject
-                                                            .exportObject(np, 0);
-                action = np;
-            } else if (g.getType() == PredicateType.WCP) {
-                WCPNormalProcess np = new WCPNormalProcess(name, checkers,
-                                                           normalProcesses);
-                npStub = (NormalProcess) UnicastRemoteObject
-                                                            .exportObject(np, 0);
-                action = np;
-            } else if (g.getType() == PredicateType.LP) {
-
-            } else {
-
+            
+            CheckMode checkMode = MIPAResource.getCheckMode();
+            if(checkMode == CheckMode.NORMAL) {
+                // NORMAL mode code puts here!
+                switch(g.getType()) {
+                case SCP:
+                    SCPNormalProcess scpNP = new SCPNormalProcess(name, checkers,
+                                                                normalProcesses);
+                    npStub = (NormalProcess) UnicastRemoteObject
+                                                            .exportObject(scpNP, 0);
+                    action = scpNP;
+                
+                    break;
+                case OGA:
+                    String[] subMembers = new String[g.getSubMembers().size()];
+                    g.getSubMembers().toArray(subMembers);
+                    OGANormalProcess ogaNP = new OGANormalProcess(name, checkers,
+                                                                   normalProcesses,
+                                                                   subMembers);
+                    npStub = (NormalProcess) UnicastRemoteObject
+                                                            .exportObject(ogaNP, 0);
+                    action = ogaNP;
+                    break;
+                case WCP:
+                    WCPNormalProcess wcpNP = new WCPNormalProcess(name, checkers,
+                                                                   normalProcesses);
+                    npStub = (NormalProcess) UnicastRemoteObject
+                                                            .exportObject(wcpNP, 0);
+                    action = wcpNP;
+                    break;
+                case LP:
+                
+                    break;
+                default:
+                    System.out.println("Type " + g.getType() + " has not been defined.");
+                }
+            } else if(checkMode == CheckMode.LATTICE) {
+                // LATTICE mode code puts here!
+                switch(g.getType()) {
+                case WCP:
+                    
+                    break;
+                case SCP:
+                    
+                    break;
+                    
+                case OGA:
+                    
+                    break;
+                case LP:
+                    
+                    break;
+                default:
+                    System.out.println("Type " + g.getType() + " has not been defined.");
+                }
             }
 
             server.bind(name, npStub);
             coordinator.memberFinished(g.getCoordinatorID(), name);
 
-            if (DEBUG) {
-                System.out.println("before binding condition...");
-            }
-
             Condition everything = new EmptyCondition(action, localPredicate);
 
-            if (DEBUG) {
-                System.out.println("after binding condition...");
-            }
             // attaching condition to data source.
 
             if (DEBUG) {
