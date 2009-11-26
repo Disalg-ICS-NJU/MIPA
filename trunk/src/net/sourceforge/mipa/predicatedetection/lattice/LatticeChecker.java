@@ -1,3 +1,22 @@
+/* 
+ * MIPA - Middleware Infrastructure for Predicate detection in Asynchronous 
+ * environments
+ * 
+ * Copyright (C) 2009 the original author or authors.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the term of the GNU General Public License as published by 
+ * the Free Software Foundation, either version 3, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sourceforge.mipa.predicatedetection.lattice;
 
 import static config.Config.LOG_DIRECTORY;
@@ -12,18 +31,26 @@ import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.predicatedetection.AbstractChecker;
 
+/**
+ * 
+ * @author tingting Hua<huatingting0820@gmail.com>
+ *
+ */
 public abstract class LatticeChecker extends AbstractChecker {
 
 	private static final long serialVersionUID = 1230192910873066775L;
 
 	private int dimension;
 
+	/**store the current globalState*/
 	private LocalState[] globalState;
 
+	/**store all the received state*/
 	private ArrayList<ArrayList<LocalState>> stateSet;
 
 	private ArrayList<ArrayList<LocalState>> buffer;
 
+	/**lattice start node*/
 	private AbstractLatticeNode startNode;
 
 	private AbstractLatticeNode currentNode;
@@ -33,7 +60,8 @@ public abstract class LatticeChecker extends AbstractChecker {
 	private ArrayList<ArrayList<Message>> msgBuffer;
 
 	private long[] currentMessageCount;
-	////////////////////////////
+	
+	/**output the lattice constructor procedure information*/
 	private PrintWriter out=null;
 
 	public LatticeChecker(ResultCallback application, String checkerName,
@@ -67,7 +95,7 @@ public abstract class LatticeChecker extends AbstractChecker {
 
 		startNode = createNode(globalState,s);
 		currentNode = startNode;
-		////////////////////////////
+	
 		try {
             out = new PrintWriter(LOG_DIRECTORY + "/checker.log");
         } catch (Exception e) {
@@ -77,6 +105,9 @@ public abstract class LatticeChecker extends AbstractChecker {
 	}
 
 	@Override
+	/**
+	 * override, deal with the message when receive,first FIFO check, then buffer check, then generate lattice
+	 */
 	public void receive(Message message) throws RemoteException {
 		// TODO Auto-generated method stub
 		ArrayList<Message> messages = new ArrayList<Message>();
@@ -101,16 +132,17 @@ public abstract class LatticeChecker extends AbstractChecker {
 							.getLatticeMessageContent();
 					LocalState localstate = new LocalState(id,
 							content.getlvc(), content.getlocalPredicate());
-					/////////////////////////////
+					//output the lattice constructor procedure information
 					try {
                         out.println(mess.getMessageID()+", "+normalProcess+", "+content.getlocalPredicate()+", "+content.getlvc().toString());
                         out.flush();
                     } catch(Exception e) {
                         e.printStackTrace();
                     }
-					
+					 
 					boolean b = buffer(localstate);
-					/////////////////////////////
+					
+					//output the lattice constructor procedure information
 					try {
                         out.println("whether generate lattice : "+b);
                         out.flush();
@@ -127,6 +159,7 @@ public abstract class LatticeChecker extends AbstractChecker {
 		}
 	}
 
+	
 	private void add(ArrayList<Message> messages, Message msg) {
 		long msgID = msg.getMessageID();
 
@@ -155,6 +188,11 @@ public abstract class LatticeChecker extends AbstractChecker {
 		return true;
 	}
 
+	/**
+	 * check whether the state is happen-before ordered.
+	 * @param state
+	 * @return
+	 */
 	private boolean buffer(LocalState state) {
 		boolean result = false;
 		int pID = state.processID;
@@ -168,7 +206,8 @@ public abstract class LatticeChecker extends AbstractChecker {
 			if (b) {
 				buffer.get(pID).remove(0);
 				buffer.get(pID).add(state);
-/////////////////////////////
+
+				//output the lattice constructor procedure information
 				try {
                     out.println("to call expandLattice(state), state's vector clcok is"+state.vc.toString());
                     out.flush();
@@ -192,7 +231,8 @@ public abstract class LatticeChecker extends AbstractChecker {
 							}
 							if (bo) {
 								buffer.get(i).remove(0);
-	/////////////////////////////
+	
+								//output the lattice constructor procedure information
 								try {
 				                    out.println("to call expandLattice(state), state's vector clcok is"+state.vc.toString());
 				                    out.flush();
@@ -208,7 +248,8 @@ public abstract class LatticeChecker extends AbstractChecker {
 				}
 			} else {
 				buffer.get(pID).add(state);
-/////////////////////////////
+
+				//output the lattice constructor procedure information
 				try {
                     out.println("store in buffer, state's vector clcok is"+state.vc.toString());
                     out.flush();
@@ -217,7 +258,8 @@ public abstract class LatticeChecker extends AbstractChecker {
                 }
 			}
 		} else {
-/////////////////////////////
+
+			//output the lattice constructor procedure information
 			try {
                 out.println("store in buffer, state's vector clcok is"+state.vc.toString());
                 out.flush();
@@ -229,6 +271,10 @@ public abstract class LatticeChecker extends AbstractChecker {
 		return result;
 	}
 
+	/**
+	 * compute the set of state, which is pre-concurrent with state s and is maximum of each process
+	 * @param s
+	 */
 	private void updateMax(LocalState s) {
 
 		int pID = s.processID;
@@ -253,6 +299,12 @@ public abstract class LatticeChecker extends AbstractChecker {
 		// max.add(0, s);
 	}
 
+	/**
+	 * compare two nodes, if equal, return 0; if node1 linked before node2, return 1; others, return -1.
+	 * @param node1
+	 * @param node2
+	 * @return
+	 */
 	private int compare(AbstractLatticeNode node1, AbstractLatticeNode node2) {
 		int position = -1;
 		boolean eq = true, firstneq = true;
@@ -287,6 +339,10 @@ public abstract class LatticeChecker extends AbstractChecker {
 		return -1;
 	}
 
+	/**
+	 * generate the lattice by adding the new state.
+	 * @param state
+	 */
 	private void expandLattice(LocalState state) {
 		int pID = state.processID;
 		stateSet.get(pID).add(0, state);
@@ -303,7 +359,7 @@ public abstract class LatticeChecker extends AbstractChecker {
 		node.previous.add(currentNode);
 		currentNode = node;
 		
-/////////////////////////////
+		//output the lattice constructor procedure information
 		try {
             out.print("created new node: ");
             for(int m=0;m<dimension;m++){
@@ -372,9 +428,8 @@ public abstract class LatticeChecker extends AbstractChecker {
 									listStack.push(new ArrayList<LocalState>());
 									break;
 								}
-								// if not created, add into the lattice.
 								
-	/////////////////////////////
+								//output the lattice constructor procedure information
 								try {
 						            out.print("inside created new node: ");
 						            for(int m=0;m<dimension;m++){
@@ -385,7 +440,8 @@ public abstract class LatticeChecker extends AbstractChecker {
 						        } catch(Exception e) {
 						            e.printStackTrace();
 						        }
-								
+						        
+						        // if not created, add into the lattice.
 								currentNode.previous.add(newnode);
 								newnode.next.add(currentNode);
 								for (int j = 0; j < currentNode.previous.size() - 1; j++) {
