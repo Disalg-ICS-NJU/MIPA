@@ -84,7 +84,7 @@ public class OGATopChecker extends AbstractChecker {
     }
     
     private void detect(Message message) {
-        OGAMessageContent content = message.getOgaMessageContent();
+        OGAMessageContent content = (OGAMessageContent) message.getMessageContent();
         String senderName = message.getSenderID();
         ArrayList<OGAVectorClock> curQueLo = content.getSetLo();
         ArrayList<OGAVectorClock> curQueHi = content.getSetHi();

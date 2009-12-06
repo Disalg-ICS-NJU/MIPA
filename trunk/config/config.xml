@@ -6,5 +6,5 @@
 		<port>1099</port>
 	</naming>
 	<!-- normal or lattice -->
-	<checkmode>lattice</checkmode>
+	<checkmode>normal</checkmode>
 </config>

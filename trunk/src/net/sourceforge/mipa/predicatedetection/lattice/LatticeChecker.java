@@ -128,8 +128,8 @@ public abstract class LatticeChecker extends AbstractChecker {
 
 				for (int i = 0; i < messages.size(); i++) {
 					Message mess = messages.get(i);
-					LatticeMessageContent content = mess
-							.getLatticeMessageContent();
+					LatticeMessageContent content = (LatticeMessageContent) mess
+							.getMessageContent();
 					LocalState localstate = new LocalState(id,
 							content.getlvc(), content.getlocalPredicate());
 					//output the lattice constructor procedure information

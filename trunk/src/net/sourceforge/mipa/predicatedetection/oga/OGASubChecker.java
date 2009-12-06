@@ -156,7 +156,7 @@ public class OGASubChecker extends AbstractChecker {
 
         ArrayList<OGAMessageContent> contents = new ArrayList<OGAMessageContent>();
         for (int i = 0; i < messages.size(); i++)
-            contents.add(messages.get(i).getOgaMessageContent());
+            contents.add((OGAMessageContent) messages.get(i).getMessageContent());
 
         ArrayList<OGAMessageContent> queue = queues.get(id);
         // queue.add(content);
@@ -303,7 +303,7 @@ public class OGASubChecker extends AbstractChecker {
         m.setType(type);
         m.setSenderID(name);
         m.setReceiverID(receiverName);
-        m.setOgaMessageContent(content);
+        m.setMessageContent(content);
 
         try {
             MessageDispatcher messageDispatcher = MIPAResource

@@ -155,7 +155,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         m.setReceiverID(receiverName);
         VectorClock current = new SCPVectorClock(currentClock);
         m.setTimestamp(current);
-        m.setScpMessageContent(content);
+        m.setMessageContent(content);
         
         if(currentMessageCount.containsKey(receiverName) == true) {
             long currentCount = currentMessageCount.get(receiverName);

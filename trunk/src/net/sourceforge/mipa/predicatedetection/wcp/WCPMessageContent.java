@@ -19,14 +19,14 @@
  */
 package net.sourceforge.mipa.predicatedetection.wcp;
 
-import java.io.Serializable;
+import net.sourceforge.mipa.components.MessageContent;
 
 /**
  * 
  * @author sorrybone <sorrybone@gmail.com>
  *
  */
-public class WCPMessageContent implements Serializable {
+public class WCPMessageContent extends MessageContent {
 
     private static final long serialVersionUID = -5766981304037987880L;
 

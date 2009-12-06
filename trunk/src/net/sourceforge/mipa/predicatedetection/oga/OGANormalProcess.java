@@ -175,7 +175,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
         m.setReceiverID(receiverName);
         VectorClock current = new OGAVectorClock(currentClock);
         m.setTimestamp(current);
-        m.setOgaMessageContent(content);
+        m.setMessageContent(content);
 
         if (currentMessageCount.containsKey(receiverName) == true) {
             long currentCount = currentMessageCount.get(receiverName);

@@ -124,7 +124,7 @@ public class WCPNormalProcess extends AbstractNormalProcess {
         m.setReceiverID(receiverName);
         VectorClock current = new WCPVectorClock(currentClock);
         m.setTimestamp(current);
-        m.setWcpMessageContent(content);
+        m.setMessageContent(content);
         
         if(currentMessageCount.containsKey(receiverName) == true) {
             long currentCount = currentMessageCount.get(receiverName);

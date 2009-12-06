@@ -116,7 +116,7 @@ public class WCPLatticeNormalProcess extends AbstractNormalProcess {
 		m.setReceiverID(receiverName);
 		VectorClock current = new LatticeVectorClock(currentClock);
 		m.setTimestamp(current);
-		m.setLatticeMessageContent(content);
+		m.setMessageContent(content);
 
 		if (currentMessageCount.containsKey(receiverName) == true) {
 			long currentCount = currentMessageCount.get(receiverName);
