@@ -149,7 +149,7 @@ public class SCPChecker extends AbstractChecker {
         
         ArrayList<SCPMessageContent> contents = new ArrayList<SCPMessageContent> ();
         for(int i = 0; i < messages.size(); i++)
-            contents.add(messages.get(i).getScpMessageContent());
+            contents.add((SCPMessageContent) messages.get(i).getMessageContent());
 
         ArrayList<SCPMessageContent> queue = queues.get(id);
         //queue.add(content);

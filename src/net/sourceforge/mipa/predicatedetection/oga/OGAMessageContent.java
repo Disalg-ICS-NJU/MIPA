@@ -19,14 +19,15 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+
+import net.sourceforge.mipa.components.MessageContent;
 
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class OGAMessageContent implements Serializable {
+public class OGAMessageContent extends MessageContent {
 
     private static final long serialVersionUID = -2412107813802433533L;
 

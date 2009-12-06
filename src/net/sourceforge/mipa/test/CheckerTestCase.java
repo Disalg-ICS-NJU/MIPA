@@ -80,9 +80,9 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(1));
             hi.setVectorClock(clock);
             SCPMessageContent content = new SCPMessageContent(lo, hi);
-            m.setScpMessageContent(content);
+            m.setMessageContent(content);
             
-            m.getScpMessageContent();
+            m.getMessageContent();
             checkerProcess.receive(m);
             
             m = new Message();
@@ -101,7 +101,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(4));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setScpMessageContent(content);
+            m.setMessageContent(content);
             
             checkerProcess.receive(m);
             
@@ -121,7 +121,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(2));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setScpMessageContent(content);
+            m.setMessageContent(content);
             
             checkerProcess.receive(m);
             
@@ -141,7 +141,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(3));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setScpMessageContent(content);
+            m.setMessageContent(content);
             
             checkerProcess.receive(m);
             
@@ -161,7 +161,7 @@ public class CheckerTestCase implements ResultCallback {
             clock.add(new Long(4));
             hi.setVectorClock(clock);
             content = new SCPMessageContent(lo, hi);
-            m.setScpMessageContent(content);
+            m.setMessageContent(content);
             
             checkerProcess.receive(m);
         } catch (Exception e) {

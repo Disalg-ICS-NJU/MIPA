@@ -21,8 +21,6 @@ package net.sourceforge.mipa.components;
 
 import java.io.Serializable;
 
-import net.sourceforge.mipa.predicatedetection.VectorClock;
-
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
@@ -33,9 +31,9 @@ public abstract class MessageContent implements Serializable {
     
    //protected SCPMessageContent scp;
     
-    public abstract VectorClock getLo();
+    //public abstract VectorClock getLo();
     
-    public abstract VectorClock getHi();
+    //public abstract VectorClock getHi();
     
     /*
     public SCPMessageContent getSCPRelatedContent() {

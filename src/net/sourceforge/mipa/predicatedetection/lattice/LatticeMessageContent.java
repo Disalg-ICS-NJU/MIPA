@@ -19,14 +19,14 @@
  */
 package net.sourceforge.mipa.predicatedetection.lattice;
 
-import java.io.Serializable;
+import net.sourceforge.mipa.components.MessageContent;
 
 /**
  * 
  * @author tingting Hua<huatingting0820@gmail.com>
  * 
  */
-public class LatticeMessageContent implements Serializable {
+public class LatticeMessageContent extends MessageContent {
 
 	private static final long serialVersionUID = -2767579403415223094L;
 

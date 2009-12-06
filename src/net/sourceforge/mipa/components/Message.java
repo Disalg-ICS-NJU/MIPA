@@ -22,10 +22,6 @@ package net.sourceforge.mipa.components;
 import java.io.Serializable;
 
 import net.sourceforge.mipa.predicatedetection.VectorClock;
-import net.sourceforge.mipa.predicatedetection.lattice.LatticeMessageContent;
-import net.sourceforge.mipa.predicatedetection.oga.OGAMessageContent;
-import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
-import net.sourceforge.mipa.predicatedetection.wcp.WCPMessageContent;
 
 /**
  * message class.
@@ -57,19 +53,23 @@ public class Message implements Serializable {
     /** vector clock of message */
     private VectorClock timestamp;
     
+    /** message content */
+    private MessageContent messageContent = null;
+    
+    
     /** SCP message content */
-    private SCPMessageContent scpMessageContent = null;
+    //private SCPMessageContent scpMessageContent = null;
     
     /** WCP message content */
-    private WCPMessageContent wcpMessageContent = null;
+    //private WCPMessageContent wcpMessageContent = null;
     
     /** OGA message content */
-    private OGAMessageContent ogaMessageContent = null;
+    //private OGAMessageContent ogaMessageContent = null;
     
     //TODO other predicate message content types go here.
     
     /** lattice message content */
-    private LatticeMessageContent latticeMessageContent = null;
+    //private LatticeMessageContent latticeMessageContent = null;
 
     /**
      * @param messageID the messageID to set
@@ -170,62 +170,85 @@ public class Message implements Serializable {
     }
 
     /**
+     * @param messageContent the messageContent to set
+     */
+    public void setMessageContent(MessageContent messageContent) {
+        this.messageContent = messageContent;
+    }
+
+    /**
+     * @return the messageContent
+     */
+    public MessageContent getMessageContent() {
+        return messageContent;
+    }
+
+    /**
      * @param scpMessageContent the scpMessageContent to set
      */
+    /*
     public void setScpMessageContent(SCPMessageContent scpMessageContent) {
         this.scpMessageContent = scpMessageContent;
-    }
+    }*/
 
     /**
      * @return the scpMessageContent
      */
+    /*
     public SCPMessageContent getScpMessageContent() {
         return scpMessageContent;
-    }
+    }*/
 
     /**
      * @param ogaMessageContent the ogaMessageContent to set
      */
+    /*
     public void setOgaMessageContent(OGAMessageContent ogaMessageContent) {
         this.ogaMessageContent = ogaMessageContent;
-    }
+    }*/
 
     /**
      * @return the ogaMessageContent
      */
+    /*
     public OGAMessageContent getOgaMessageContent() {
         return ogaMessageContent;
-    }
+    }*/
 
     /**
      * 
      * @param wcpMessageContent the wcpMessageContext to set
      */
+    /*
     public void setWcpMessageContent(WCPMessageContent wcpMessageContent) {
         this.wcpMessageContent = wcpMessageContent;
-    }
+    }*/
 
     /**
      * 
      * @return the wcpMessageContext
      */
+    /*
     public WCPMessageContent getWcpMessageContent() {
         return wcpMessageContent;
-    }
+    }*/
     
     /**
      * 
      * @param latticeMessageContent
      */
+    /*
     public void setLatticeMessageContent(LatticeMessageContent latticeMessageContent){
         this.latticeMessageContent=latticeMessageContent;
     }
+    */
     
     /**
      * 
      * @return the latticeMessageContent
      */
+    /*
     public LatticeMessageContent getLatticeMessageContent(){
         return latticeMessageContent;
-    }
+    }*/
 }

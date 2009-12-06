@@ -19,16 +19,16 @@
  */
 package net.sourceforge.mipa.predicatedetection.scp;
 
-import java.io.Serializable;
+import net.sourceforge.mipa.components.MessageContent;
 
 
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class SCPMessageContent implements Serializable {
+public class SCPMessageContent extends MessageContent {
 
-    private static final long serialVersionUID = -172044301137888284L;
+    private static final long serialVersionUID = -2494955328740349416L;
 
     private long pTimeLo;
     

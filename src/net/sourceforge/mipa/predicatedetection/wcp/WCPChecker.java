@@ -144,7 +144,7 @@ public class WCPChecker extends AbstractChecker {
         
         ArrayList<WCPMessageContent> contents = new ArrayList<WCPMessageContent> ();
         for(int i = 0; i < messages.size(); i++)
-            contents.add(messages.get(i).getWcpMessageContent());
+            contents.add((WCPMessageContent) messages.get(i).getMessageContent());
 
         ArrayList<WCPMessageContent> queue = queues.get(id);
         
