@@ -240,67 +240,7 @@ public class GroupManager {
         }
     }
     
-    private void allocateAsWCP(Map<String, AbstractGroup> groups,
-                                  Map<String, String> groupToChecker,
-                                  Map<LocalPredicate, String> localPredicateToNormalProcess,
-                                  String callback,
-                                  int maxLevel) {
-        IDManager idManager = MIPAResource.getIDManager();
-        Coordinator coordinator = MIPAResource.getCoordinator();
-        
-        // start checker for level > 0
-        for(int i = maxLevel; i > 0; i--) {
-            
-        }
-        
-        // check the level == 0
-        for(String s : groups.keySet()) {
-            AbstractGroup g = groups.get(s);
-            if(g.getLevel() == 0) {
-                String gid = g.getGroupId();
-                
-                // current Implementation is that father of WCP checker is null;
-                
-                ArrayList<Object> children = g.getChildren();
-                ArrayList<String> owners = new ArrayList<String>();
-                ArrayList<String> members = new ArrayList<String>();
-                owners.add(groupToChecker.get(gid));
-                for(int i = 0; i < children.size(); i++) {
-                    members.add(localPredicateToNormalProcess.get(children.get(i)));
-                }
-                // create group
-                String groupId = null;
-                try {
-                    groupId = idManager.getID(Catalog.Group);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                
-                Group ng = new Group(groupId, owners, members, PredicateType.WCP);
-                ng.setCoordinatorID(groupId);
-                
-                try {
-                    coordinator.newCoordinator(ng);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                
-                String checkerName = ng.getOwners().get(0);
-                String[] normalProcesses = new String[ng.getMembers().size()];
-                ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.newChecker(callback, checkerName, normalProcesses,
-                                          ng.getType());
-
-                // create Normal Processes.
-                for (int i = 0; i < children.size(); i++) {
-                    broker.registerLocalPredicate((LocalPredicate) children.get(i), 
-                                                  localPredicateToNormalProcess.get(children.get(i)), 
-                                                  ng);
-                }
-            }
-        }
-    }
-
+    
 
     private void allocateAsOGA(Map<String, AbstractGroup> groups, 
                                   Map<String, String> groupToChecker, 
@@ -332,7 +272,7 @@ public class GroupManager {
                     }
                     String[] childrenArray = new String[childrenList.size()];
                     childrenList.toArray(childrenArray);
-                    CheckerFactory.ogaChecker(callback, 
+                    CheckerFactory.createOGAChecker(callback, 
                                                 groupToChecker.get(g.getGroupId()), 
                                                 fatherArray, 
                                                 childrenArray, 
@@ -358,7 +298,7 @@ public class GroupManager {
                 }
                 String[] childrenArray = new String[childrenList.size()];
                 childrenList.toArray(childrenArray);
-                CheckerFactory.ogaChecker(null, 
+                CheckerFactory.createOGAChecker(null, 
                                             groupToChecker.get(g.getGroupId()), 
                                             fatherArray, 
                                             childrenArray, 
@@ -529,7 +469,7 @@ public class GroupManager {
         topCheckers.toArray(topCheckersArray);
         String[] subCheckersArray = new String[subCheckers.size()];
         subCheckers.toArray(subCheckersArray);
-        CheckerFactory.ogaChecker(callback, topCheckers.get(0), null, subCheckersArray, 0);
+        CheckerFactory.createOGAChecker(callback, topCheckers.get(0), null, subCheckersArray, 0);
         
         // create sub checkers in OGA.
         for(int i = 0; i < subCheckers.size(); i++) {
@@ -537,7 +477,7 @@ public class GroupManager {
             ArrayList<String> subMembers =  subGroups.get(subCheckerName);
             String[] subMembersArray = new String[subMembers.size()];
             subMembers.toArray(subMembersArray);
-            CheckerFactory.ogaChecker(null, subCheckerName, topCheckersArray, subMembersArray, 1);
+            CheckerFactory.createOGAChecker(null, subCheckerName, topCheckersArray, subMembersArray, 1);
         }
         
         // create Normal Processes in OGA.
@@ -612,8 +552,7 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.newChecker(callback, checkerName, normalProcesses,
-                                          ng.getType());
+                CheckerFactory.createSCPChecker(callback, checkerName, normalProcesses);
 
                 // create Normal Processes.
                 for (int i = 0; i < children.size(); i++) {
@@ -682,13 +621,72 @@ public class GroupManager {
             String checkerName = g.getOwners().get(0);
             String[] normalProcesses = new String[g.getMembers().size()];
             g.getMembers().toArray(normalProcesses);
-            CheckerFactory.newChecker(callback, checkerName, normalProcesses,
-                                      g.getType());
+            CheckerFactory.createSCPChecker(callback, checkerName, normalProcesses);
 
             // create Normal Processes.
             for (int i = 0; i < members.size(); i++) {
                 LocalPredicate lp = mapping.get(members.get(i));
                 broker.registerLocalPredicate(lp, members.get(i), g);
+            }
+        }
+    }
+
+    private void allocateAsWCP(Map<String, AbstractGroup> groups,
+                               Map<String, String> groupToChecker,
+                               Map<LocalPredicate, String> localPredicateToNormalProcess,
+                               String callback,
+                               int maxLevel) {
+        IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+     
+        // start checker for level > 0
+        for(int i = maxLevel; i > 0; i--) {
+         
+        }
+     
+        // check the level == 0
+        for(String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if(g.getLevel() == 0) {
+                String gid = g.getGroupId();
+             
+                // current Implementation is that father of WCP checker is null;
+             
+                ArrayList<Object> children = g.getChildren();
+                ArrayList<String> owners = new ArrayList<String>();
+                ArrayList<String> members = new ArrayList<String>();
+                owners.add(groupToChecker.get(gid));
+                for(int i = 0; i < children.size(); i++) {
+                    members.add(localPredicateToNormalProcess.get(children.get(i)));
+                }
+                // create group
+                String groupId = null;
+                try {
+                    groupId = idManager.getID(Catalog.Group);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+             
+                Group ng = new Group(groupId, owners, members, PredicateType.WCP);
+                ng.setCoordinatorID(groupId);
+             
+                try {
+                    coordinator.newCoordinator(ng);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+             
+                String checkerName = ng.getOwners().get(0);
+                String[] normalProcesses = new String[ng.getMembers().size()];
+                ng.getMembers().toArray(normalProcesses);
+                CheckerFactory.createWCPChecker(callback, checkerName, normalProcesses);
+
+                // create Normal Processes.
+                for (int i = 0; i < children.size(); i++) {
+                    broker.registerLocalPredicate((LocalPredicate) children.get(i), 
+                                                  localPredicateToNormalProcess.get(children.get(i)), 
+                                                  ng);
+                }
             }
         }
     }
@@ -752,8 +750,7 @@ public class GroupManager {
             String checkerName = g.getOwners().get(0);
             String[] normalProcesses = new String[g.getMembers().size()];
             g.getMembers().toArray(normalProcesses);
-            CheckerFactory.newChecker(callback, checkerName, normalProcesses,
-                                      g.getType());
+            CheckerFactory.createWCPChecker(callback, checkerName, normalProcesses);
 
             // create Normal Processes.
             for (int i = 0; i < members.size(); i++) {

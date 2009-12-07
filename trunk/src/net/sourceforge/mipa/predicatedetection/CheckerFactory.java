@@ -49,13 +49,11 @@ public class CheckerFactory {
         }
     }
 
-    // FIXME checker factory should contain different predicate type checker
-    // generating functions.
     /**
      * 
      * @param level the level of checker in OGA, 0 represents top.
      */
-    public static void ogaChecker(String callback, 
+    public static void createOGAChecker(String callback, 
                                      String checkerName,
                                      String[] fathers, 
                                      String[] children, 
@@ -91,8 +89,75 @@ public class CheckerFactory {
         }
     }
 
-    // FIXME this function should split to scpChecker, wcpChecker, LPChecker,
-    // etc.
+    public static void createSCPChecker(String callback, String checkerName,
+                                        String[] normalProcesses) {
+        try {
+            ResultCallback application = (ResultCallback) server
+                                                    .lookup(callback);
+
+            CheckMode checkMode = MIPAResource.getCheckMode();
+            if(checkMode == CheckMode.NORMAL) {
+                // NORMAL mode code puts here!
+                SCPChecker checker = new SCPChecker(application, checkerName,
+                                                    normalProcesses);
+                Communication checkerStub 
+                                    = (Communication) UnicastRemoteObject
+                                                            .exportObject(checker,
+                                                                          0);
+                server.bind(checkerName, checkerStub);
+                if (DEBUG) {
+                    System.out.println("binding checker " + checkerName);
+                }
+            } else if(checkMode == CheckMode.LATTICE) {
+                
+                
+            } else {
+                System.out.println("Check Mode " + checkMode + "has not been defined.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void createWCPChecker(String callback, String checkerName,
+                                        String[] normalProcesses) {
+        try {
+            ResultCallback application = (ResultCallback) server
+                                                                .lookup(callback);
+            
+            CheckMode checkMode = MIPAResource.getCheckMode();
+            if(checkMode == CheckMode.NORMAL) {
+                // NORMAL mode code puts here!
+                WCPChecker wcpChecker = new WCPChecker(application, checkerName,
+                                                        normalProcesses);
+                Communication wcpCheckerStub 
+                                        = (Communication) UnicastRemoteObject
+                                                                .exportObject(wcpChecker,
+                                                                               0);
+                server.bind(checkerName, wcpCheckerStub);
+                if (DEBUG) {
+                    System.out.println("binding checker " + checkerName);
+                }
+            } else if(checkMode == CheckMode.LATTICE) {
+                // LATTICE mode code puts here!
+                WCPLatticeChecker wcpLatticeChecker = new WCPLatticeChecker(application, checkerName,
+                                                                                normalProcesses);
+                Communication wcpLatticecheckerStub = (Communication) UnicastRemoteObject
+                                                                                      .exportObject(wcpLatticeChecker,
+                                                                                                    0);
+                server.bind(checkerName, wcpLatticecheckerStub);
+            } else {
+                System.out.println("Check Mode " + checkMode + "has not been defined.");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+    /*
     public static void newChecker(String callback, String checkerName,
                                   String[] normalProcesses,
                                   PredicateType type) {
@@ -162,4 +227,5 @@ public class CheckerFactory {
             e.printStackTrace();
         }
     }
+    */
 }
