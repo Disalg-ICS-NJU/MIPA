@@ -31,7 +31,6 @@ import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.CheckerFactory;
-import net.sourceforge.mipa.predicatedetection.PredicateType;
 import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
 import net.sourceforge.mipa.predicatedetection.scp.SCPVectorClock;
 
@@ -60,7 +59,7 @@ public class CheckerTestCase implements ResultCallback {
             normalProcesses[0] = idManager.getID(Catalog.NormalProcess);
             normalProcesses[1] = idManager.getID(Catalog.NormalProcess);
             
-            CheckerFactory.newChecker(id, checker, normalProcesses, PredicateType.SCP);
+            CheckerFactory.createSCPChecker(id, checker, normalProcesses);
             
             Communication checkerProcess = (Communication) server.lookup(checker);
             
