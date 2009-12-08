@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.predicatedetection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class LocalPredicate extends Atom implements Structure {
+public class LocalPredicate implements Structure,Serializable {
 
     private static final long serialVersionUID = -1765170172935638206L;
     
@@ -35,8 +36,11 @@ public class LocalPredicate extends Atom implements Structure {
     
     //private String connection;
     
+    private ArrayList<Structure> formula;
+    
     public LocalPredicate() {
         atoms = new ArrayList<Atom>();
+        formula = new ArrayList<Structure>();
     }
     
     public Atom getAtomByName(String name) {
@@ -60,19 +64,32 @@ public class LocalPredicate extends Atom implements Structure {
     
     @Override
     public void add(Structure child) {
-	// TODO Auto-generated method stub
-	
+    // TODO Auto-generated method stub
+        formula.add(child);
     }
 
     @Override
     public ArrayList<Structure> getChildren() {
-	// TODO Auto-generated method stub
-	return null;
+    // TODO Auto-generated method stub
+        return formula;
     }
 
     @Override
     public NodeType getNodeType() {
-	// TODO Auto-generated method stub
-	return NodeType.LP;
+    // TODO Auto-generated method stub
+    return NodeType.LP;
+    }
+    
+    public String toString()
+    {
+        String string = "";
+        for(int i=0;i<atoms.size();i++)
+        {
+            string = string+"["+atoms.get(i).getName()
+                           +" "+atoms.get(i).getOperator()
+                           +" "+atoms.get(i).getValue()
+                           +"] ";
+        }
+        return string.trim();
     }
 }
