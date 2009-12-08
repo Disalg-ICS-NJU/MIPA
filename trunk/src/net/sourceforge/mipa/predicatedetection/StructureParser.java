@@ -165,7 +165,6 @@ public class StructureParser {
                     Atom atom = (Atom)parseAtom(node);
                     formulaNode.add(atom);
                     //atom.setFather(formulaNode);
-                    //将所有的Atom保存到LocalPredicate的ArrayList<Atom>中
                     localPredicate.addAtom(atom);
                     
                 }
