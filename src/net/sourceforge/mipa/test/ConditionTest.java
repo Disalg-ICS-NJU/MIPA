@@ -1,6 +1,8 @@
 package net.sourceforge.mipa.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ import net.sourceforge.mipa.predicatedetection.Connector;
 import net.sourceforge.mipa.predicatedetection.Formula;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NodeType;
-import net.sourceforge.mipa.predicatedetection.Structure;
 import net.sourceforge.mipa.predicatedetection.StructureParser;
 import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
 

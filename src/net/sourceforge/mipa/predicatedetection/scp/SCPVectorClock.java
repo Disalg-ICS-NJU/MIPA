@@ -90,8 +90,6 @@ public class SCPVectorClock extends VectorClock {
         */
     }
 
-    
-    //FIXME need to prove the correctness.
     @Override
     public boolean notLessThan(VectorClock timestamp) {
         ArrayList<Long> right = timestamp.getVectorClock();
