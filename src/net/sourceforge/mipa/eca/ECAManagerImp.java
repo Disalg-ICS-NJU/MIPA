@@ -34,6 +34,7 @@ import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.Group;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNormalProcess;
@@ -188,17 +189,20 @@ public class ECAManagerImp implements ECAManager {
             // attaching condition to data source.
 
             if (DEBUG) {
-                System.out.println("local predicate name is "
-                                   + localPredicate.getName());
+                System.out.println("local predicate includes:");
             }
-
-            // FIXME should attach local predicate related events, get from
-            // atoms.
-            dataSource.attach(everything, localPredicate.getName());
-
+            ArrayList<Atom> arrayList = localPredicate.getAtoms();
+            for(int i=0; i<arrayList.size(); i++)
+            {
+                Atom atom = arrayList.get(i);
+                if (DEBUG) {
+                    System.out.print(" " + atom.getName());
+                }
+                dataSource.attach(everything, atom.getName());
+            }
             if (DEBUG) {
-                System.out
-                          .println("binding condition to data source successful.");
+                System.out.println(".");
+                System.out.println("binding condition to data source successful.");
             }
         } catch (Exception e) {
             e.printStackTrace();
