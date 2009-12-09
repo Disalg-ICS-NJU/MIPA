@@ -19,52 +19,38 @@
  */
 package net.sourceforge.mipa.predicatedetection.oga;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.predicatedetection.AbstractChecker;
+import net.sourceforge.mipa.predicatedetection.AbstractNonFIFOChecker;
 
 /**
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class OGATopChecker extends AbstractChecker {
+public class OGATopChecker extends AbstractNonFIFOChecker {
 
     private static final long serialVersionUID = -5005195916176717460L;
 
-    private int index;
-
     private int m;
 
-    /** index --> Message queue */
-    private Map<Integer, ArrayList<Message>> messageQueues;
-    
-    private Map<String, Integer> indexMap;
     private Map<String, ArrayList<OGAVectorClock>> preQueHiMap;
 
     public OGATopChecker(ResultCallback application, String checkerName,
                          String[] children) {
         super(application, checkerName, children);
 
-        index = 1;
-
         m = children.length;
 
-        indexMap = new HashMap<String, Integer>();
-        messageQueues = new HashMap<Integer, ArrayList<Message>>();
         preQueHiMap = new HashMap<String, ArrayList<OGAVectorClock>>();
-
         for(int i = 0; i < children.length; i++) {
-            indexMap.put(children[i], new Integer(i + 1));
-            messageQueues.put(new Integer(i + 1), new ArrayList<Message>());
             preQueHiMap.put(children[i], null);
         }
     }
-
+    /*
     @Override
     public synchronized void receive(Message message) throws RemoteException {
         
@@ -82,7 +68,15 @@ public class OGATopChecker extends AbstractChecker {
             queue = messageQueues.get(new Integer(index));
         }
     }
+    */
     
+    protected void handle(ArrayList<Message> messages) {
+        while(messages.size() != 0) {
+            detect(messages.remove(0));
+            // index will change in detect().
+            messages = messageQueues.get(new Integer(index));
+        }
+    }
     private void detect(Message message) {
         OGAMessageContent content = (OGAMessageContent) message.getMessageContent();
         String senderName = message.getSenderID();
