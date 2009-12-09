@@ -23,7 +23,6 @@ import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
 
 import java.io.PrintWriter;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import net.sourceforge.mipa.application.ResultCallback;
@@ -31,24 +30,20 @@ import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageDispatcher;
 import net.sourceforge.mipa.components.MessageType;
-import net.sourceforge.mipa.predicatedetection.AbstractChecker;
+import net.sourceforge.mipa.predicatedetection.AbstractFIFOChecker;
 
 /**
  * OGA algorithm sub checker.
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class OGASubChecker extends AbstractChecker {
+public class OGASubChecker extends AbstractFIFOChecker {
 
     private static final long serialVersionUID = -8872862161054484454L;
 
     private ArrayList<ArrayList<OGAMessageContent>> queues;
 
-    private ArrayList<ArrayList<Message>> msgBuffer;
-
     private String[] topCheckers;
-
-    private long[] currentMessageCount;
 
     private PrintWriter out;
 
@@ -58,15 +53,9 @@ public class OGASubChecker extends AbstractChecker {
 
         this.topCheckers = topCheckers;
 
-        currentMessageCount = new long[children.length];
-
         queues = new ArrayList<ArrayList<OGAMessageContent>>();
-        msgBuffer = new ArrayList<ArrayList<Message>>();
-
         for (int i = 0; i < children.length; i++) {
             queues.add(new ArrayList<OGAMessageContent>());
-            msgBuffer.add(new ArrayList<Message>());
-            currentMessageCount[i] = 0;
         }
 
         if (ENABLE_PHYSICAL_CLOCK) {
@@ -85,6 +74,7 @@ public class OGASubChecker extends AbstractChecker {
         }
     }
 
+    /*
     @Override
     public synchronized void receive(Message message) throws RemoteException {
 
@@ -108,34 +98,7 @@ public class OGASubChecker extends AbstractChecker {
             }
         }
     }
-
-    private void add(ArrayList<Message> messages, Message msg) {
-        long msgID = msg.getMessageID();
-
-        for (int i = 0; i < messages.size(); i++) {
-            long tempID = messages.get(i).getMessageID();
-
-            if (msgID < tempID) {
-                messages.add(i, msg);
-                return;
-            }
-        }
-        messages.add(msg);
-    }
-
-    private boolean isContinuous(ArrayList<Message> messages, int id) {
-        assert (messages.size() > 0);
-
-        long pre = messages.get(0).getMessageID();
-        for (int i = 1; i < messages.size(); i++) {
-            if (messages.get(i).getMessageID() != ++pre) {
-                currentMessageCount[id] = pre;
-                return false;
-            }
-        }
-        currentMessageCount[id] = pre + 1;
-        return true;
-    }
+    */
     
     // FIX bug of issue 8 at http://mipa.googlecode.com
     private void addOnce(ArrayList<Integer> list, Integer num) {
@@ -149,6 +112,11 @@ public class OGASubChecker extends AbstractChecker {
         if(already == false) list.add(num);
     }
 
+    
+    protected void handle(ArrayList<Message> messages) {
+        check(messages);
+    }
+    
     private void check(ArrayList<Message> messages) {
 
         String child = messages.get(0).getSenderID();

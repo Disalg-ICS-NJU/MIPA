@@ -23,27 +23,22 @@ import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
 
 import java.io.PrintWriter;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.predicatedetection.AbstractChecker;
+import net.sourceforge.mipa.predicatedetection.AbstractFIFOChecker;
 
 /**
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class SCPChecker extends AbstractChecker {
+public class SCPChecker extends AbstractFIFOChecker {
 
     private static final long serialVersionUID = -4933006939390647117L;
 
     private ArrayList<ArrayList<SCPMessageContent>> queues;
     
-    private long[] currentMessageCount;
-    
-    private ArrayList<ArrayList<Message>> msgBuffer;
-
     private PrintWriter out = null;
     
     /**
@@ -54,15 +49,10 @@ public class SCPChecker extends AbstractChecker {
     public SCPChecker(ResultCallback application, String checkerName,
                       String[] normalProcesses) {
         super(application, checkerName, normalProcesses);
-        // TODO Auto-generated constructor stub
-        currentMessageCount = new long[normalProcesses.length];
-        
+      
         queues = new ArrayList<ArrayList<SCPMessageContent>>();
-        msgBuffer = new ArrayList<ArrayList<Message>>();
         for (int i = 0; i < normalProcesses.length; i++) {
             queues.add(new ArrayList<SCPMessageContent>());
-            msgBuffer.add(new ArrayList<Message>());
-            currentMessageCount[i] = 0;
         }
         
         if(ENABLE_PHYSICAL_CLOCK) {
@@ -72,36 +62,6 @@ public class SCPChecker extends AbstractChecker {
                 e.printStackTrace();
             }
         }
-    }
-    /*
-     * -------------------------------------------------------
-     */
-    private boolean isContinuous(ArrayList<Message> messages, int id) {
-        assert(messages.size() > 0);
-        
-        long pre = messages.get(0).getMessageID();
-        for(int i = 1; i < messages.size(); i++) {
-            if(messages.get(i).getMessageID() != ++pre) {
-                currentMessageCount[id] = pre;
-                return false;
-            }
-        }
-        currentMessageCount[id] = pre + 1;
-        return true;
-    }
-    
-    private void add(ArrayList<Message> messages, Message msg) {
-        long msgID = msg.getMessageID();
-        
-        for(int i = 0; i < messages.size(); i++) {
-            long tempID = messages.get(i).getMessageID();
-            
-            if(msgID < tempID) {
-                messages.add(i, msg);
-                return;
-            }
-        }
-        messages.add(msg);
     }
     
     // FIX bug of issue 8 at http://mipa.googlecode.com
@@ -119,7 +79,7 @@ public class SCPChecker extends AbstractChecker {
     /*
      * -------------------------------------------------------
      */
-    
+    /*
     @Override
     public void receive(Message message) throws RemoteException {
         ArrayList<Message> messages = new ArrayList<Message> ();
@@ -141,6 +101,11 @@ public class SCPChecker extends AbstractChecker {
                 check(messages);
             }
         }
+    }
+    */
+    
+    protected void handle(ArrayList<Message> messages) {
+        check(messages);
     }
     
     private void check(ArrayList<Message> messages) {

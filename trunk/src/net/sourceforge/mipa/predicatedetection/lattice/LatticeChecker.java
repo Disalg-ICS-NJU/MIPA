@@ -22,21 +22,20 @@ package net.sourceforge.mipa.predicatedetection.lattice;
 import static config.Config.LOG_DIRECTORY;
 
 import java.io.PrintWriter;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.predicatedetection.AbstractChecker;
+import net.sourceforge.mipa.predicatedetection.AbstractFIFOChecker;
 
 /**
  * 
  * @author tingting Hua<huatingting0820@gmail.com>
  *
  */
-public abstract class LatticeChecker extends AbstractChecker {
+public abstract class LatticeChecker extends AbstractFIFOChecker {
 
 	private static final long serialVersionUID = 1230192910873066775L;
 
@@ -57,10 +56,6 @@ public abstract class LatticeChecker extends AbstractChecker {
 
 	private ArrayList<LocalState> max;
 
-	private ArrayList<ArrayList<Message>> msgBuffer;
-
-	private long[] currentMessageCount;
-	
 	/**output the lattice constructor procedure information*/
 	private PrintWriter out=null;
 
@@ -70,7 +65,6 @@ public abstract class LatticeChecker extends AbstractChecker {
 		super(application, checkerName, normalProcesses);
 
 		dimension = normalProcesses.length;
-		currentMessageCount = new long[normalProcesses.length];
 		globalState = new LocalState[dimension];
 		for (int i = 0; i < dimension; i++) {
 			LatticeVectorClock vc = new LatticeVectorClock(dimension);
@@ -80,7 +74,6 @@ public abstract class LatticeChecker extends AbstractChecker {
 		stateSet = new ArrayList<ArrayList<LocalState>>();
 		buffer = new ArrayList<ArrayList<LocalState>>();
 		max = new ArrayList<LocalState>();
-		msgBuffer = new ArrayList<ArrayList<Message>>();
 
 		String[] s = new String[dimension];
 		for (int i = 0; i < dimension; i++) {
@@ -89,7 +82,6 @@ public abstract class LatticeChecker extends AbstractChecker {
 			buffer.add(new ArrayList<LocalState>());
 			buffer.get(i).add(globalState[i]);
 			max.add(globalState[i]);
-			msgBuffer.add(new ArrayList<Message>());
 			s[i] = "0";
 		}
 
@@ -104,10 +96,13 @@ public abstract class LatticeChecker extends AbstractChecker {
 
 	}
 
+	/*
 	@Override
 	/**
 	 * override, deal with the message when receive,first FIFO check, then buffer check, then generate lattice
 	 */
+	
+	/*
 	public void receive(Message message) throws RemoteException {
 		// TODO Auto-generated method stub
 		ArrayList<Message> messages = new ArrayList<Message>();
@@ -158,36 +153,42 @@ public abstract class LatticeChecker extends AbstractChecker {
 			}
 		}
 	}
-
+	*/
 	
-	private void add(ArrayList<Message> messages, Message msg) {
-		long msgID = msg.getMessageID();
-
-		for (int i = 0; i < messages.size(); i++) {
-			long tempID = messages.get(i).getMessageID();
-
-			if (msgID < tempID) {
-				messages.add(i, msg);
-				return;
-			}
-		}
-		messages.add(msg);
+	protected void handle(ArrayList<Message> messages) {
+	    
+	    String normalProcess = messages.get(0).getSenderID();
+        int id = nameToID.get(normalProcess).intValue();
+        
+	    for (int i = 0; i < messages.size(); i++) {
+            Message mess = messages.get(i);
+            LatticeMessageContent content = (LatticeMessageContent) mess
+                    .getMessageContent();
+            LocalState localstate = new LocalState(id,
+                    content.getlvc(), content.getlocalPredicate());
+            //output the lattice constructor procedure information
+            try {
+                out.println(mess.getMessageID()+", "+normalProcess+", "+content.getlocalPredicate()+", "+content.getlvc().toString());
+                out.flush();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+             
+            boolean b = buffer(localstate);
+            
+            //output the lattice constructor procedure information
+            try {
+                out.println("whether generate lattice : "+b);
+                out.flush();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            
+            if (b) {
+                check(startNode,currentNode);
+            }
+        }
 	}
-
-	private boolean isContinuous(ArrayList<Message> messages, int id) {
-		assert (messages.size() > 0);
-
-		long pre = messages.get(0).getMessageID();
-		for (int i = 1; i < messages.size(); i++) {
-			if (messages.get(i).getMessageID() != ++pre) {
-				currentMessageCount[id] = pre;
-				return false;
-			}
-		}
-		currentMessageCount[id] = pre + 1;
-		return true;
-	}
-
 	/**
 	 * check whether the state is happen-before ordered.
 	 * @param state
