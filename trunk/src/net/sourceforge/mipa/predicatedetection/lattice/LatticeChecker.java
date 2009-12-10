@@ -96,65 +96,6 @@ public abstract class LatticeChecker extends AbstractFIFOChecker {
 
 	}
 
-	/*
-	@Override
-	/**
-	 * override, deal with the message when receive,first FIFO check, then buffer check, then generate lattice
-	 */
-	
-	/*
-	public void receive(Message message) throws RemoteException {
-		// TODO Auto-generated method stub
-		ArrayList<Message> messages = new ArrayList<Message>();
-		String normalProcess = message.getSenderID();
-		int id = nameToID.get(normalProcess).intValue();
-
-		long messageID = message.getMessageID();
-		add(msgBuffer.get(id), message);
-
-		if (messageID == currentMessageCount[id]) {
-			// check the buffer if is continuous or not
-			if (isContinuous(msgBuffer.get(id), id) == true) {
-				ArrayList<Message> buffer = msgBuffer.get(id);
-				int size = buffer.size();
-				for (int i = 0; i < size; i++) {
-					messages.add(buffer.remove(0));
-				}
-
-				for (int i = 0; i < messages.size(); i++) {
-					Message mess = messages.get(i);
-					LatticeMessageContent content = (LatticeMessageContent) mess
-							.getMessageContent();
-					LocalState localstate = new LocalState(id,
-							content.getlvc(), content.getlocalPredicate());
-					//output the lattice constructor procedure information
-					try {
-                        out.println(mess.getMessageID()+", "+normalProcess+", "+content.getlocalPredicate()+", "+content.getlvc().toString());
-                        out.flush();
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-					 
-					boolean b = buffer(localstate);
-					
-					//output the lattice constructor procedure information
-					try {
-                        out.println("whether generate lattice : "+b);
-                        out.flush();
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                    
-					if (b) {
-						check(startNode,currentNode);
-					}
-				}
-				
-			}
-		}
-	}
-	*/
-	
 	protected void handle(ArrayList<Message> messages) {
 	    
 	    String normalProcess = messages.get(0).getSenderID();

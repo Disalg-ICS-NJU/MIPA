@@ -73,32 +73,6 @@ public class OGASubChecker extends AbstractFIFOChecker {
             }
         }
     }
-
-    /*
-    @Override
-    public synchronized void receive(Message message) throws RemoteException {
-
-        ArrayList<Message> messages = new ArrayList<Message>();
-        String child = message.getSenderID();
-        int id = nameToID.get(child).intValue();
-
-        long messageID = message.getMessageID();
-        add(msgBuffer.get(id), message);
-
-        if (messageID == currentMessageCount[id]) {
-
-            if (isContinuous(msgBuffer.get(id), id) == true) {
-                ArrayList<Message> buffer = msgBuffer.get(id);
-                int size = buffer.size();
-                for (int i = 0; i < size; i++) {
-                    Message elem = buffer.remove(0);
-                    messages.add(elem);
-                }
-                check(messages);
-            }
-        }
-    }
-    */
     
     // FIX bug of issue 8 at http://mipa.googlecode.com
     private void addOnce(ArrayList<Integer> list, Integer num) {

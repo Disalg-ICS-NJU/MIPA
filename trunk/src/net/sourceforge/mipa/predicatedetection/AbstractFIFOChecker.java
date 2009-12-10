@@ -31,7 +31,7 @@ import net.sourceforge.mipa.components.Message;
 
 /**
  *
- * @author Jianping Yu <jianp.yue@gmail.com>
+ * @author Yiling Yang
  */
 public abstract class AbstractFIFOChecker implements Serializable, Communication, Runnable{
 
@@ -49,9 +49,7 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
 
     private ArrayList<ArrayList<Message>> msgBuffer;
     
-    private ArrayList<Message> messages;
-    
-    private boolean flag = false;
+    private boolean finished = true;
     
     public AbstractFIFOChecker(ResultCallback application, 
                             String checkerName, 
@@ -65,8 +63,6 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
             nameToID.put(children[i], new Integer(i));
         }
         
-        messages = new ArrayList<Message> ();
-        
         msgBuffer = new ArrayList<ArrayList<Message>>();
         currentMessageCount = new long[children.length];
         for (int i = 0; i < children.length; i++) {
@@ -78,7 +74,23 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
         thread.start();
     }
     
-    public void add(ArrayList<Message> messages, Message msg) {
+    public void receive(Message message)throws RemoteException
+    {
+        String normalProcess = message.getSenderID();
+        int id = nameToID.get(normalProcess).intValue();
+
+        synchronized(msgBuffer) {
+            add(msgBuffer.get(id), message);
+            updateCurrentMessageCount(id);
+        }
+        if(finished == true) {//notify checker
+            synchronized(this) {
+                this.notify();
+            }
+        }
+    }
+    
+    private void add(ArrayList<Message> messages, Message msg) {
         long msgID = msg.getMessageID();
 
         for (int i = 0; i < messages.size(); i++) {
@@ -90,47 +102,43 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
             }
         }
         messages.add(msg);
-    }
-
-    public boolean isContinuous(ArrayList<Message> messages, int id) {
-        assert (messages.size() > 0);
-
-        long pre = messages.get(0).getMessageID();
-        for (int i = 1; i < messages.size(); i++) {
-            if (messages.get(i).getMessageID() != ++pre) {
-                currentMessageCount[id] = pre;
-                return false;
-            }
-        }
-        currentMessageCount[id] = pre + 1;
-        return true;
-    }
+    }   
     
-    public synchronized void receive(Message message)throws RemoteException
-    {
-        String normalProcess = message.getSenderID();
-        int id = nameToID.get(normalProcess).intValue();
-        
-        long messageID = message.getMessageID();
-        add(msgBuffer.get(id), message);
-        
-        if(messageID == currentMessageCount[id]) {
-            // check the buffer if is continuous or not
-            if(isContinuous(msgBuffer.get(id), id) == true) {
-                messages.clear();
-                ArrayList<Message> buffer = msgBuffer.get(id);
-                int size = buffer.size();
-                for(int i = 0; i < size; i++) {
-                    messages.add(buffer.remove(0));
+    private void updateCurrentMessageCount(int id) {
+        // TODO Auto-generated method stub
+        long messageID = -1;
+        int size = msgBuffer.get(id).size();
+        ArrayList<Message> arrayList = msgBuffer.get(id);
+        for(int i = 0; i<size; i++) {
+            if(arrayList.get(i).getMessageID() == currentMessageCount[id])
+            {
+                for(int j = i+1; j<size; j++) {
+                    if((arrayList.get(j-1).getMessageID()+1) != arrayList.get(j).getMessageID()) {
+                        messageID = arrayList.get(j-1).getMessageID()+1;
+                        break;
+                    }
                 }
-                flag = true;
+                if(messageID == -1) {
+                    messageID = arrayList.get(size-1).getMessageID()+1;
+                }
+                break;
             }
         }
+        if(messageID != -1) {
+            currentMessageCount[id] = messageID;
+        }
     }
+
     public void run() {
         while(true)
         {
-            if(flag == false)
+            if(hasMessages())
+            {
+                finished = false;
+                handleBuffer();
+                finished = true;
+            }
+            else
             {
                 try {
                     synchronized(this){
@@ -141,12 +149,54 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
                     e.printStackTrace();
                 }
             }
-            else
+        }
+    }
+    
+    /**
+     * if there is any message in msgBuffer, return true
+     * @return
+     */
+    private boolean hasMessages()
+    {
+        for(int i= 0; i<msgBuffer.size(); i++) {
+            synchronized(msgBuffer) {
+                if(msgBuffer.get(i).size()!=0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private void handleBuffer() {
+        ArrayList<Message> messages = new ArrayList<Message>();
+        for(int i = 0; i < msgBuffer.size();i++)
+        {
+            synchronized(msgBuffer)
             {
-                flag = false;
+                messages = getContinousMessages(msgBuffer.get(i),currentMessageCount[i]);
+            }
+            if(messages.size()!=0) {
                 handle(messages);
             }
         }
     }
-    protected abstract void handle(ArrayList<Message> message);
+    
+    private ArrayList<Message> getContinousMessages(ArrayList<Message> bufferedMessages,
+                                                    long currentMessageCount) {
+        ArrayList<Message> messages = new ArrayList<Message>();
+        if(bufferedMessages.size() > 0) {
+            int index = 0;
+            while(index < bufferedMessages.size()
+                  &&bufferedMessages.get(index).getMessageID() < currentMessageCount) {
+                messages.add(bufferedMessages.get(index));
+                index++;
+            }
+            for(int i = 0; i<index; i++) {
+                bufferedMessages.remove(0);
+            }
+        }
+        return messages;
+    }
+    protected abstract void handle(ArrayList<Message> messages);
 }

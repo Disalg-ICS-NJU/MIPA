@@ -25,13 +25,13 @@ import java.util.Map;
 
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.predicatedetection.AbstractNonFIFOChecker;
+import net.sourceforge.mipa.predicatedetection.AbstractGenericChecker;
 
 /**
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class OGATopChecker extends AbstractNonFIFOChecker {
+public class OGATopChecker extends AbstractGenericChecker {
 
     private static final long serialVersionUID = -5005195916176717460L;
 
@@ -50,29 +50,14 @@ public class OGATopChecker extends AbstractNonFIFOChecker {
             preQueHiMap.put(children[i], null);
         }
     }
-    /*
-    @Override
-    public synchronized void receive(Message message) throws RemoteException {
-        
-        String senderName = message.getSenderID();
-        Integer messageSenderIndex = indexMap.get(senderName);
-        
-        ArrayList<Message> queue = messageQueues.get(messageSenderIndex);
-        queue.add(message);
-        
-        queue = messageQueues.get(new Integer(index));
-        
-        while(queue.size() != 0) {
-            detect(queue.remove(0));
-            // index will change in detect().
-            queue = messageQueues.get(new Integer(index));
-        }
-    }
-    */
     
     protected void handle(ArrayList<Message> messages) {
         while(messages.size() != 0) {
-            detect(messages.remove(0));
+            Message message;
+            synchronized(messageQueues) {
+                message = messages.remove(0);
+            }
+            detect(message);
             // index will change in detect().
             messages = messageQueues.get(new Integer(index));
         }
