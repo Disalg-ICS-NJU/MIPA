@@ -70,31 +70,6 @@ public class WCPChecker extends AbstractFIFOChecker {
         }
         if(already == false) list.add(num);
     }
-    /*
-    @Override
-    public void receive(Message message) throws RemoteException {
-        // TODO Auto-generated method stub
-        ArrayList<Message> messages = new ArrayList<Message> ();
-        String normalProcess = message.getSenderID();
-        int id = nameToID.get(normalProcess).intValue();
-        
-        long messageID = message.getMessageID();
-        add(msgBuffer.get(id), message);
-        
-        if(messageID == currentMessageCount[id]) {
-            // check the buffer if is continuous or not
-            if(isContinuous(msgBuffer.get(id), id) == true) {
-                ArrayList<Message> buffer = msgBuffer.get(id);
-                int size = buffer.size();
-                for(int i = 0; i < size; i++) {
-                    messages.add(buffer.remove(0));
-                }
-                
-                check(messages);
-            }
-        }
-    }
-    */
     
     protected void handle(ArrayList<Message> messages) {
         check(messages);

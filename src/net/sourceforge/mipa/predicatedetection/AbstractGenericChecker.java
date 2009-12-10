@@ -31,9 +31,9 @@ import net.sourceforge.mipa.components.Message;
 
 /**
  *
- * @author Jianping Yu <jianp.yue@gmail.com>
+ * @author Yiling Yang
  */
-public abstract class AbstractNonFIFOChecker implements Serializable, Communication, Runnable{
+public abstract class AbstractGenericChecker implements Serializable, Communication, Runnable{
 
     private static final long serialVersionUID = -5023931031473945453L;
     
@@ -52,11 +52,9 @@ public abstract class AbstractNonFIFOChecker implements Serializable, Communicat
     
     protected Map<String, Integer> indexMap;
     
-    private ArrayList<Message> messages;
+    private boolean finished = true;
     
-    private boolean flag = false;
-    
-    public AbstractNonFIFOChecker(ResultCallback application, 
+    public AbstractGenericChecker(ResultCallback application, 
                             String checkerName, 
                             String[] children) {
         this.application = application;
@@ -69,7 +67,6 @@ public abstract class AbstractNonFIFOChecker implements Serializable, Communicat
         }
         
         index = 1;
-        messages = new ArrayList<Message> ();
         
         indexMap = new HashMap<String, Integer>();
         messageQueues = new HashMap<Integer, ArrayList<Message>>();
@@ -86,20 +83,31 @@ public abstract class AbstractNonFIFOChecker implements Serializable, Communicat
     {
         String senderName = message.getSenderID();
         Integer messageSenderIndex = indexMap.get(senderName);
+
+        synchronized(messageQueues) {
+            ArrayList<Message> queue = messageQueues.get(messageSenderIndex);
+            queue.add(message);
+        }
         
-        ArrayList<Message> queue = messageQueues.get(messageSenderIndex);
-        queue.add(message);
-        messages = messageQueues.get(new Integer(index));
-        if(messages.size() != 0)
-        {
-            flag = true;
+        if(finished == true) {//notify checker
+            synchronized(this) {
+                this.notify();
+            }
         }
     }
     
     public void run() {
         while(true)
         {
-            if(flag == false)
+            int size = messageQueues.get(new Integer(index)).size();
+            if(size != 0)
+            {
+                finished = false;
+                handle(messageQueues.get(new Integer(index)));
+                finished = true;
+                
+            }
+            else
             {
                 try {
                     synchronized(this){
@@ -109,11 +117,6 @@ public abstract class AbstractNonFIFOChecker implements Serializable, Communicat
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-            }
-            else
-            {
-                flag = false;
-                handle(messages);
             }
         }
     }
