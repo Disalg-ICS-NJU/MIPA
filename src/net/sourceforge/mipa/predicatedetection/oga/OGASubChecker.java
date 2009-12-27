@@ -26,9 +26,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import net.sourceforge.mipa.application.ResultCallback;
-import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.components.MessageDispatcher;
 import net.sourceforge.mipa.components.MessageType;
 import net.sourceforge.mipa.predicatedetection.AbstractFIFOChecker;
 
@@ -246,13 +244,7 @@ public class OGASubChecker extends AbstractFIFOChecker {
         m.setSenderID(name);
         m.setReceiverID(receiverName);
         m.setMessageContent(content);
-
-        try {
-            MessageDispatcher messageDispatcher = MIPAResource
-                                                              .getMessageDispatcher();
-            messageDispatcher.send(m);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+   
+        sender.send(m);
     }
 }

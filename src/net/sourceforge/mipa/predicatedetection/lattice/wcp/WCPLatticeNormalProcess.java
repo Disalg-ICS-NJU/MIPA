@@ -21,7 +21,6 @@ package net.sourceforge.mipa.predicatedetection.lattice.wcp;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageType;
 import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
@@ -126,11 +125,7 @@ public class WCPLatticeNormalProcess extends AbstractNormalProcess {
 			assert (false);
 		}
 
-		try {
-			messageDispatcher.send(m);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		sender.send(m);
 	}
 
 	private void broadcast(MessageType type, LatticeMessageContent content) {

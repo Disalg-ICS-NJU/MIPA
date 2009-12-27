@@ -27,7 +27,10 @@ import java.rmi.RemoteException;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.components.MessageDispatcher;
+import net.sourceforge.mipa.components.AbstractSender;
+import net.sourceforge.mipa.components.Mode;
+import net.sourceforge.mipa.components.RealSender;
+import net.sourceforge.mipa.components.SimulateSender;
 import net.sourceforge.mipa.eca.Listener;
 
 /**
@@ -58,8 +61,8 @@ public abstract class AbstractNormalProcess
     protected VectorClock currentClock;
 
     protected boolean finished;
-
-    protected MessageDispatcher messageDispatcher;
+    
+    protected AbstractSender sender;
 
     public AbstractNormalProcess(String name, String[] checkers,
                                  String[] normalProcesses) {
@@ -75,11 +78,17 @@ public abstract class AbstractNormalProcess
             }
         }
 
-        try {
-            messageDispatcher = MIPAResource.getMessageDispatcher();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        Mode mode = MIPAResource.getMode();
+        switch(mode) {
+            case SIMULATE:
+                sender = new SimulateSender();
+                break;
+            case REAL:
+                sender = new RealSender();
+                break;
+            default:
+                System.out.println("wrong mode!");
+            break;
         }
     }
 

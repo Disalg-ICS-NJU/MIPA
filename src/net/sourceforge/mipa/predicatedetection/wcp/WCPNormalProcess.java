@@ -25,7 +25,6 @@ import static config.Config.LOG_DIRECTORY;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageType;
@@ -36,7 +35,7 @@ import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 /**
  * 
- * @author sorrybone <sorrybone@gmail.com>
+ * @author YiLing Yang <csylyang@gmail.com>
  *
  */
 public class WCPNormalProcess extends AbstractNormalProcess {
@@ -133,13 +132,8 @@ public class WCPNormalProcess extends AbstractNormalProcess {
         } else {
             assert(false);
         }
-        
-        try {
-            messageDispatcher.send(m);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
+
+        sender.send(m);
     }
     
     private void broadcast(MessageType type, WCPMessageContent content) {
