@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageType;
@@ -165,11 +164,8 @@ public class SCPNormalProcess extends AbstractNormalProcess {
             assert(false);
         }
         
-        try {
-            messageDispatcher.send(m);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        sender.send(m);
+        
         currentClock.increment(id);
     }
     

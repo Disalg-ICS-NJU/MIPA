@@ -7,4 +7,5 @@
 	</naming>
 	<!-- normal or lattice -->
 	<checkmode>normal</checkmode>
+	<mode>simulate</mode>
 </config>

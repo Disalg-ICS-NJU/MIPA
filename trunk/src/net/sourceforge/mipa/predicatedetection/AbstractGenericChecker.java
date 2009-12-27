@@ -26,8 +26,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sourceforge.mipa.application.ResultCallback;
+import net.sourceforge.mipa.components.AbstractSender;
 import net.sourceforge.mipa.components.Communication;
+import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
+import net.sourceforge.mipa.components.Mode;
+import net.sourceforge.mipa.components.RealSender;
+import net.sourceforge.mipa.components.SimulateSender;
 
 /**
  *
@@ -54,6 +59,8 @@ public abstract class AbstractGenericChecker implements Serializable, Communicat
     
     private boolean finished = true;
     
+    protected AbstractSender sender;
+    
     public AbstractGenericChecker(ResultCallback application, 
                             String checkerName, 
                             String[] children) {
@@ -73,6 +80,19 @@ public abstract class AbstractGenericChecker implements Serializable, Communicat
         for(int i = 0; i < children.length; i++) {
             indexMap.put(children[i], new Integer(i + 1));
             messageQueues.put(new Integer(i + 1), new ArrayList<Message>());
+        }
+        
+        Mode mode = MIPAResource.getMode();
+        switch(mode) {
+            case SIMULATE:
+                sender = new SimulateSender();
+                break;
+            case REAL:
+                sender = new RealSender();
+                break;
+            default:
+                System.out.println("wrong mode!");
+            break;
         }
         
         Thread thread = new Thread(this);

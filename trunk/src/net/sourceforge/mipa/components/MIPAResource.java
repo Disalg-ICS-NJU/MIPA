@@ -57,6 +57,8 @@ public class MIPAResource {
     private static MessageDispatcher messageDispatcher = null;
     
     private static String checkMode = null;
+    
+    private static String mode = null;
 
     static {
         parseConfig(config.Config.CONFIG_FILE);
@@ -82,9 +84,12 @@ public class MIPAResource {
                                 .getFirstChild().getNodeValue();
 
             port = Integer.parseInt(doc.getElementsByTagName("port").item(0)
-                             .getFirstChild().getNodeValue());
+                                .getFirstChild().getNodeValue());
             
             checkMode = doc.getElementsByTagName("checkmode").item(0)
+                                .getFirstChild().getNodeValue();
+            
+            mode = doc.getElementsByTagName("mode").item(0)
                                 .getFirstChild().getNodeValue();
             
             MIPAResource
@@ -214,5 +219,14 @@ public class MIPAResource {
             return CheckMode.LATTICE;
         else
             return CheckMode.NORMAL;
+    }
+    
+    public static Mode getMode() {
+        if(mode.equals("simulate"))
+            return Mode.SIMULATE;
+        else if(mode.equals("real"))
+            return Mode.REAL;
+        else
+            return Mode.SIMULATE;
     }
 }
