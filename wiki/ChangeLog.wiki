@@ -5,7 +5,7 @@
 
     `*` support lattice
 
-    `*` trade naming as a service in MIPA.
+    `*` take naming as a service in MIPA.
 
     `*` support real mode message passing (without message dispatcher).
 
