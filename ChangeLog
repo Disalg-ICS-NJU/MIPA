@@ -3,12 +3,14 @@ mipa-1.3.1
 * support wcp
 * support lattice
 * trade naming as a service in MIPA.
+* support real mode message passing (without message dispatcher).
 
 mipa-1.2.1
 
 * support sensors plug-in.
 
 mipa-1.0
+
 
 
 mipa-0.5
