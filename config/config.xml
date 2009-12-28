@@ -6,6 +6,7 @@
 		<port>1099</port>
 	</naming>
 	<!-- normal or lattice -->
-	<checkmode>normal</checkmode>
-	<mode>simulate</mode>
+	<checkMode>normal</checkMode>
+	<!-- real or simulate -->
+	<mode>real</mode>
 </config>

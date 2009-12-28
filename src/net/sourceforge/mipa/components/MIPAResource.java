@@ -86,7 +86,7 @@ public class MIPAResource {
             port = Integer.parseInt(doc.getElementsByTagName("port").item(0)
                                 .getFirstChild().getNodeValue());
             
-            checkMode = doc.getElementsByTagName("checkmode").item(0)
+            checkMode = doc.getElementsByTagName("checkMode").item(0)
                                 .getFirstChild().getNodeValue();
             
             mode = doc.getElementsByTagName("mode").item(0)
