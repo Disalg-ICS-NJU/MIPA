@@ -19,8 +19,6 @@
  */
 package net.sourceforge.mipa.eca;
 
-import static config.Debug.DEBUG;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;

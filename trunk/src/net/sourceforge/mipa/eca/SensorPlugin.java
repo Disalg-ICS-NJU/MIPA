@@ -105,8 +105,6 @@ public class SensorPlugin {
             Class<?> cons = Class.forName(class_name);
             
             // get the constructor of sensor.
-            //TODO should check very argument, we assume there is only
-            // one String parameter currently.
             Constructor<?> constructor = cons.getConstructor(Object.class);
             
             Object arg = Array.newInstance(String.class, args.size());
