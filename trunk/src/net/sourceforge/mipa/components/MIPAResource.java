@@ -222,11 +222,11 @@ public class MIPAResource {
     }
     
     public static Mode getMode() {
-        if(mode.equals("simulate"))
-            return Mode.SIMULATE;
+        if(mode.equals("simulated"))
+            return Mode.SIMULATED;
         else if(mode.equals("real"))
             return Mode.REAL;
         else
-            return Mode.SIMULATE;
+            return Mode.SIMULATED;
     }
 }
