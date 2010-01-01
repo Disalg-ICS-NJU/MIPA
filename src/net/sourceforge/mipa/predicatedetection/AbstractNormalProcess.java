@@ -30,7 +30,7 @@ import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.AbstractSender;
 import net.sourceforge.mipa.components.Mode;
 import net.sourceforge.mipa.components.RealSender;
-import net.sourceforge.mipa.components.SimulateSender;
+import net.sourceforge.mipa.components.SimulatedSender;
 import net.sourceforge.mipa.eca.Listener;
 
 /**
@@ -80,8 +80,8 @@ public abstract class AbstractNormalProcess
 
         Mode mode = MIPAResource.getMode();
         switch(mode) {
-            case SIMULATE:
-                sender = new SimulateSender();
+            case SIMULATED:
+                sender = new SimulatedSender();
                 break;
             case REAL:
                 sender = new RealSender();

@@ -8,13 +8,13 @@ import java.rmi.RemoteException;
  * @author Yiling Yang <csylyang@gmail.com>
  *
  */
-public class SimulateSender extends AbstractSender implements Serializable {
+public class SimulatedSender extends AbstractSender implements Serializable {
 
     private static final long serialVersionUID = -925287751705805498L;
     
     private MessageDispatcher messageDispatcher;
     
-    public SimulateSender() {
+    public SimulatedSender() {
         messageDispatcher = MIPAResource.getMessageDispatcher();
     }
     

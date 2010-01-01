@@ -5,6 +5,6 @@ package net.sourceforge.mipa.components;
  *
  */
 public enum Mode {
-    SIMULATE,
+    SIMULATED,
     REAL
 }

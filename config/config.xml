@@ -7,6 +7,6 @@
 	</naming>
 	<!-- normal or lattice -->
 	<checkMode>normal</checkMode>
-	<!-- real or simulate -->
+	<!-- real or simulated -->
 	<mode>real</mode>
 </config>
