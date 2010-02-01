@@ -86,33 +86,24 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         VectorClock timestamp = message.getTimestamp();
         currentClock.update(timestamp);
         firstflag = true;
-        /*
-        if(DEBUG) {
-            System.out.println(name + " firstflag: true.");
-        }
-        */
     }
 
     @Override
     public void action(boolean value) {
         // TODO Auto-generated method stub
-        if(prevState != value && firstflag) {
+    	if(prevState != value) {
             if(prevState == false) {
-                //interval begins
-                lo = new SCPVectorClock(currentClock);
-                
-                if(ENABLE_PHYSICAL_CLOCK) {
+            	broadcast(MessageType.Control, null);
+            	lo = new SCPVectorClock(currentClock);
+            	if(ENABLE_PHYSICAL_CLOCK) {
                     pTimeLo = (new Date()).getTime();
                 }
-                
-                broadcast(MessageType.Control, null);
-            } else {
-                //interval ends
-                SCPVectorClock hi = new SCPVectorClock(currentClock);
-                
-                SCPMessageContent content = new SCPMessageContent(lo, hi);
-                
-                if(ENABLE_PHYSICAL_CLOCK) {
+            	currentClock.increment(id);
+            }
+            else if(prevState == true && firstflag == true) {
+            	SCPVectorClock hi = new SCPVectorClock(currentClock);
+            	SCPMessageContent content = new SCPMessageContent(lo, hi);
+            	if(ENABLE_PHYSICAL_CLOCK) {
                     IDManager idManager = MIPAResource.getIDManager();
                     try {
                         String intervalID = idManager.getID(Catalog.Numerical);
@@ -127,23 +118,14 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                         e.printStackTrace();
                     }
                 }
-                
-                //??? SCP doesn't send any message to other normal processes.
+            	//??? SCP doesn't send any message to other normal processes.
                 for(int i = 0; i < checkers.length; i++) {
                     String checker = checkers[i];
                     send(MessageType.Detection, checker, content);
                 }
-                broadcast(MessageType.Control, null);
                 firstflag = false;
-
-                /*
-                if(DEBUG) {
-                    System.out.println(name + " firstflag: false");
-                }
-                */
-                
             }
-        }
+    	}
         prevState = value;
     }
     
@@ -162,11 +144,8 @@ public class SCPNormalProcess extends AbstractNormalProcess {
             currentMessageCount.put(receiverName, new Long(currentCount + 1));
         } else {
             assert(false);
-        }
-        
+        }        
         sender.send(m);
-        
-        currentClock.increment(id);
     }
     
     private void broadcast(MessageType type, SCPMessageContent content) {
