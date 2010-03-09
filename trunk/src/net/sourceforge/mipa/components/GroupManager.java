@@ -236,6 +236,13 @@ public class GroupManager {
                           callback, 
                           maxLevel);
             break;
+        case CADA:
+            allocateAsCADA(groups, 
+                    groupToChecker, 
+                    localPredicateToNormalProcess, 
+                    callback, 
+                    maxLevel);
+            break;
         default:
             System.out.println("This predicate type have not been implemented yet.");
         }
@@ -628,6 +635,67 @@ public class GroupManager {
             for (int i = 0; i < members.size(); i++) {
                 LocalPredicate lp = mapping.get(members.get(i));
                 broker.registerLocalPredicate(lp, members.get(i), g);
+            }
+        }
+    }
+    
+    private void allocateAsCADA(Map<String, AbstractGroup> groups, 
+            Map<String, String> groupToChecker, 
+            Map<LocalPredicate, String> localPredicateToNormalProcess, 
+            String callback,
+            int maxLevel) {
+
+        IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+
+        // start checker for level > 0
+        for(int i = maxLevel; i > 0; i--) {
+            
+        }
+
+        // check the level == 0
+        for(String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if(g.getLevel() == 0) {
+                String gid = g.getGroupId();
+
+                // current Implementation is that father of CADA checker is null;
+
+                ArrayList<Object> children = g.getChildren();
+                ArrayList<String> owners = new ArrayList<String>();
+                ArrayList<String> members = new ArrayList<String>();
+                owners.add(groupToChecker.get(gid));
+                for(int i = 0; i < children.size(); i++) {
+                    members.add(localPredicateToNormalProcess.get(children.get(i)));
+                }
+                // create group
+                String groupId = null;
+                try {
+                    groupId = idManager.getID(Catalog.Group);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+                Group ng = new Group(groupId, owners, members, PredicateType.CADA);
+                ng.setCoordinatorID(groupId);
+
+                try {
+                    coordinator.newCoordinator(ng);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String checkerName = ng.getOwners().get(0);
+                String[] normalProcesses = new String[ng.getMembers().size()];
+                ng.getMembers().toArray(normalProcesses);
+                CheckerFactory.createCADAChecker(callback, checkerName, normalProcesses);
+                
+                // create Normal Processes.
+                for (int i = 0; i < children.size(); i++) {
+                    broker.registerLocalPredicate((LocalPredicate) children.get(i), 
+                            localPredicateToNormalProcess.get(children.get(i)), 
+                            ng);
+                }
             }
         }
     }
