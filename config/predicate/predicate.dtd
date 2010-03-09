@@ -1,5 +1,5 @@
 <!ELEMENT predicate (prefix, GSE)>
-<!ATTLIST predicate type (SCP|WCP|OGAP|LP) #REQUIRED>
+<!ATTLIST predicate type (SCP|WCP|OGAP|LP|CADA) #REQUIRED>
 <!ELEMENT prefix EMPTY>
 <!ATTLIST prefix value (def|pos) #REQUIRED>
 

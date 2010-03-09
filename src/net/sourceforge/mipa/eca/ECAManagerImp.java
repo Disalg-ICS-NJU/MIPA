@@ -37,6 +37,7 @@ import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
+import net.sourceforge.mipa.predicatedetection.cada.CADANormalProcess;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNormalProcess;
 import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
 import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
@@ -153,6 +154,13 @@ public class ECAManagerImp implements ECAManager {
                 case LP:
                 
                     break;
+                case CADA:
+                    CADANormalProcess cadaNP = new CADANormalProcess(name, checkers,
+                            normalProcesses);
+                    npStub = (NormalProcess) UnicastRemoteObject
+                                                            .exportObject(cadaNP, 0);
+                    action = cadaNP;
+                    break;
                 default:
                     System.out.println("Type " + g.getType() + " has not been defined.");
                 }
@@ -174,6 +182,9 @@ public class ECAManagerImp implements ECAManager {
                     
                     break;
                 case LP:
+                    
+                    break;
+                case CADA:
                     
                     break;
                 default:

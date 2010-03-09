@@ -28,6 +28,7 @@ import net.sourceforge.mipa.components.CheckMode;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
+import net.sourceforge.mipa.predicatedetection.cada.CADAChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.oga.OGASubChecker;
 import net.sourceforge.mipa.predicatedetection.oga.OGATopChecker;
@@ -155,6 +156,38 @@ public class CheckerFactory {
             e.printStackTrace();
         }
         
+    }
+
+    public static void createCADAChecker(String callback, String checkerName,
+            String[] normalProcesses) {
+        // TODO Auto-generated method stub
+        try {
+            ResultCallback application = (ResultCallback) server
+                                                    .lookup(callback);
+
+            CheckMode checkMode = MIPAResource.getCheckMode();
+            if(checkMode == CheckMode.NORMAL) {
+                // NORMAL mode code puts here!
+                CADAChecker checker = new CADAChecker(application, checkerName,
+                                                    normalProcesses);
+                Communication checkerStub 
+                                    = (Communication) UnicastRemoteObject
+                                                            .exportObject(checker,
+                                                                          0);
+                server.bind(checkerName, checkerStub);
+                if (DEBUG) {
+                    System.out.println("binding checker " + checkerName);
+                }
+            } else if(checkMode == CheckMode.LATTICE) {
+                
+                
+            } else {
+                System.out.println("Check Mode " + checkMode + "has not been defined.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     /*
