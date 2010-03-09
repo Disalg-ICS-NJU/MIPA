@@ -54,7 +54,7 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
 
     private ArrayList<ArrayList<Message>> msgBuffer;
     
-    private boolean finished = true;
+    private ArrayList<ArrayList<Message>> continousMessageBuffer;
     
     protected AbstractSender sender;
     
@@ -71,6 +71,7 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
         }
         
         msgBuffer = new ArrayList<ArrayList<Message>>();
+        continousMessageBuffer = new ArrayList<ArrayList<Message>>();
         currentMessageCount = new long[children.length];
         for (int i = 0; i < children.length; i++) {
             msgBuffer.add(new ArrayList<Message>());
@@ -103,7 +104,11 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
             add(msgBuffer.get(id), message);
             updateCurrentMessageCount(id);
         }
-        if(finished == true) {//notify checker
+        ArrayList<Message> messages = getContinousMessages(msgBuffer.get(id),currentMessageCount[id]);
+        if(messages.size() != 0) {
+            continousMessageBuffer.add(messages);
+        }
+        if(continousMessageBuffer.size() == 1) {//notify checker
             synchronized(this) {
                 this.notify();
             }
@@ -152,11 +157,9 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
     public void run() {
         while(true)
         {
-            if(hasMessages())
+            if(continousMessageBuffer.size() != 0)
             {
-                finished = false;
                 handleBuffer();
-                finished = true;
             }
             else
             {
@@ -172,34 +175,9 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
         }
     }
     
-    /**
-     * if there is any message in msgBuffer, return true
-     * @return
-     */
-    private boolean hasMessages()
-    {
-        for(int i= 0; i<msgBuffer.size(); i++) {
-            synchronized(msgBuffer) {
-                if(msgBuffer.get(i).size()!=0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
     private void handleBuffer() {
-        ArrayList<Message> messages = new ArrayList<Message>();
-        for(int i = 0; i < msgBuffer.size();i++)
-        {
-            synchronized(msgBuffer)
-            {
-                messages = getContinousMessages(msgBuffer.get(i),currentMessageCount[i]);
-            }
-            if(messages.size()!=0) {
-                handle(messages);
-            }
-        }
+        ArrayList<Message> messages = continousMessageBuffer.remove(0);
+        handle(messages);
     }
     
     private ArrayList<Message> getContinousMessages(ArrayList<Message> bufferedMessages,
