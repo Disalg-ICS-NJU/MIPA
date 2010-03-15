@@ -37,6 +37,7 @@ import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
+import net.sourceforge.mipa.predicatedetection.lattice.SCP.SCPLatticeNormalProcess;
 import net.sourceforge.mipa.predicatedetection.cada.CADANormalProcess;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNormalProcess;
 import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
@@ -175,7 +176,11 @@ public class ECAManagerImp implements ECAManager {
                     action = wcpNP;
                     break;
                 case SCP:
-                    
+                	SCPLatticeNormalProcess scpNP = new SCPLatticeNormalProcess(name, checkers,
+					                            normalProcesses);
+					npStub = (NormalProcess) UnicastRemoteObject
+					           .exportObject(scpNP, 0);
+					action = scpNP;
                     break;
                     
                 case OGA:
