@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.predicatedetection.cada;
+package net.sourceforge.mipa.predicatedetection.normal.cada;
 
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.predicatedetection.AbstractFIFOChecker;
-import net.sourceforge.mipa.predicatedetection.cada.CADAMessageContent;
+import net.sourceforge.mipa.predicatedetection.normal.cada.CADAMessageContent;
 
 /**
  * 
