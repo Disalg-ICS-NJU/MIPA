@@ -21,7 +21,7 @@ package net.sourceforge.mipa.predicatedetection.lattice;
 
 import java.util.ArrayList;
 
-import net.sourceforge.mipa.predicatedetection.lattice.SCP.SCPLatticeNode;
+import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeNode;
 //import net.sourceforge.mipa.predicatedetection.lattice.simplesequence.SSLatticeNode;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNode;
 
