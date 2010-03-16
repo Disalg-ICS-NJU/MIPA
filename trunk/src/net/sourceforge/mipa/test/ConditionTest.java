@@ -20,7 +20,7 @@ import net.sourceforge.mipa.predicatedetection.Formula;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NodeType;
 import net.sourceforge.mipa.predicatedetection.StructureParser;
-import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
+import net.sourceforge.mipa.predicatedetection.normal.scp.SCPNormalProcess;
 
 import org.junit.After;
 import org.junit.AfterClass;

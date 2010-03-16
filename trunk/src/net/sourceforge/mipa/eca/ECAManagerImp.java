@@ -38,11 +38,11 @@ import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
 import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeNormalProcess;
-import net.sourceforge.mipa.predicatedetection.cada.CADANormalProcess;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNormalProcess;
-import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
-import net.sourceforge.mipa.predicatedetection.scp.SCPNormalProcess;
-import net.sourceforge.mipa.predicatedetection.wcp.WCPNormalProcess;
+import net.sourceforge.mipa.predicatedetection.normal.cada.CADANormalProcess;
+import net.sourceforge.mipa.predicatedetection.normal.oga.OGANormalProcess;
+import net.sourceforge.mipa.predicatedetection.normal.scp.SCPNormalProcess;
+import net.sourceforge.mipa.predicatedetection.normal.wcp.WCPNormalProcess;
 import net.sourceforge.mipa.test.TimeInfo;
 
 /**
