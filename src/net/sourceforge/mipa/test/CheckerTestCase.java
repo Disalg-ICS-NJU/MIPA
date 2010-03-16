@@ -31,8 +31,8 @@ import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.CheckerFactory;
-import net.sourceforge.mipa.predicatedetection.scp.SCPMessageContent;
-import net.sourceforge.mipa.predicatedetection.scp.SCPVectorClock;
+import net.sourceforge.mipa.predicatedetection.normal.scp.SCPMessageContent;
+import net.sourceforge.mipa.predicatedetection.normal.scp.SCPVectorClock;
 
 /**
  *

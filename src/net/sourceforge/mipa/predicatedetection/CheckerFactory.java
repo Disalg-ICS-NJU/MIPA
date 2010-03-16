@@ -29,12 +29,12 @@ import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeChecker;
-import net.sourceforge.mipa.predicatedetection.cada.CADAChecker;
+import net.sourceforge.mipa.predicatedetection.normal.cada.CADAChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeChecker;
-import net.sourceforge.mipa.predicatedetection.oga.OGASubChecker;
-import net.sourceforge.mipa.predicatedetection.oga.OGATopChecker;
-import net.sourceforge.mipa.predicatedetection.scp.SCPChecker;
-import net.sourceforge.mipa.predicatedetection.wcp.WCPChecker;
+import net.sourceforge.mipa.predicatedetection.normal.oga.OGASubChecker;
+import net.sourceforge.mipa.predicatedetection.normal.oga.OGATopChecker;
+import net.sourceforge.mipa.predicatedetection.normal.scp.SCPChecker;
+import net.sourceforge.mipa.predicatedetection.normal.wcp.WCPChecker;
 
 /**
  * 
