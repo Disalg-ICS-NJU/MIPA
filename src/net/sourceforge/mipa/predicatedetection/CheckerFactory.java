@@ -28,7 +28,7 @@ import net.sourceforge.mipa.components.CheckMode;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
-import net.sourceforge.mipa.predicatedetection.lattice.SCP.SCPLatticeChecker;
+import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.cada.CADAChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.oga.OGASubChecker;

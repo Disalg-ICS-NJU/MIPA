@@ -37,7 +37,7 @@ import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
-import net.sourceforge.mipa.predicatedetection.lattice.SCP.SCPLatticeNormalProcess;
+import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeNormalProcess;
 import net.sourceforge.mipa.predicatedetection.cada.CADANormalProcess;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNormalProcess;
 import net.sourceforge.mipa.predicatedetection.oga.OGANormalProcess;
