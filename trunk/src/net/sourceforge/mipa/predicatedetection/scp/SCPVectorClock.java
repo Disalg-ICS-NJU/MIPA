@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.predicatedetection.scp;
+package net.sourceforge.mipa.predicatedetection.normal.scp;
 
 import java.util.ArrayList;
 

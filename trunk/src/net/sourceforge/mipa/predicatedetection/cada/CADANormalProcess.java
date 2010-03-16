@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.predicatedetection.cada;
+package net.sourceforge.mipa.predicatedetection.normal.cada;
 
 import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
@@ -35,8 +35,8 @@ import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.predicatedetection.AbstractNormalProcess;
 import net.sourceforge.mipa.predicatedetection.VectorClock;
-import net.sourceforge.mipa.predicatedetection.cada.CADAMessageContent;
-import net.sourceforge.mipa.predicatedetection.cada.CADAVectorClock;
+import net.sourceforge.mipa.predicatedetection.normal.cada.CADAMessageContent;
+import net.sourceforge.mipa.predicatedetection.normal.cada.CADAVectorClock;
 
 /**
  * 

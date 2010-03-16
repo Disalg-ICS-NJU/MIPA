@@ -17,10 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.predicatedetection.cada;
+package net.sourceforge.mipa.predicatedetection.normal.cada;
 
 import net.sourceforge.mipa.components.MessageContent;
-import net.sourceforge.mipa.predicatedetection.cada.CADAVectorClock;
+import net.sourceforge.mipa.predicatedetection.normal.cada.CADAVectorClock;
 /**
  * 
  * @author Yiling Yang <csylyang@gmail.com>
