@@ -108,7 +108,7 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
         if(messages.size() != 0) {
             continousMessageBuffer.add(messages);
         }
-        if(continousMessageBuffer.size() == 1) {//notify checker
+        if(continousMessageBuffer.size() != 0) {//notify checker
             synchronized(this) {
                 this.notify();
             }
