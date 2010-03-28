@@ -24,7 +24,6 @@ import static config.Config.LOG_DIRECTORY;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Stack;
 
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Message;
@@ -360,7 +359,7 @@ public abstract class LatticeChecker extends AbstractFIFOChecker {
 					
 					cur_node.previous.add(newnode);
 					newnode.next.add(cur_node);
-					// ²¹±ß
+					// 
 					for (int j = 0; j < cur_node.previous.size() - 1; j++) {
 						AbstractLatticeNode pnode = cur_node.previous.get(j);
 						for (int k = 0; k < pnode.previous.size(); k++) {
