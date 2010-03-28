@@ -27,7 +27,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import net.sourceforge.mipa.components.ContextRegister;
+import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.eca.DataSource;
 import net.sourceforge.mipa.eca.DataSourceImp;
@@ -62,10 +62,11 @@ public class ECAInitialize {
                                                                 + "Naming");
 
             IDManager idManager = (IDManager) server.lookup("IDManager");
-            ContextRegister contextRegister 
-                                = (ContextRegister) server
-                                                         .lookup("ContextRegister");
-
+            //ContextRegister contextRegister 
+            //                    = (ContextRegister) server
+            //                                             .lookup("ContextRegister");
+            BrokerInterface broker = (BrokerInterface) MIPAResource.getBroker();
+            
             // binding data source
             String dataSourceId = idManager.getID(Catalog.DataSource);
             DataSourceImp dataSource = new DataSourceImp();
@@ -76,7 +77,7 @@ public class ECAInitialize {
             server.bind(dataSourceId, dataSourceStub);
 
             String ecaManagerId = idManager.getID(Catalog.ECAManager);
-            ECAManagerImp ecaManager = new ECAManagerImp(contextRegister,
+            ECAManagerImp ecaManager = new ECAManagerImp(broker,
                                                                  dataSource,
                                                                  ecaManagerId);
             // ecaManager.setECAManagerName(ecaManagerId);

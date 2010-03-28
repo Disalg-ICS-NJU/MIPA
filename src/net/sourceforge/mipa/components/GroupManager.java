@@ -2,7 +2,7 @@
  * MIPA - Middleware Infrastructure for Predicate detection in Asynchronous 
  * environments
  * 
- * Copyright (C) 2009 the original author or authors.
+ * Copyright (C) 2009-2010 the original author or authors.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the term of the GNU General Public License as published by 
@@ -19,13 +19,14 @@
  */
 package net.sourceforge.mipa.components;
 
-import static config.Debug.DEBUG;
 import static config.Config.EXPERIMENT;
+import static config.Debug.DEBUG;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.predicatedetection.CheckerFactory;
@@ -41,18 +42,18 @@ import net.sourceforge.mipa.predicatedetection.Structure;
  */
 public class GroupManager {
     
-    private ContextModeling modeling;
+    //private ContextModeling modeling;
     
-    private ContextRetrieving retrieving;
+    //private ContextRetrieving retrieving;
+    
+    private ResourceManager resourceManager;
     
     private Broker broker;
     
     
-    public GroupManager(ContextModeling modeling, 
-                          ContextRetrieving retrieving, 
+    public GroupManager(ResourceManager resourceManager, 
                           Broker broker) {
-        this.modeling = modeling;
-        this.retrieving = retrieving;
+        this.resourceManager = resourceManager;
         this.broker = broker;
     }
     

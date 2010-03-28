@@ -48,7 +48,8 @@ public class MIPAResource {
 
     private static IDManager idManager = null;
 
-    private static ContextRegister contextRegister = null;
+    //private static ContextRegister contextRegister = null;
+    private static BrokerInterface broker = null;
     
     private static Coordinator coordinator = null;
     
@@ -161,6 +162,7 @@ public class MIPAResource {
         return idManager;
     }
     
+    /*
     public static ContextRegister getContextRegister() {
         if(contextRegister == null) {
             Naming server = getNamingServer();
@@ -171,6 +173,19 @@ public class MIPAResource {
             }
         }
         return contextRegister;
+    }
+    */
+    
+    public static BrokerInterface getBroker() {
+        if(broker == null) {
+            Naming server = getNamingServer();
+            try {
+                broker = (BrokerInterface) server.lookup("Broker");
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return broker;
     }
     
     public static Coordinator getCoordinator() {

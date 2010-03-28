@@ -28,8 +28,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.CheckMode;
-import net.sourceforge.mipa.components.ContextRegister;
 import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.Group;
 import net.sourceforge.mipa.components.MIPAResource;
@@ -54,13 +54,13 @@ public class ECAManagerImp implements ECAManager {
     /** name of ECAManager */
     private String ecaManagerName;
 
-    private ContextRegister contextRegister;
+    private BrokerInterface broker;
 
     private DataSource dataSource;
 
-    public ECAManagerImp(ContextRegister contextRegister,
+    public ECAManagerImp(BrokerInterface broker,
                          DataSource dataSource, String ecaManagerName) {
-        this.setContextRegister(contextRegister);
+        this.setBroker(broker);
         this.ecaManagerName = ecaManagerName;
         this.dataSource = dataSource;
     }
@@ -84,15 +84,15 @@ public class ECAManagerImp implements ECAManager {
      * @param contextRegister
      *            the contextRegister to set
      */
-    public void setContextRegister(ContextRegister contextRegister) {
-        this.contextRegister = contextRegister;
+    public void setBroker(BrokerInterface broker) {
+        this.broker = broker;
     }
 
     /**
      * @return the contextRegister
      */
-    public ContextRegister getContextRegister() {
-        return contextRegister;
+    public BrokerInterface getBroker() {
+        return broker;
     }
 
     @Override
@@ -251,7 +251,7 @@ public class ECAManagerImp implements ECAManager {
         try {
             for (int i = 0; i < resources.size(); i++) {
                 SensorAgent resource = resources.get(i);
-                contextRegister.registerResource(resource.getName(),
+                broker.registerResource(resource.getName(),
                                                  resource.getValueType(),
                                                  ecaManagerName);
             }

@@ -19,10 +19,27 @@
  */
 package net.sourceforge.mipa.components;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
- * @author Jianping Yu <jianp.yue@gmail.com>
+ * @author Jianping Yu <jpyu.mail@gmail.com>
  */
-public interface ResourceManager {
-
+public interface BrokerInterface extends Remote {
+    /**
+     * resource register provides register to ECA Manager.
+     * 
+     * @param resourceName
+     *            resource name
+     * @param valueType
+     *            value type of resource
+     * @param entityId
+     *            ECA manager ID(name)
+     * @throws RemoteException
+     */
+    public void registerResource(String resourceName, 
+                                  String valueType,
+                                  String entityId)
+                                      throws RemoteException;
 }
