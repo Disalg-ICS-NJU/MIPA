@@ -19,8 +19,10 @@
  */
 package net.sourceforge.mipa.components;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.eca.ECAManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.Atom;
@@ -30,23 +32,80 @@ import net.sourceforge.mipa.predicatedetection.LocalPredicate;
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
-public class Broker {
+public class Broker implements BrokerInterface {
     
-    private ContextModeling contextModeling;
+    //private ContextModeling contextModeling;
     
-    private ContextRetrieving contextRetrieving;
+    //private ContextRetrieving contextRetrieving;
+    
+    private ResourceManager resourceManager;
     
     
+    public Broker(ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+    }
+    
+    /*
     public Broker(ContextModeling modeling, ContextRetrieving retrieving) {
         contextModeling = modeling;
         contextRetrieving = retrieving;
     }
+    */
     
     
+    public synchronized void registerResource(String resourceName,
+                                              String valueType, 
+                                              String entityId)
+                                                  throws RemoteException {
+        
+        resourceManager.registerResource(resourceName, valueType, entityId);
+    }
+    
+    
+    //FIXME it only supports that a high level context is mapping to only one low level context.
+    //TODO it should support that a high level context is mapping to several low level contexts.
+    public void registerLocalPredicate(LocalPredicate lp, String normalProcessId, Group g) {
+        try {
+            ArrayList<Atom> arrayList = lp.getAtoms();
+            String ecaManagerId = resourceManager.findResource(arrayList.get(0).getName())[0];
+            
+            for(int i = 0; i < arrayList.size(); i++) {
+                Atom atom = arrayList.get(i);
+                String newId = resourceManager.findResource(atom.getName())[0];
+                if(! newId.equals(ecaManagerId)) {
+                    System.out.println("The sensors " + arrayList.get(0).getName()
+                                                       + " and "
+                                                       + arrayList.get(i).getName()
+                                                       + " are in different ECA.");
+                    
+                }
+                
+                //FIXME atom should be recreated, and doesn't reuse the atom in the arrayList. 
+                // It is not a bug, but it isn't elegant.
+                String atomicContext = resourceManager.getAtomicContextNames(atom.getName())[0];
+                atom.setName(atomicContext);
+                atom.setValueType(resourceManager.getTypeOfAtomicContext(atomicContext));
+            }
+            
+            Naming server = MIPAResource.getNamingServer();
+            ECAManager ecaManager = (ECAManager) server.lookup(ecaManagerId);
+            
+            System.out.println("find eca manager successfully.");
+            System.out.println(ecaManagerId);
+            ecaManager.registerLocalPredicate(lp, normalProcessId, g);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /*
     public void registerLocalPredicate(LocalPredicate lp, String normalProcessId, Group g) {
         try {
                 ArrayList<Atom> arrayList = lp.getAtoms();
-                String ecaManagerID = contextRetrieving.getEntityId(contextModeling.getLowContext(arrayList.get(0).getName()));
+                String ecaManagerID = contextRetrieving.getEntityId(
+                                           contextModeling.
+                                               getLowContext(arrayList.get(0).getName()));
+                
                 for(int i=0;i<arrayList.size();i++)
                 {
                     Atom atom = arrayList.get(i);
@@ -74,5 +133,5 @@ public class Broker {
             e.printStackTrace();
         }
     }
-    
+    */
 }

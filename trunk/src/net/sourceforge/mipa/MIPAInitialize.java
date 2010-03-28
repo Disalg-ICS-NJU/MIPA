@@ -25,9 +25,8 @@ import static config.Debug.DEBUG;
 import java.rmi.server.UnicastRemoteObject;
 
 import net.sourceforge.mipa.components.Broker;
+import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.ContextModeling;
-import net.sourceforge.mipa.components.ContextRegister;
-import net.sourceforge.mipa.components.ContextRegisterImp;
 import net.sourceforge.mipa.components.ContextRetrieving;
 import net.sourceforge.mipa.components.Coordinator;
 import net.sourceforge.mipa.components.CoordinatorImp;
@@ -35,6 +34,8 @@ import net.sourceforge.mipa.components.ExponentDelayMessageDispatcher;
 import net.sourceforge.mipa.components.GroupManager;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.MessageDispatcher;
+import net.sourceforge.mipa.components.rm.ResourceManager;
+import net.sourceforge.mipa.components.rm.SimpleResourceManager;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.IDManagerImp;
 import net.sourceforge.mipa.naming.Naming;
@@ -84,15 +85,30 @@ public class MIPAInitialize {
             
             ContextRetrieving contextRetrieving = new ContextRetrieving();
 
+            ResourceManager resourceManager =
+                                    new SimpleResourceManager(contextModeling,
+                                                                  contextRetrieving);
+            
+            Broker broker = new Broker(resourceManager);
+            
+            BrokerInterface brokerStub = 
+                            (BrokerInterface) UnicastRemoteObject
+                                                    .exportObject(broker, 0);
+            
+            server.bind("Broker", brokerStub);
+            
+            /*
             ContextRegisterImp contextRegister 
                                     = new ContextRegisterImp(contextModeling, 
                                                                contextRetrieving);
+            
             ContextRegister contextRegisterStub 
                                     = (ContextRegister) UnicastRemoteObject
                                                              .exportObject(contextRegister,
                                                                             0);
             server.bind("ContextRegister", contextRegisterStub);
-
+            */
+            
             //RandomDelayMessageDispatcher messageDispatcher = new RandomDelayMessageDispatcher();
             //NoDelayMessageDispatcher messageDispatcher = new NoDelayMessageDispatcher();
             ExponentDelayMessageDispatcher messageDispatcher = new ExponentDelayMessageDispatcher();
@@ -111,10 +127,8 @@ public class MIPAInitialize {
                 System.out.println("Creating PredicateParser...");
             }
             
-            Broker broker = new Broker(contextModeling, contextRetrieving);
-            
             GroupManager groupManager 
-                                = new GroupManager(contextModeling, contextRetrieving, broker);
+                                = new GroupManager(resourceManager, broker);
             
             PredicateParser predicateParser = new PredicateParser(groupManager);
             
