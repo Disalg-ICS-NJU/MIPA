@@ -17,43 +17,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.eca;
+package net.sourceforge.mipa.components.exception;
 
 /**
- * Condition Not Found exception used between Condition and Data Source
- *
+ * event name bound twice exception.
+ * 
  * @author Jianping Yu <jianp.yue@gmail.com>
- * @see Condition
- * @see DataSource
  */
-public class ConditionNotFoundException extends Exception {
+public class EventNameBoundTwiceException extends Exception {
 
-    private static final long serialVersionUID = 621635417163744041L;
+    private static final long serialVersionUID = -7928838819594739142L;
 
-    public ConditionNotFoundException() {
-        
+    public EventNameBoundTwiceException() {
+        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param message
      */
-    public ConditionNotFoundException(String message) {
+    public EventNameBoundTwiceException(String message) {
         super(message);
+        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param cause
      */
-    public ConditionNotFoundException(Throwable cause) {
+    public EventNameBoundTwiceException(Throwable cause) {
         super(cause);
+        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param message
      * @param cause
      */
-    public ConditionNotFoundException(String message, Throwable cause) {
+    public EventNameBoundTwiceException(String message, Throwable cause) {
         super(message, cause);
+        // TODO Auto-generated constructor stub
     }
 
 }

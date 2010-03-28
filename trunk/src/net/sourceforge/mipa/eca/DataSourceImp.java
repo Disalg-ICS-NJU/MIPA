@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.mipa.eca.exception.ConditionNotFoundException;
+
 /**
  * Data Source implementation.
  * 

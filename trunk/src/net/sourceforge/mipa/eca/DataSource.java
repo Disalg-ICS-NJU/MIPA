@@ -22,6 +22,8 @@ package net.sourceforge.mipa.eca;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.eca.exception.ConditionNotFoundException;
+
 /**
  * Data source of ECA mechanism.
  * 

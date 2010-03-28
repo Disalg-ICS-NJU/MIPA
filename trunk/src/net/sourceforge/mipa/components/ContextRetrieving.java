@@ -22,6 +22,9 @@ package net.sourceforge.mipa.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.mipa.components.exception.EventNameBoundTwiceException;
+import net.sourceforge.mipa.components.exception.EventNameNotFoundException;
+
 /**
  * context retrieving module.
  * 

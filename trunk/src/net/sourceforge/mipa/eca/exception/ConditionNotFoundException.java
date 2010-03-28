@@ -17,44 +17,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.components;
+package net.sourceforge.mipa.eca.exception;
+
+import net.sourceforge.mipa.eca.Condition;
+import net.sourceforge.mipa.eca.DataSource;
 
 /**
- * event name not found exception.
- * 
+ * Condition Not Found exception used between Condition and Data Source
+ *
  * @author Jianping Yu <jianp.yue@gmail.com>
+ * @see Condition
+ * @see DataSource
  */
-public class EventNameNotFoundException extends Exception {
+public class ConditionNotFoundException extends Exception {
 
-    private static final long serialVersionUID = -1541814629279651575L;
+    private static final long serialVersionUID = 621635417163744041L;
 
-    public EventNameNotFoundException() {
-        // TODO Auto-generated constructor stub
+    public ConditionNotFoundException() {
+        
     }
 
     /**
      * @param message
      */
-    public EventNameNotFoundException(String message) {
+    public ConditionNotFoundException(String message) {
         super(message);
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param cause
      */
-    public EventNameNotFoundException(Throwable cause) {
+    public ConditionNotFoundException(Throwable cause) {
         super(cause);
-        // TODO Auto-generated constructor stub
     }
 
     /**
      * @param message
      * @param cause
      */
-    public EventNameNotFoundException(String message, Throwable cause) {
+    public ConditionNotFoundException(String message, Throwable cause) {
         super(message, cause);
-        // TODO Auto-generated constructor stub
     }
 
 }
