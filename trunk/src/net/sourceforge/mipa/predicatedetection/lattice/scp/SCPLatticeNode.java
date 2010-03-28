@@ -2,7 +2,7 @@
  * MIPA - Middleware Infrastructure for Predicate detection in Asynchronous 
  * environments
  * 
- * Copyright (C) 2009 the original author or authors.
+ * Copyright (C) 2009-2010 the original author or authors.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the term of the GNU General Public License as published by 
@@ -85,7 +85,7 @@ public class SCPLatticeNode extends AbstractLatticeNode {
 	/**
 	 * compute the global predicate value on lattice node.
 	 * 
-	 * @return
+	 * @return the result
 	 */
 	public boolean cgs() {
 		boolean result = true;
