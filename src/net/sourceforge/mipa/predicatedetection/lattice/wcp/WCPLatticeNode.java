@@ -40,7 +40,7 @@ public class WCPLatticeNode extends AbstractLatticeNode {
 	/**
 	 * compute the global predicate value on lattice node.
 	 * 
-	 * @return
+	 * @return the result
 	 */
 	public boolean cgs() {
 		boolean result = true;

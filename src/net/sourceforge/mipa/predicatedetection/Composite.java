@@ -77,7 +77,7 @@ public class Composite implements Structure,Serializable {
     }
 
     /**
-     * @param name
+     * @param nodeName
      *            the name to set
      */
     public void setNodeName(String nodeName) {
