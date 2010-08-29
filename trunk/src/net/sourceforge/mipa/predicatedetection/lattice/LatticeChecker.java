@@ -384,4 +384,8 @@ public abstract class LatticeChecker extends AbstractFIFOChecker {
 	public abstract void check(AbstractLatticeNode startNode,
 			AbstractLatticeNode currentNode);
 
+    public LocalState[] getGlobalState() {
+        return globalState;
+    }
+
 }
