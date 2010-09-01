@@ -21,11 +21,6 @@ package net.sourceforge.mipa.predicatedetection.lattice;
 
 import java.util.ArrayList;
 
-import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeNode;
-import net.sourceforge.mipa.predicatedetection.lattice.sequence.SequenceLatticeNode;
-//import net.sourceforge.mipa.predicatedetection.lattice.simplesequence.SSLatticeNode;
-import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeNode;
-
 /**
  * 
  * @author tingting Hua<huatingting0820@gmail.com>
@@ -41,15 +36,6 @@ public abstract class AbstractLatticeNode {
 	protected ArrayList<AbstractLatticeNode> next;
 
 	protected ArrayList<AbstractLatticeNode> previous;
-
-	// link to children type node
-	protected WCPLatticeNode WCPNode = null;
-
-	protected SCPLatticeNode SCPNode = null;
-	
-	//protected SequenceLatticeNode sequenceNode = null;
-
-	//protected SSLatticeNode SSNode = null;
 
 	public AbstractLatticeNode(LocalState[] gs, String[] s) {
 		ID = s;
@@ -77,37 +63,4 @@ public abstract class AbstractLatticeNode {
 		return previous;
 	}
 
-	public void setWCPNode(WCPLatticeNode WCPNode) {
-		this.WCPNode = WCPNode;
-	}
-
-	public WCPLatticeNode getWCPNode() {
-		return WCPNode;
-	}
-
-/*	public void setSSNode(SSLatticeNode SSNode) {
-		this.SSNode = SSNode;
-	}
-
-	public SSLatticeNode getSSNode() {
-		return SSNode;
-	}
-*/
-	public void setSCPNode(SCPLatticeNode SCPNode) {
-		this.SCPNode = SCPNode;
-	}
-
-	public SCPLatticeNode getSCPNode() {
-		return SCPNode;
-	}
-
-	/*
-    public SequenceLatticeNode getSequenceNode() {
-        return sequenceNode;
-    }
-
-    public void setSequenceNode(SequenceLatticeNode sequenceNode) {
-        this.sequenceNode = sequenceNode;
-    }
-    */
 }

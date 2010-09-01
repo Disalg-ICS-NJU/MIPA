@@ -23,7 +23,6 @@ import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.predicatedetection.lattice.AbstractLatticeNode;
 import net.sourceforge.mipa.predicatedetection.lattice.LatticeChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.LocalState;
-
 import static config.Config.LOG_DIRECTORY;
 
 import java.io.PrintWriter;
@@ -43,7 +42,7 @@ public class SCPLatticeChecker extends LatticeChecker {
 	/** store the node when last time check the SCP */
 	//private AbstractLatticeNode lastnode;
 
-	private AbstractLatticeNode previousnode = null;;
+	private SCPLatticeNode previousnode = null;;
 
 	private PrintWriter out = null;
 
@@ -68,16 +67,19 @@ public class SCPLatticeChecker extends LatticeChecker {
 			AbstractLatticeNode currentNode) {
 		// TODO Auto-generated method stub
 
-		currentNode.getSCPNode().settailflag(true);
-		detectSCP(currentNode);
-		previousnode = currentNode;
-		currentNode.getSCPNode().setvisited(true);
+		((SCPLatticeNode) currentNode).settailflag(true);
+		detectSCP((SCPLatticeNode) currentNode);
+		previousnode = (SCPLatticeNode) currentNode;
+		((SCPLatticeNode) currentNode).setvisited(true);
 	}
 
-	private void detectSCP(AbstractLatticeNode node) {
+	private void detectSCP(SCPLatticeNode node) {
 
-		ArrayList<AbstractLatticeNode> pred = node.getprevious();
-
+		ArrayList<SCPLatticeNode> pred = new ArrayList<SCPLatticeNode>();
+		for (int i = 0; i < node.getprevious().size(); i++) {
+           pred.add((SCPLatticeNode) node.getprevious().get(i));
+        }
+		
 		// if the node is the initial node, pred is null.
 		if (pred.size() == 0) {
 			previousnode = node;
@@ -85,30 +87,30 @@ public class SCPLatticeChecker extends LatticeChecker {
 			return;
 		}
 
-		Iterator<AbstractLatticeNode> itor = pred.iterator();
+		Iterator<SCPLatticeNode> itor = pred.iterator();
 		while (itor.hasNext()) {
-			AbstractLatticeNode prednode = itor.next();
-			if (prednode.getSCPNode().getvisited() == false) {
+			SCPLatticeNode prednode = itor.next();
+			if (prednode.getvisited() == false) {
 				detectSCP(prednode);
-				prednode.getSCPNode().setvisited(true);
+				prednode.setvisited(true);
 			}
 		}
 
 		boolean flag = true;
-		Iterator<AbstractLatticeNode> iterator = pred.iterator();
+		Iterator<SCPLatticeNode> iterator = pred.iterator();
 		while (iterator.hasNext()) {
-			AbstractLatticeNode prenode = iterator.next();
-			if (prenode.getSCPNode().getpathflag() == false) {
+			SCPLatticeNode prenode = iterator.next();
+			if (prenode.getpathflag() == false) {
 				flag = false;
 				break;
 			}
 		}
 
-		if (node.getSCPNode().cgs()) {
-			node.getSCPNode().setinsideflag(true);
+		if (node.cgs()) {
+			node.setinsideflag(true);
 		}
 
-		node.getSCPNode().setpathflag(flag || node.getSCPNode().cgs());
+		node.setpathflag(flag || node.cgs());
 		
 		//set old lattice part false
 		/*for(int i=0;i<dimension;i++){
@@ -118,13 +120,13 @@ public class SCPLatticeChecker extends LatticeChecker {
 		}*/
 
 		// node's pathflag is true
-		if (node.getSCPNode().getpathflag() == true) {
+		if (node.getpathflag() == true) {
 			// node is the tail of the lattice
-			if (node.getSCPNode().gettailflag() == true) {
+			if (node.gettailflag() == true) {
 				// the previous node is inside the true frame,the current node
 				// is outside
-				if ((previousnode.getSCPNode().getinsideflag() == true)
-						&& (node.getSCPNode().getinsideflag() == false)) {
+				if ((previousnode.getinsideflag() == true)
+						&& (node.getinsideflag() == false)) {
 					// detect SCP,out put the information
 					try {
 						application.callback(String.valueOf(true));
@@ -151,7 +153,7 @@ public class SCPLatticeChecker extends LatticeChecker {
 					}
 					
 					//clear all the previous flag and LP
-					node.getSCPNode().setpathflag(false);
+					node.setpathflag(false);
 					
 					//lastnode=previousnode;
 
@@ -203,10 +205,9 @@ public class SCPLatticeChecker extends LatticeChecker {
 	}
 
 	@Override
-	public AbstractLatticeNode createNode(LocalState[] globalState, String[] s) {
+	public SCPLatticeNode createNode(LocalState[] globalState, String[] s) {
 		// TODO Auto-generated method stub
 		SCPLatticeNode node = new SCPLatticeNode(globalState, s);
-		node.setSCPNode(node);
 		return node;
 	}
 

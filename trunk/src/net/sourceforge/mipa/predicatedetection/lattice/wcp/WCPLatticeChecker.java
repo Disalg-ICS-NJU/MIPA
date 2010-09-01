@@ -55,10 +55,9 @@ public class WCPLatticeChecker extends LatticeChecker {
 	}
 
 	@Override
-	public AbstractLatticeNode createNode(LocalState[] globalState, String[] s) {
+	public WCPLatticeNode createNode(LocalState[] globalState, String[] s) {
 		// TODO Auto-generated method stub
 		WCPLatticeNode node = new WCPLatticeNode(globalState, s);
-		node.setWCPNode(node);
 		return node;
 	}
 
@@ -66,19 +65,22 @@ public class WCPLatticeChecker extends LatticeChecker {
 	public void check(AbstractLatticeNode startNode,
 			AbstractLatticeNode currentNode) {
 
-		detect(currentNode);
+		detect((WCPLatticeNode) currentNode);
 	}
 
-	public void detect(AbstractLatticeNode node) {
-		ArrayList<AbstractLatticeNode> list = node.getprevious();
-		Iterator<AbstractLatticeNode> iter = list.iterator();
+	public void detect(WCPLatticeNode node) {
+		ArrayList<WCPLatticeNode> list = new ArrayList<WCPLatticeNode>();
+		for (int i = 0; i < node.getprevious().size(); i++) {
+            list.add((WCPLatticeNode) node.getprevious().get(i));
+        }
+		Iterator<WCPLatticeNode> iter = list.iterator();
 		while (iter.hasNext()) {
-			AbstractLatticeNode child = iter.next();
+			WCPLatticeNode child = iter.next();
 			// if the node has not been visited
-			if (child.getWCPNode().getVisited() == false) {
+			if (child.getVisited() == false) {
 				// if the global predicate is true, then detected
-				child.getWCPNode().setVisited(true);
-				if (child.getWCPNode().cgs()) {
+				child.setVisited(true);
+				if (child.cgs()) {
 					LocalState[] gs = child.getglobalState();
 					for (int i = 0; i < gs.length; i++) {
 						try {
