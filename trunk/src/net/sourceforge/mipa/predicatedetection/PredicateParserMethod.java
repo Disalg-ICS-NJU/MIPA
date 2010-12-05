@@ -37,8 +37,9 @@ public interface PredicateParserMethod extends Remote {
      *            application who invokes this method
      * @param predicate
      *            predicate document
+     * @return preidcate ID
      * @throws RemoteException
      */
-    public void parsePredicate(String applicationName, Document predicate)
+    public String parsePredicate(String applicationName, Document predicate)
                                                                           throws RemoteException;
 }

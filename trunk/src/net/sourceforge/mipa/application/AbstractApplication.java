@@ -28,11 +28,11 @@ import java.rmi.server.UnicastRemoteObject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
-import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
 
 import org.w3c.dom.Document;
 
@@ -76,9 +76,11 @@ public abstract class AbstractApplication implements ResultCallback {
      * 
      * @param configFileName
      *            config file name
+     * @return predicate ID
      */
-    public void start(String configFileName) {
+    public String start(String configFileName) {
 
+    	String predicateID = null;
         String namingAddress = MIPAResource.getNamingAddress();
 
         if (DEBUG) {
@@ -106,24 +108,32 @@ public abstract class AbstractApplication implements ResultCallback {
 
             // get predicate parser and transfer xml document to it.
 
-            PredicateParserMethod parser = MIPAResource.getPredicateParser();
+            //PredicateParserMethod parser = MIPAResource.getPredicateParser();
+            BrokerInterface broker = MIPAResource.getBroker();
             if (DEBUG) {
                 System.out
                           .println("application lookups predicate parser successfully.");
             }
 
-            parser.parsePredicate(applicationName, predicate);
+            //parser.parsePredicate(applicationName, predicate);
+            predicateID = broker.registerPredicate(applicationName, predicate);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return predicateID;
     }
     
     /**
      * unregister the predicate and stop the application.
      */
-    public void stop() {
-    	
+    public void stop(String predicateID) {
+    	BrokerInterface broker = MIPAResource.getBroker();
+    	try {
+    		broker.unregisterPredicate(predicateID);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
 
 

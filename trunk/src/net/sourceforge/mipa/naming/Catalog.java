@@ -28,6 +28,7 @@ package net.sourceforge.mipa.naming;
 public enum Catalog {
     DataSource,
     ECAManager,
+    Predicate,
     NormalProcess,
     Checker,
     Application,

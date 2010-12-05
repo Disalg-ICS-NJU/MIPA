@@ -69,9 +69,9 @@ public class Application extends AbstractApplication {
         int count = Integer.parseInt(args[1]);
         for(int i = 0; i < count; i++) {
             Application app = new Application("config/predicate/" + args[0]);
-            app.start("config/config.xml");
+            String predicateID = app.start("config/config.xml");
             System.out.println(i);
-            app.stop();
+            app.stop(predicateID);
         }
     }
 }
