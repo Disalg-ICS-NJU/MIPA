@@ -89,13 +89,6 @@ public class MIPAInitialize {
                                     new SimpleResourceManager(contextModeling,
                                                                   contextRetrieving);
             
-            Broker broker = new Broker(resourceManager);
-            
-            BrokerInterface brokerStub = 
-                            (BrokerInterface) UnicastRemoteObject
-                                                    .exportObject(broker, 0);
-            
-            server.bind("Broker", brokerStub);
             
             /*
             ContextRegisterImp contextRegister 
@@ -128,7 +121,17 @@ public class MIPAInitialize {
             }
             
             GroupManager groupManager 
-                                = new GroupManager(resourceManager, broker);
+                                = new GroupManager(resourceManager);
+            
+            Broker broker = new Broker(resourceManager, groupManager);
+            
+            BrokerInterface brokerStub = 
+                            (BrokerInterface) UnicastRemoteObject
+                                                    .exportObject(broker, 0);
+            
+            server.bind("Broker", brokerStub);
+            
+            groupManager.setBroker(broker);
             
             PredicateParser predicateParser = new PredicateParser(groupManager);
             

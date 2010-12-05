@@ -88,6 +88,34 @@ public class CoordinatorImp implements Coordinator {
     }
 
     @Override
+    public synchronized void memberStopReady(String groupID, String memberID)
+    											throws RemoteException {
+    	assert (groupMap.containsKey(groupID));
+    	
+    	Group g = groupMap.get(groupID);
+    	
+    	int finishedNum = g.getNumberOfFinishedMembers();
+    	int total = g.getMembers().size();
+    	
+    	assert (finishedNum < total);
+    	
+    	finishedNum++;
+    	g.setNumberOfFinishedMembers(finishedNum);
+    	
+    	if(finishedNum == total) {
+    		ArrayList<String> members = g.getMembers();
+    		for(int i = 0; i < members.size(); i++) {
+    			try {
+    				NormalProcess np = (NormalProcess) server.lookup(members.get(i));
+    				np.stopReady();
+    			} catch(Exception e) {
+    				e.printStackTrace();
+    			}
+    		}
+    	}
+    }
+    
+    @Override
     public synchronized void newCoordinator(Group g) throws RemoteException {
 
         assert (groupMap.containsKey(g.getCoordinatorID()) == false);

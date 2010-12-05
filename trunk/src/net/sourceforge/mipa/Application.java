@@ -71,7 +71,7 @@ public class Application extends AbstractApplication {
             Application app = new Application("config/predicate/" + args[0]);
             String predicateID = app.start("config/config.xml");
             System.out.println(i);
-            app.stop(predicateID);
+            //app.stop(predicateID);
         }
     }
 }

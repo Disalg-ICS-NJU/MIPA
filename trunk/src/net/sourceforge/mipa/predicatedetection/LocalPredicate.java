@@ -44,6 +44,7 @@ public class LocalPredicate implements Structure,Serializable {
         formula = new ArrayList<Structure>();
     }
     
+    
     public Atom getAtomByName(String name) {
         for(int i = 0; i < atoms.size(); i++) {
             if(name.equals(atoms.get(i))) return atoms.get(i);
