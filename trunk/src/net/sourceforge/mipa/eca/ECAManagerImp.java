@@ -96,6 +96,17 @@ public class ECAManagerImp implements ECAManager {
         return broker;
     }
 
+    public void unregisterLocalPredicate(LocalPredicate localPredicate,
+    									String npID, Group g) throws RemoteException {
+    	
+    	//detach the data source
+    	
+    	//stop normal process
+    	
+    	
+    	
+    }
+    
     @Override
     public void registerLocalPredicate(LocalPredicate localPredicate,
             String name, Group g) throws RemoteException {

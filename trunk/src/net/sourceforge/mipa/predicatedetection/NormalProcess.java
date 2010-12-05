@@ -34,4 +34,10 @@ public interface NormalProcess extends Remote {
      * @throws RemoteException
      */
     public void finished() throws RemoteException;
+    
+    /**
+     * it should be invoked when all NPs in one group are ready to destroy.
+     * @throws RemoteException
+     */
+    public void stopReady() throws RemoteException;
 }
