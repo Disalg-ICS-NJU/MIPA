@@ -22,6 +22,8 @@ package net.sourceforge.mipa.components;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import org.w3c.dom.Document;
+
 import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.eca.ECAManager;
 import net.sourceforge.mipa.naming.Naming;
@@ -52,6 +54,14 @@ public class Broker implements BrokerInterface {
     }
     */
     
+    public String registerPredicate(String applicationName, Document predicate) 
+    												throws RemoteException {
+    	return null;
+    }
+    
+    public void unregisterPredicate(String predicateID) throws RemoteException {
+    	
+    }
     
     public synchronized void registerResource(String resourceName,
                                               String valueType, 

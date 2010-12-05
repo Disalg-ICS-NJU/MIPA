@@ -2,7 +2,7 @@
  * MIPA - Middleware Infrastructure for Predicate detection in Asynchronous 
  * environments
  * 
- * Copyright (C) 2009 the original author or authors.
+ * Copyright (C) 2009-2010 the original author or authors.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the term of the GNU General Public License as published by 
@@ -63,6 +63,8 @@ public abstract class AbstractNormalProcess
     protected boolean finished;
     
     protected AbstractSender sender;
+    
+    protected int stopStatus; // STOP_REV_MSG or DESTROYED
 
     public AbstractNormalProcess(String name, String[] checkers,
                                  String[] normalProcesses) {
@@ -126,5 +128,9 @@ public abstract class AbstractNormalProcess
         finished = true;
         Thread t = new Thread(this);
         t.start();
+    }
+    
+    public void stopReady() {
+    	
     }
 }

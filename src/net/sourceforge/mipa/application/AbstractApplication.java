@@ -118,6 +118,13 @@ public abstract class AbstractApplication implements ResultCallback {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * unregister the predicate and stop the application.
+     */
+    public void stop() {
+    	
+    }
 
 
     /**

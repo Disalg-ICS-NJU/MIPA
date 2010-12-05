@@ -22,6 +22,8 @@ package net.sourceforge.mipa.components;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import org.w3c.dom.Document;
+
 /**
  *
  * @author Jianping Yu <jpyu.mail@gmail.com>
@@ -42,4 +44,26 @@ public interface BrokerInterface extends Remote {
                                   String valueType,
                                   String entityId)
                                       throws RemoteException;
+    
+    
+    /**
+     * register predicate.
+     * 
+     * @param applicationName
+     *            application who wants to register predicate
+     * @param predicate
+     *            predicate document
+     * @return predicate ID
+     * @throws RemoteException
+     */
+    public String registerPredicate(String applicationName, Document predicate)
+    									throws RemoteException;
+    
+    /**
+     * unregister predicate
+     * 
+     * @param predicateID the ID of predicate
+     * @throws RemoteException
+     */
+    public void unregisterPredicate(String predicateID) throws RemoteException;
 }
