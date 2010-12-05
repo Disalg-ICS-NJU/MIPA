@@ -22,13 +22,14 @@ package net.sourceforge.mipa.components;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-import org.w3c.dom.Document;
-
 import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.eca.ECAManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
+import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
+
+import org.w3c.dom.Document;
 
 /**
  *
@@ -42,9 +43,12 @@ public class Broker implements BrokerInterface {
     
     private ResourceManager resourceManager;
     
+    private PredicateParserMethod predicateParser;
+    
     
     public Broker(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
+        this.predicateParser = null;
     }
     
     /*
@@ -56,7 +60,12 @@ public class Broker implements BrokerInterface {
     
     public String registerPredicate(String applicationName, Document predicate) 
     												throws RemoteException {
-    	return null;
+    	if(predicateParser == null) {
+    		predicateParser = MIPAResource.getPredicateParser();
+    	}
+    	
+    	String predicateID = predicateParser.parsePredicate(applicationName, predicate);
+    	return predicateID;
     }
     
     public void unregisterPredicate(String predicateID) throws RemoteException {

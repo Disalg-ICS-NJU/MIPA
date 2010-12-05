@@ -57,7 +57,7 @@ public class PredicateParser implements PredicateParserMethod {
         this.groupManager = groupManager;
     }
 
-    public synchronized void parsePredicate(String applicationName,
+    public synchronized String parsePredicate(String applicationName,
                                                 Document predicate)
                                                     throws RemoteException {
 
@@ -86,10 +86,10 @@ public class PredicateParser implements PredicateParserMethod {
         }
         
         if (! predicateValidation.validate(predicateStructure)) {
-            return;
+            return null;
         }
         
-        groupManager.createGroups(predicateStructure, type, applicationName);
+        String predicateID = groupManager.createGroups(predicateStructure, type, applicationName);
         
         if(EXPERIMENT) {
             TimeInfo t = TimeCost.get(applicationName);
@@ -105,5 +105,7 @@ public class PredicateParser implements PredicateParserMethod {
                 e.printStackTrace();
             }
         }
+        
+        return predicateID;
     }
 }

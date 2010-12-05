@@ -36,6 +36,16 @@ import net.sourceforge.mipa.predicatedetection.NodeType;
 import net.sourceforge.mipa.predicatedetection.PredicateType;
 import net.sourceforge.mipa.predicatedetection.Structure;
 
+
+class PredicateInfo {
+	public String predicateID;
+	
+	public ArrayList<String> checkers;
+	
+	public ArrayList<LocalPredicate> normalProcesses;
+	
+}
+
 /**
  * grouping the local predicate
  * 
@@ -48,6 +58,8 @@ public class GroupManager {
     // private ContextRetrieving retrieving;
 
     private ResourceManager resourceManager;
+    
+    private HashMap<String, PredicateInfo> predicates;
 
     private Broker broker;
     
@@ -56,18 +68,31 @@ public class GroupManager {
     public GroupManager(ResourceManager resourceManager, Broker broker) {
         this.resourceManager = resourceManager;
         this.broker = broker;
+        predicates = new HashMap<String, PredicateInfo>();
     }
 
-    public void createGroups(Structure s, PredicateType predicateType,
+    public String createGroups(Structure s, PredicateType predicateType,
             String callback) {
         specification = s;
         Map<String, AbstractGroup> groups = structureGrouping(s, predicateType);
         analyzeDistribution(groups);
-        parseGroups(groups, predicateType, callback);
+        PredicateInfo info = parseGroups(groups, predicateType, callback);
 
+        String predicateID = null;
+        IDManager idManager = MIPAResource.getIDManager();
+        try {
+        	predicateID = idManager.getID(Catalog.Predicate);
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+        info.predicateID = predicateID;
+        predicates.put(predicateID, info);
+        
         if (EXPERIMENT) {
             Runtime.getRuntime().gc();
         }
+        
+        return predicateID;
     }
 
     private Map<String, AbstractGroup> structureGrouping(Structure s,
@@ -153,7 +178,7 @@ public class GroupManager {
 
     }
 
-    private void parseGroups(Map<String, AbstractGroup> groups,
+    private PredicateInfo parseGroups(Map<String, AbstractGroup> groups,
             PredicateType type, String callback) {
 
         IDManager idManager = MIPAResource.getIDManager();
@@ -274,6 +299,20 @@ public class GroupManager {
             System.out
                     .println("This predicate type have not been implemented yet.");
         }
+        
+        
+        PredicateInfo info = new PredicateInfo();
+        ArrayList<String> checkers = new ArrayList<String>();
+        ArrayList<LocalPredicate> normalProcesses = new ArrayList<LocalPredicate>();
+        for(String s : groupToChecker.keySet()) {
+        	checkers.add(groupToChecker.get(s));
+        }
+        for(LocalPredicate lp : localPredicateToNormalProcess.keySet()) {
+        	normalProcesses.add(lp);
+        }
+        info.checkers = checkers;
+        info.normalProcesses = normalProcesses;
+        return info;
     }
 
     private void allocateAsSequence(Map<String, AbstractGroup> groups,
