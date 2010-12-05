@@ -42,4 +42,12 @@ public interface Coordinator extends Remote {
      * @throws RemoteException
      */
     public void newCoordinator(Group g) throws RemoteException;
+    
+    /**
+     * 
+     * @param groupID
+     * @param memberID
+     * @throws RemoteException
+     */
+    public void memberStopReady(String groupID, String memberID) throws RemoteException;
 }

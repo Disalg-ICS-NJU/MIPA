@@ -24,6 +24,8 @@ import java.util.ArrayList;
 
 import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.eca.ECAManager;
+import net.sourceforge.mipa.naming.Catalog;
+import net.sourceforge.mipa.naming.IDManager;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
@@ -45,9 +47,11 @@ public class Broker implements BrokerInterface {
     
     private PredicateParserMethod predicateParser;
     
+    private GroupManager groupManager;
     
-    public Broker(ResourceManager resourceManager) {
+    public Broker(ResourceManager resourceManager, GroupManager groupManager) {
         this.resourceManager = resourceManager;
+        this.groupManager = groupManager;
         this.predicateParser = null;
     }
     
@@ -69,6 +73,26 @@ public class Broker implements BrokerInterface {
     }
     
     public void unregisterPredicate(String predicateID) throws RemoteException {
+    	PredicateInfo info = groupManager.getPredicateInfo(predicateID);
+    	if(info != null) {
+    		ArrayList<String> normalProcesses = info.normalProcesses;
+    		
+    		IDManager idManager = MIPAResource.getIDManager();
+    		String groupID = null;
+    		try {
+    			groupID = idManager.getID(Catalog.Group);
+    		} catch(Exception e) {
+    			e.printStackTrace();
+    		}
+    		Group g = new Group(groupID, null, normalProcesses, null);
+    		
+    		for(int i = 0; i < normalProcesses.size(); i++) {
+    			unregisterLocalPredicate(normalProcesses.get(i), g);
+    		}
+    	}
+    }
+    
+    private void unregisterLocalPredicate(String normalProcess, Group g) {
     	
     }
     

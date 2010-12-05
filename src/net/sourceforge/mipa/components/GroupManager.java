@@ -42,7 +42,7 @@ class PredicateInfo {
 	
 	public ArrayList<String> checkers;
 	
-	public ArrayList<LocalPredicate> normalProcesses;
+	public ArrayList<String> normalProcesses;
 	
 }
 
@@ -65,12 +65,23 @@ public class GroupManager {
     
     private Structure specification;
 
-    public GroupManager(ResourceManager resourceManager, Broker broker) {
+    public GroupManager(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
-        this.broker = broker;
+        this.broker = null;
         predicates = new HashMap<String, PredicateInfo>();
     }
+    
+    public void setBroker(Broker broker) {
+    	this.broker = broker;
+    }
 
+    public PredicateInfo getPredicateInfo(String predicateID) {
+    	if(predicates.containsKey(predicateID)) {
+    		return predicates.get(predicateID);
+    	}
+    	return null;
+    }
+    
     public String createGroups(Structure s, PredicateType predicateType,
             String callback) {
         specification = s;
@@ -87,6 +98,18 @@ public class GroupManager {
         }
         info.predicateID = predicateID;
         predicates.put(predicateID, info);
+        
+        if (DEBUG) {
+        	System.out.println("predicates info:");
+        	PredicateInfo pInfo = predicates.get(predicateID);
+        	System.out.println("\tpredicate id: " + pInfo.predicateID);
+        	System.out.println("\tcheckers:");
+        	for(int i = 0; i < pInfo.checkers.size(); i++) 
+        		System.out.println("\t\t" + pInfo.checkers.get(i));
+        	System.out.println("\tnormal processes:");
+        	for(int i = 0; i < pInfo.normalProcesses.size(); i++)
+        		System.out.println("\t\t" + pInfo.normalProcesses.get(i));
+        }
         
         if (EXPERIMENT) {
             Runtime.getRuntime().gc();
@@ -303,12 +326,12 @@ public class GroupManager {
         
         PredicateInfo info = new PredicateInfo();
         ArrayList<String> checkers = new ArrayList<String>();
-        ArrayList<LocalPredicate> normalProcesses = new ArrayList<LocalPredicate>();
+        ArrayList<String> normalProcesses = new ArrayList<String>();
         for(String s : groupToChecker.keySet()) {
         	checkers.add(groupToChecker.get(s));
         }
         for(LocalPredicate lp : localPredicateToNormalProcess.keySet()) {
-        	normalProcesses.add(lp);
+        	normalProcesses.add(localPredicateToNormalProcess.get(lp));
         }
         info.checkers = checkers;
         info.normalProcesses = normalProcesses;
