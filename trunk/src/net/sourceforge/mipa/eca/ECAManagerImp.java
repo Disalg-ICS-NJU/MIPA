@@ -128,7 +128,12 @@ public class ECAManagerImp implements ECAManager {
             }
         }
     	//stop normal process
-    	
+    	try {
+    		Coordinator coordinator = MIPAResource.getCoordinator();
+    		coordinator.memberStopReady(g.getCoordinatorID(), npID);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
     	
     	
         resourceMap.remove(npID);

@@ -79,6 +79,7 @@ public class Broker implements BrokerInterface {
     public void unregisterPredicate(String predicateID) throws RemoteException {
     	PredicateInfo info = groupManager.getPredicateInfo(predicateID);
     	if(info != null) {
+    		Coordinator coordinator = MIPAResource.getCoordinator();
     		ArrayList<String> normalProcesses = info.normalProcesses;
     		
     		IDManager idManager = MIPAResource.getIDManager();
@@ -89,12 +90,23 @@ public class Broker implements BrokerInterface {
     			e.printStackTrace();
     		}
     		Group g = new Group(groupID, null, normalProcesses, null);
-    		
+    		g.setCoordinatorID(groupID);
+    		coordinator.newCoordinator(g);
     		for(int i = 0; i < normalProcesses.size(); i++) {
     			unregisterLocalPredicate(normalProcesses.get(i), g);
     		}
     		//remove checkers
-    		
+    		System.out.println("remove checkers:");
+    		Naming server = MIPAResource.getNamingServer();
+    		try {
+    			ArrayList<String> checkers = info.checkers;
+    			for(int i = 0; i < checkers.size(); i++) {
+    				System.out.println("\t" + checkers.get(i));
+    				server.unbind(checkers.get(i));
+    			}
+    		} catch (Exception e) {
+    			
+    		}
     		
     		groupManager.removePredicateInfo(predicateID);
     	}
