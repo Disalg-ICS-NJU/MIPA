@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.CheckMode;
@@ -46,6 +47,15 @@ import net.sourceforge.mipa.predicatedetection.normal.scp.SCPNormalProcess;
 import net.sourceforge.mipa.predicatedetection.normal.wcp.WCPNormalProcess;
 import net.sourceforge.mipa.test.TimeInfo;
 
+
+class NormalProcessResource {
+	public String normalProcessID;
+	
+	public LocalPredicate lp;
+	
+	public Condition condition;
+}
+
 /**
  * 
  * @author Jianping Yu <jianp.yue@gmail.com>
@@ -58,12 +68,15 @@ public class ECAManagerImp implements ECAManager {
     private BrokerInterface broker;
 
     private DataSource dataSource;
+    
+    private HashMap<String, NormalProcessResource> resourceMap;
 
     public ECAManagerImp(BrokerInterface broker, DataSource dataSource,
             String ecaManagerName) {
         this.setBroker(broker);
         this.ecaManagerName = ecaManagerName;
         this.dataSource = dataSource;
+        this.resourceMap = new HashMap<String, NormalProcessResource>();
     }
 
     /**
@@ -96,15 +109,29 @@ public class ECAManagerImp implements ECAManager {
         return broker;
     }
 
-    public void unregisterLocalPredicate(LocalPredicate localPredicate,
-    									String npID, Group g) throws RemoteException {
+    public void unregisterNormalProcess(String npID, Group g) throws RemoteException {
     	
+    	NormalProcessResource NPResource = resourceMap.get(npID);
+    	Condition condition = NPResource.condition;
+    	LocalPredicate localPredicate = NPResource.lp;
     	//detach the data source
-    	
+    	ArrayList<Atom> arrayList = localPredicate.getAtoms();
+        for (int i = 0; i < arrayList.size(); i++) {
+            Atom atom = arrayList.get(i);
+            if (DEBUG) {
+                System.out.print(" " + atom.getName());
+            }
+            try {
+            	dataSource.detach(condition, atom.getName());
+            } catch (Exception e) {
+            	e.printStackTrace();
+            }
+        }
     	//stop normal process
     	
     	
     	
+        resourceMap.remove(npID);
     }
     
     @Override
@@ -236,6 +263,13 @@ public class ECAManagerImp implements ECAManager {
                 }
                 dataSource.attach(everything, atom.getName());
             }
+            
+            NormalProcessResource NPResource = new NormalProcessResource();
+            NPResource.normalProcessID = name;
+            NPResource.lp = localPredicate;
+            NPResource.condition = everything;
+            resourceMap.put(name, NPResource);
+            
             if (DEBUG) {
                 System.out.println(".");
                 System.out
