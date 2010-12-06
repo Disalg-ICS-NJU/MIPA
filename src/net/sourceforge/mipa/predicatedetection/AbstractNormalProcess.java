@@ -24,14 +24,15 @@ import static config.Debug.DEBUG;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.components.AbstractSender;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
-import net.sourceforge.mipa.components.AbstractSender;
 import net.sourceforge.mipa.components.Mode;
 import net.sourceforge.mipa.components.RealSender;
 import net.sourceforge.mipa.components.SimulatedSender;
 import net.sourceforge.mipa.eca.Listener;
+import net.sourceforge.mipa.naming.Naming;
 
 /**
  * abstract normal process.
@@ -65,6 +66,8 @@ public abstract class AbstractNormalProcess
     protected AbstractSender sender;
     
     protected int stopStatus; // STOP_REV_MSG or DESTROYED
+    
+    Thread thread;
 
     public AbstractNormalProcess(String name, String[] checkers,
                                  String[] normalProcesses) {
@@ -126,11 +129,19 @@ public abstract class AbstractNormalProcess
     @Override
     public void finished() {
         finished = true;
-        Thread t = new Thread(this);
-        t.start();
+        thread = new Thread(this);
+        thread.start();
     }
     
     public void stopReady() {
-    	
+    	System.out.println(name + " stop ready");
+    	thread.interrupt();
+    	thread = null;
+    	Naming server = MIPAResource.getNamingServer();
+    	try {
+    		server.unbind(name);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     }
 }
