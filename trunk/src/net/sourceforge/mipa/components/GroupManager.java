@@ -82,6 +82,10 @@ public class GroupManager {
     	return null;
     }
     
+    public void removePredicateInfo(String predicateID) {
+    	if(predicates.containsKey(predicateID)) predicates.remove(predicateID);
+    }
+    
     public String createGroups(Structure s, PredicateType predicateType,
             String callback) {
         specification = s;

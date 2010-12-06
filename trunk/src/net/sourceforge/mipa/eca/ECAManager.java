@@ -48,16 +48,13 @@ public interface ECAManager extends Remote {
                                            throws RemoteException;
     
     /**
-     * unregister local predicate.
-     * @param localPredicate
-     * 			local predicate
+     * unregister normal process.
      * @param npID
      * 			normal process ID
      * @param g
      * 			group
      * @throws RemoteException
      */
-    public void unregisterLocalPredicate(LocalPredicate localPredicate,
-    									String npID,
+    public void unregisterNormalProcess(String npID,
     									Group g) throws RemoteException;
 }

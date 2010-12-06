@@ -21,6 +21,7 @@ package net.sourceforge.mipa.components;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.eca.ECAManager;
@@ -49,9 +50,12 @@ public class Broker implements BrokerInterface {
     
     private GroupManager groupManager;
     
+    private HashMap<String, String> normalProcessToECAManager;
+    
     public Broker(ResourceManager resourceManager, GroupManager groupManager) {
         this.resourceManager = resourceManager;
         this.groupManager = groupManager;
+        normalProcessToECAManager = new HashMap<String, String>();
         this.predicateParser = null;
     }
     
@@ -89,11 +93,28 @@ public class Broker implements BrokerInterface {
     		for(int i = 0; i < normalProcesses.size(); i++) {
     			unregisterLocalPredicate(normalProcesses.get(i), g);
     		}
+    		//remove checkers
+    		
+    		
+    		groupManager.removePredicateInfo(predicateID);
     	}
+    	
     }
     
     private void unregisterLocalPredicate(String normalProcess, Group g) {
-    	
+    	String ecaManagerID = normalProcessToECAManager.get(normalProcess);
+    	if(ecaManagerID != null) {
+    		try {
+    			Naming server = MIPAResource.getNamingServer();
+                ECAManager ecaManager = (ECAManager) server.lookup(ecaManagerID);
+                
+                ecaManager.unregisterNormalProcess(normalProcess, g);
+                
+                normalProcessToECAManager.remove(normalProcess);
+    		} catch(Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
     }
     
     public synchronized void registerResource(String resourceName,
@@ -136,6 +157,7 @@ public class Broker implements BrokerInterface {
             System.out.println("find eca manager successfully.");
             System.out.println(ecaManagerId);
             ecaManager.registerLocalPredicate(lp, normalProcessId, g);
+            normalProcessToECAManager.put(normalProcessId, ecaManagerId);
         } catch (Exception e) {
             e.printStackTrace();
         }
