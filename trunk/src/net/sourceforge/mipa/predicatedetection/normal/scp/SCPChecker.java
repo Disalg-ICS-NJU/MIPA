@@ -46,9 +46,9 @@ public class SCPChecker extends AbstractFIFOChecker {
      * @param checkerName
      * @param normalProcesses
      */
-    public SCPChecker(ResultCallback application, String checkerName,
+    public SCPChecker(ResultCallback application, String predicateID, String checkerName,
                       String[] normalProcesses) {
-        super(application, checkerName, normalProcesses);
+        super(application, predicateID, checkerName, normalProcesses);
       
         queues = new ArrayList<ArrayList<SCPMessageContent>>();
         for (int i = 0; i < normalProcesses.length; i++) {
@@ -145,7 +145,7 @@ public class SCPChecker extends AbstractFIFOChecker {
                 }
                 if (found == true) {
                     try {
-                        application.callback(String.valueOf(true));
+                        application.callback(predicateID, String.valueOf(true));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

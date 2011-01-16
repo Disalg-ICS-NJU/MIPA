@@ -57,20 +57,20 @@ public class CheckerFactory {
      * @param level
      *            the level of checker in OGA, 0 represents top.
      */
-    public static void createOGAChecker(String callback, String checkerName,
+    public static void createOGAChecker(String callback, String predicateID, String checkerName,
             String[] fathers, String[] children, int level) {
         try {
             ResultCallback application = null;
             if (level == 0) {
                 application = (ResultCallback) server.lookup(callback);
-                OGATopChecker checker = new OGATopChecker(application,
+                OGATopChecker checker = new OGATopChecker(application, predicateID,
                         checkerName, children);
                 Communication checkerStub = (Communication) UnicastRemoteObject
                         .exportObject(checker, 0);
                 server.bind(checkerName, checkerStub);
 
             } else if (level == 1) {
-                OGASubChecker checker = new OGASubChecker(application,
+                OGASubChecker checker = new OGASubChecker(application, predicateID,
                         checkerName, fathers, children);
                 Communication checkerStub = (Communication) UnicastRemoteObject
                         .exportObject(checker, 0);
@@ -85,7 +85,7 @@ public class CheckerFactory {
         }
     }
 
-    public static void createSCPChecker(String callback, String checkerName,
+    public static void createSCPChecker(String callback, String predicateID, String checkerName,
             String[] normalProcesses) {
         try {
             ResultCallback application = (ResultCallback) server
@@ -94,8 +94,8 @@ public class CheckerFactory {
             CheckMode checkMode = MIPAResource.getCheckMode();
             if (checkMode == CheckMode.NORMAL) {
                 // NORMAL mode code puts here!
-                SCPChecker checker = new SCPChecker(application, checkerName,
-                        normalProcesses);
+                SCPChecker checker = new SCPChecker(application, predicateID, 
+                		checkerName, normalProcesses);
                 Communication checkerStub = (Communication) UnicastRemoteObject
                         .exportObject(checker, 0);
                 server.bind(checkerName, checkerStub);
@@ -103,7 +103,7 @@ public class CheckerFactory {
                     System.out.println("binding checker " + checkerName);
                 }
             } else if (checkMode == CheckMode.LATTICE) {
-                SCPLatticeChecker checker = new SCPLatticeChecker(application,
+                SCPLatticeChecker checker = new SCPLatticeChecker(application, predicateID,
                         checkerName, normalProcesses);
                 Communication checkerStub = (Communication) UnicastRemoteObject
                         .exportObject(checker, 0);
@@ -122,7 +122,7 @@ public class CheckerFactory {
         }
     }
 
-    public static void createWCPChecker(String callback, String checkerName,
+    public static void createWCPChecker(String callback, String predicateID, String checkerName,
             String[] normalProcesses) {
         try {
             ResultCallback application = (ResultCallback) server
@@ -131,7 +131,7 @@ public class CheckerFactory {
             CheckMode checkMode = MIPAResource.getCheckMode();
             if (checkMode == CheckMode.NORMAL) {
                 // NORMAL mode code puts here!
-                WCPChecker wcpChecker = new WCPChecker(application,
+                WCPChecker wcpChecker = new WCPChecker(application, predicateID,
                         checkerName, normalProcesses);
                 Communication wcpCheckerStub = (Communication) UnicastRemoteObject
                         .exportObject(wcpChecker, 0);
@@ -142,7 +142,7 @@ public class CheckerFactory {
             } else if (checkMode == CheckMode.LATTICE) {
                 // LATTICE mode code puts here!
                 WCPLatticeChecker wcpLatticeChecker = new WCPLatticeChecker(
-                        application, checkerName, normalProcesses);
+                        application, predicateID, checkerName, normalProcesses);
                 Communication wcpLatticecheckerStub = (Communication) UnicastRemoteObject
                         .exportObject(wcpLatticeChecker, 0);
                 server.bind(checkerName, wcpLatticecheckerStub);
@@ -157,7 +157,7 @@ public class CheckerFactory {
 
     }
 
-    public static void createCADAChecker(String callback, String checkerName,
+    public static void createCADAChecker(String callback, String predicateID, String checkerName,
             String[] normalProcesses) {
         // TODO Auto-generated method stub
         try {
@@ -167,7 +167,7 @@ public class CheckerFactory {
             CheckMode checkMode = MIPAResource.getCheckMode();
             if (checkMode == CheckMode.NORMAL) {
                 // NORMAL mode code puts here!
-                CADAChecker checker = new CADAChecker(application, checkerName,
+                CADAChecker checker = new CADAChecker(application, predicateID, checkerName,
                         normalProcesses);
                 Communication checkerStub = (Communication) UnicastRemoteObject
                         .exportObject(checker, 0);
@@ -187,7 +187,7 @@ public class CheckerFactory {
         }
     }
 
-    public static void createSequenceChecker(String callback,
+    public static void createSequenceChecker(String callback, String predicateID, 
             String checkerName, String[] normalProcesses, Structure specification) {
         // TODO Auto-generated method stub
         try {
@@ -199,7 +199,7 @@ public class CheckerFactory {
                 // NORMAL mode code puts here!
             } else if (checkMode == CheckMode.LATTICE) {
                 SequenceLatticeChecker sequenceLatticeChecker = new SequenceLatticeChecker(
-                        application, checkerName, normalProcesses,specification);
+                        application, predicateID, checkerName, normalProcesses,specification);
                 Communication sequenceLatticecheckerStub = (Communication) UnicastRemoteObject
                         .exportObject(sequenceLatticeChecker, 0);
                 server.bind(checkerName, sequenceLatticecheckerStub);

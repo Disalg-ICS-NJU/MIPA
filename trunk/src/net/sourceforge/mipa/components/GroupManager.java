@@ -89,10 +89,7 @@ public class GroupManager {
     public String createGroups(Structure s, PredicateType predicateType,
             String callback) {
         specification = s;
-        Map<String, AbstractGroup> groups = structureGrouping(s, predicateType);
-        analyzeDistribution(groups);
-        PredicateInfo info = parseGroups(groups, predicateType, callback);
-
+        
         String predicateID = null;
         IDManager idManager = MIPAResource.getIDManager();
         try {
@@ -100,6 +97,11 @@ public class GroupManager {
         } catch(Exception e) {
         	e.printStackTrace();
         }
+        
+        Map<String, AbstractGroup> groups = structureGrouping(s, predicateType);
+        analyzeDistribution(groups);
+        PredicateInfo info = parseGroups(groups, predicateType, callback, predicateID);
+
         info.predicateID = predicateID;
         predicates.put(predicateID, info);
         
@@ -206,7 +208,7 @@ public class GroupManager {
     }
 
     private PredicateInfo parseGroups(Map<String, AbstractGroup> groups,
-            PredicateType type, String callback) {
+            PredicateType type, String callback, String predicateID) {
 
         IDManager idManager = MIPAResource.getIDManager();
 
@@ -304,23 +306,23 @@ public class GroupManager {
         switch (type) {
         case OGA:
             allocateAsOGA(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
             break;
         case SCP:
             allocateAsSCP(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
             break;
         case WCP:
             allocateAsWCP(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
             break;
         case CADA:
             allocateAsCADA(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
             break;
         case SEQUENCE:
             allocateAsSequence(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
             break;
         default:
             System.out
@@ -345,7 +347,7 @@ public class GroupManager {
     private void allocateAsSequence(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, int maxLevel) {
+            String callback, String predicateID, int maxLevel) {
         // TODO Auto-generated method stub
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -392,7 +394,7 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createSequenceChecker(callback, checkerName,
+                CheckerFactory.createSequenceChecker(callback, predicateID, checkerName,
                         normalProcesses, specification);
 
                 // create Normal Processes.
@@ -408,7 +410,7 @@ public class GroupManager {
     private void allocateAsOGA(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, int maxLevel) {
+            String callback, String predicateID, int maxLevel) {
 
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -435,7 +437,7 @@ public class GroupManager {
                     String[] childrenArray = new String[childrenList.size()];
                     childrenList.toArray(childrenArray);
                     CheckerFactory
-                            .createOGAChecker(callback, groupToChecker.get(g
+                            .createOGAChecker(callback, predicateID, groupToChecker.get(g
                                     .getGroupId()), fatherArray, childrenArray,
                                     0);
                 }
@@ -460,7 +462,7 @@ public class GroupManager {
                 }
                 String[] childrenArray = new String[childrenList.size()];
                 childrenList.toArray(childrenArray);
-                CheckerFactory.createOGAChecker(null, groupToChecker.get(g
+                CheckerFactory.createOGAChecker(null, predicateID, groupToChecker.get(g
                         .getGroupId()), fatherArray, childrenArray, 1);
             }
         }
@@ -526,7 +528,7 @@ public class GroupManager {
         }
     }
 
-    public void parseOGAStructure(Structure s, String callback) {
+    public void parseOGAStructure(Structure s, String callback, String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
         assert (children != null);
@@ -626,7 +628,7 @@ public class GroupManager {
         topCheckers.toArray(topCheckersArray);
         String[] subCheckersArray = new String[subCheckers.size()];
         subCheckers.toArray(subCheckersArray);
-        CheckerFactory.createOGAChecker(callback, topCheckers.get(0), null,
+        CheckerFactory.createOGAChecker(callback, predicateID, topCheckers.get(0), null,
                 subCheckersArray, 0);
 
         // create sub checkers in OGA.
@@ -635,7 +637,7 @@ public class GroupManager {
             ArrayList<String> subMembers = subGroups.get(subCheckerName);
             String[] subMembersArray = new String[subMembers.size()];
             subMembers.toArray(subMembersArray);
-            CheckerFactory.createOGAChecker(null, subCheckerName,
+            CheckerFactory.createOGAChecker(null, predicateID, subCheckerName,
                     topCheckersArray, subMembersArray, 1);
         }
 
@@ -667,7 +669,7 @@ public class GroupManager {
     private void allocateAsSCP(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, int maxLevel) {
+            String callback, String predicateID, int maxLevel) {
 
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -714,7 +716,7 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createSCPChecker(callback, checkerName,
+                CheckerFactory.createSCPChecker(callback, predicateID, checkerName,
                         normalProcesses);
 
                 // create Normal Processes.
@@ -731,12 +733,12 @@ public class GroupManager {
      * 
      * @param s
      */
-    public void parseSCPStructure(Structure s, String callback) {
+    public void parseSCPStructure(Structure s, String callback, String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
         if (s.getNodeType() == NodeType.GSE) {
             for (int i = 0; i < children.size(); i++) {
-                parseSCPStructure(children.get(i), callback);
+                parseSCPStructure(children.get(i), callback, predicateID);
             }
         } else if (s.getNodeType() == NodeType.CGS) {
             IDManager idManager = MIPAResource.getIDManager();
@@ -785,7 +787,7 @@ public class GroupManager {
             String checkerName = g.getOwners().get(0);
             String[] normalProcesses = new String[g.getMembers().size()];
             g.getMembers().toArray(normalProcesses);
-            CheckerFactory.createSCPChecker(callback, checkerName,
+            CheckerFactory.createSCPChecker(callback, predicateID, checkerName,
                     normalProcesses);
 
             // create Normal Processes.
@@ -799,7 +801,7 @@ public class GroupManager {
     private void allocateAsCADA(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, int maxLevel) {
+            String callback, String predicateID, int maxLevel) {
 
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -847,7 +849,7 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createCADAChecker(callback, checkerName,
+                CheckerFactory.createCADAChecker(callback, predicateID, checkerName,
                         normalProcesses);
 
                 // create Normal Processes.
@@ -863,7 +865,7 @@ public class GroupManager {
     private void allocateAsWCP(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, int maxLevel) {
+            String callback, String predicateID, int maxLevel) {
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
 
@@ -909,7 +911,7 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createWCPChecker(callback, checkerName,
+                CheckerFactory.createWCPChecker(callback, predicateID, checkerName,
                         normalProcesses);
 
                 // create Normal Processes.
@@ -927,12 +929,12 @@ public class GroupManager {
      * @param s
      * @param callback
      */
-    public void parseWCPStructure(Structure s, String callback) {
+    public void parseWCPStructure(Structure s, String callback, String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
         if (s.getNodeType() == NodeType.GSE) {
             for (int i = 0; i < children.size(); i++) {
-                parseWCPStructure(children.get(i), callback);
+                parseWCPStructure(children.get(i), callback, predicateID);
             }
         } else if (s.getNodeType() == NodeType.CGS) {
             IDManager idManager = MIPAResource.getIDManager();
@@ -981,7 +983,7 @@ public class GroupManager {
             String checkerName = g.getOwners().get(0);
             String[] normalProcesses = new String[g.getMembers().size()];
             g.getMembers().toArray(normalProcesses);
-            CheckerFactory.createWCPChecker(callback, checkerName,
+            CheckerFactory.createWCPChecker(callback, predicateID, checkerName,
                     normalProcesses);
 
             // create Normal Processes.

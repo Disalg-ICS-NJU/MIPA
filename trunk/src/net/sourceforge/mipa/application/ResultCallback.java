@@ -34,6 +34,8 @@ public interface ResultCallback extends Remote {
      * 
      * @param value
      *            predicate detection result
+     * @param predicateID
+     * 			  predicate ID
      */
-    public void callback(String value) throws RemoteException;
+    public void callback(String predicateID, String value) throws RemoteException;
 }

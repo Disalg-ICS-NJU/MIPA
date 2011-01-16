@@ -60,10 +60,10 @@ public abstract class LatticeChecker extends AbstractFIFOChecker {
 	/** output the lattice constructor procedure information */
 	private PrintWriter out = null;
 
-	public LatticeChecker(ResultCallback application, String checkerName,
+	public LatticeChecker(ResultCallback application, String predicateID, String checkerName,
 			String[] normalProcesses) {
 
-		super(application, checkerName, normalProcesses);
+		super(application, predicateID, checkerName, normalProcesses);
 
 		dimension = normalProcesses.length;
 		globalState = new LocalState[dimension];

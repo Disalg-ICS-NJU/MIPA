@@ -47,6 +47,7 @@ public class CheckerTestCase implements ResultCallback {
             IDManager idManager = (IDManager) server.lookup("IDManager");
             
             String id = idManager.getID(Catalog.Application);
+            String predicateID = idManager.getID(Catalog.Predicate);
             String checker = idManager.getID(Catalog.Checker);
             
             CheckerTestCase tc = new CheckerTestCase();
@@ -59,7 +60,7 @@ public class CheckerTestCase implements ResultCallback {
             normalProcesses[0] = idManager.getID(Catalog.NormalProcess);
             normalProcesses[1] = idManager.getID(Catalog.NormalProcess);
             
-            CheckerFactory.createSCPChecker(id, checker, normalProcesses);
+            CheckerFactory.createSCPChecker(id, predicateID, checker, normalProcesses);
             
             Communication checkerProcess = (Communication) server.lookup(checker);
             
@@ -168,7 +169,7 @@ public class CheckerTestCase implements ResultCallback {
         }
     }
     
-    public void callback(String value) {
+    public void callback(String predicateID, String value) {
         System.out.println(value);
     }
 }
