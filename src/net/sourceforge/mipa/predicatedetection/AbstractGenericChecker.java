@@ -61,12 +61,17 @@ public abstract class AbstractGenericChecker implements Serializable, Communicat
     
     protected AbstractSender sender;
     
+    protected String predicateID;
+    
     public AbstractGenericChecker(ResultCallback application, 
+    						String predicateID,
                             String checkerName, 
                             String[] children) {
         this.application = application;
         this.name = checkerName;
         this.children = children;
+        
+        this.predicateID = predicateID;
         
         nameToID = new HashMap<String, Integer>();
         for(int i = 0; i < children.length; i++) {

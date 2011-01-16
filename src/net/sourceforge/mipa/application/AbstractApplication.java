@@ -47,29 +47,48 @@ public abstract class AbstractApplication implements ResultCallback {
     private String applicationName;
 
     /** predicate represented by Document. */
-    private Document predicate;
+    //private Document predicate;
 
-    /**
-     * reads predicate from an xml file.
-     * 
-     * @param xmlName
-     *            predicate file name
-     */
-    public AbstractApplication(String xmlName) {
-        this.predicate = parseXml(xmlName);
+    public AbstractApplication() {
+    	try {
+    		String namingAddress = MIPAResource.getNamingAddress();
+
+            if (DEBUG) {
+                System.out.println("naming address is " + namingAddress);
+            }
+    		Naming server = MIPAResource.getNamingServer();
+            if (DEBUG) {
+                System.out.println("application lookup Naming successfully.");
+            }
+
+    		IDManager idManager = MIPAResource.getIDManager();
+    		applicationName = idManager.getID(Catalog.Application);
+
+    		ResultCallback stub = (ResultCallback) UnicastRemoteObject
+                                                   .exportObject(this,
+                                                                  0);
+    		server.bind(applicationName, stub);
+
+            if (DEBUG) {
+                System.out.println("application binds successfully.");
+            }
+            
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    public AbstractApplication(String configFilename) {
+        this();
+    	//this.predicate = parseXml(xmlName);
     }
 
-    /**
-     * reads predicate from <code>Document</code>.
-     * 
-     * @param xml
-     *            predicate <code>Document</code>
-     */
-    public AbstractApplication(Document xml) {
-        this.predicate = xml;
+    public AbstractApplication(Document configFile) {
+    	this();
+        //this.predicate = xml;
     }
 
-    public abstract void callback(String value) throws RemoteException;
+    public abstract void callback(String predicateID, String value) throws RemoteException;
 
     /**
      * starts application.
@@ -78,33 +97,11 @@ public abstract class AbstractApplication implements ResultCallback {
      *            config file name
      * @return predicate ID
      */
-    public String start(String configFileName) {
+    public String start(String predicateFilename) {
 
+    	Document predicate = parseXml(predicateFilename);
     	String predicateID = null;
-        String namingAddress = MIPAResource.getNamingAddress();
-
-        if (DEBUG) {
-            System.out.println("naming address is " + namingAddress);
-        }
-
         try {
-            Naming server = MIPAResource.getNamingServer();
-
-            if (DEBUG) {
-                System.out.println("application lookup Naming successfully.");
-            }
-
-            IDManager idManager = MIPAResource.getIDManager();
-            applicationName = idManager.getID(Catalog.Application);
-
-            ResultCallback stub = (ResultCallback) UnicastRemoteObject
-                                                       .exportObject(this,
-                                                                      0);
-            server.bind(applicationName, stub);
-
-            if (DEBUG) {
-                System.out.println("application binds successfully.");
-            }
 
             // get predicate parser and transfer xml document to it.
 

@@ -51,10 +51,10 @@ public class Application extends AbstractApplication {
     }
     
     @Override
-    public synchronized void callback(String value) throws RemoteException {
+    public synchronized void callback(String predicateID, String value) throws RemoteException {
         //TODO implements application logic
         System.out.println("Result returns:");
-        System.out.println("\t" + value);
+        System.out.println("\t" + predicateID + "\t" + value);
         count++;
         System.out.println("count is " + count);
         try {
@@ -68,8 +68,8 @@ public class Application extends AbstractApplication {
     public static void main(String[] args) {
         int count = Integer.parseInt(args[1]);
         for(int i = 0; i < count; i++) {
-            Application app = new Application("config/predicate/" + args[0]);
-            String predicateID = app.start("config/config.xml");
+            Application app = new Application("config/config.xml");
+            String predicateID = app.start("config/predicate/" + args[0]);
             System.out.println(i);
             /*
             try {

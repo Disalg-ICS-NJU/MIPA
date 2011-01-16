@@ -58,10 +58,14 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
     
     protected AbstractSender sender;
     
+    protected String predicateID;
+    
     public AbstractFIFOChecker(ResultCallback application, 
+    						String predicateID,
                             String checkerName, 
                             String[] children) {
         this.application = application;
+        this.predicateID = predicateID;
         this.name = checkerName;
         this.children = children;
         

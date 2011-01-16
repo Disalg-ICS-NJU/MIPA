@@ -60,11 +60,11 @@ public class SequenceLatticeChecker extends LatticeChecker {
     private boolean flag = false;
     private PrintWriter outTime = null;
     
-    public SequenceLatticeChecker(ResultCallback application,
+    public SequenceLatticeChecker(ResultCallback application, String predicateID, 
             String checkerName, String[] normalProcesses,
             Structure specification) {
         // TODO Auto-generated constructor stub
-        super(application, checkerName, normalProcesses);
+        super(application, predicateID, checkerName, normalProcesses);
         try {
             out = new PrintWriter(LOG_DIRECTORY + "/Sequence.log");
             debug = new PrintWriter(LOG_DIRECTORY + "/Sequence_Debug.log");
@@ -170,7 +170,7 @@ public class SequenceLatticeChecker extends LatticeChecker {
                 if (node.getFlagIntersection() == true) {
                     // detect Def(sequence),output the information
                     try {
-                        application.callback(String.valueOf(true));
+                        application.callback(predicateID, String.valueOf(true));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

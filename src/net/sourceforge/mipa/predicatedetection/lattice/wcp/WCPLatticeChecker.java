@@ -42,9 +42,9 @@ public class WCPLatticeChecker extends LatticeChecker {
 
 	private PrintWriter out = null;
 
-	public WCPLatticeChecker(ResultCallback application, String checkerName,
+	public WCPLatticeChecker(ResultCallback application, String predicateID, String checkerName,
 			String[] normalProcesses) {
-		super(application, checkerName, normalProcesses);
+		super(application, predicateID, checkerName, normalProcesses);
 		// TODO Auto-generated constructor stub
 
 		try {
@@ -84,7 +84,7 @@ public class WCPLatticeChecker extends LatticeChecker {
 					LocalState[] gs = child.getglobalState();
 					for (int i = 0; i < gs.length; i++) {
 						try {
-							application.callback(String.valueOf(true));
+							application.callback(predicateID, String.valueOf(true));
 							String end = i + 1 != children.length ? " "
 									: "\r\n";
 							out.print("[" + gs[i].getvc().toString() + "]"

@@ -45,9 +45,9 @@ public class OGASubChecker extends AbstractFIFOChecker {
 
     private PrintWriter out;
 
-    public OGASubChecker(ResultCallback application, String checkerName,
+    public OGASubChecker(ResultCallback application, String predicateID, String checkerName,
                          String[] topCheckers, String[] children) {
-        super(application, checkerName, children);
+        super(application, predicateID, checkerName, children);
 
         this.topCheckers = topCheckers;
 
