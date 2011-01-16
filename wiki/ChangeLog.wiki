@@ -1,11 +1,11 @@
 #labels Featured
 ===mipa-1.3.2===
 
-    `*` support unregister predicate
+    `*` support unregistering predicate
 
     `*` support sequence
     
-
+    `*` refactor API
 
 ===mipa-1.3.1===
 
