@@ -69,7 +69,7 @@ public class Application extends AbstractApplication {
         int count = Integer.parseInt(args[1]);
         for(int i = 0; i < count; i++) {
             Application app = new Application("config/config.xml");
-            String predicateID = app.start("config/predicate/" + args[0]);
+            String predicateID = app.register("config/predicate/" + args[0]);
             System.out.println(i);
             /*
             try {
@@ -78,7 +78,7 @@ public class Application extends AbstractApplication {
             	
             }
             System.out.println("application stop");
-            app.stop(predicateID);
+            app.unregister(predicateID);
             */
         }
     }

@@ -91,13 +91,13 @@ public abstract class AbstractApplication implements ResultCallback {
     public abstract void callback(String predicateID, String value) throws RemoteException;
 
     /**
-     * starts application.
+     * register predicate
      * 
-     * @param configFileName
-     *            config file name
+     * @param predicateFilename
+     *            predicate file name
      * @return predicate ID
      */
-    public String start(String predicateFilename) {
+    public String register(String predicateFilename) {
 
     	Document predicate = parseXml(predicateFilename);
     	String predicateID = null;
@@ -124,7 +124,7 @@ public abstract class AbstractApplication implements ResultCallback {
     /**
      * unregister the predicate and stop the application.
      */
-    public void stop(String predicateID) {
+    public void unregister(String predicateID) {
     	BrokerInterface broker = MIPAResource.getBroker();
     	try {
     		broker.unregisterPredicate(predicateID);
