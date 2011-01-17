@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import net.sourceforge.mipa.eca.preprocessing.DataDisseminate;
 import net.sourceforge.mipa.eca.sensor.Sensor;
 
 import org.w3c.dom.Document;
