@@ -17,10 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.mipa.eca;
+package net.sourceforge.mipa.eca.preprocessing;
 
 import static config.Debug.DEBUG;
 import java.util.ArrayList;
+
+import net.sourceforge.mipa.eca.DataSource;
 
 /**
  *

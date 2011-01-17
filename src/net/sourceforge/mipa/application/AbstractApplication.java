@@ -122,7 +122,7 @@ public abstract class AbstractApplication implements ResultCallback {
     }
     
     /**
-     * unregister the predicate and stop the application.
+     * unregister the predicate.
      */
     public void unregister(String predicateID) {
     	BrokerInterface broker = MIPAResource.getBroker();

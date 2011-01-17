@@ -19,6 +19,8 @@
  */
 package net.sourceforge.mipa.eca;
 
+import net.sourceforge.mipa.eca.preprocessing.DataDisseminate;
+
 
 /**
  * Sensor Agent.

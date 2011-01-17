@@ -20,6 +20,7 @@
 package net.sourceforge.mipa.eca;
 
 import static config.Debug.DEBUG;
+import net.sourceforge.mipa.eca.preprocessing.DataDisseminate;
 import net.sourceforge.mipa.eca.sensor.RFID;
 import net.sourceforge.mipa.eca.sensor.Sensor;
 
