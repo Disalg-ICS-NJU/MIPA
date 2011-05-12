@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE config SYSTEM "config.dtd">
+<config>
+	<naming>
+		<address>127.0.0.1</address>
+		<port>1099</port>
+	</naming>
+	<!-- normal or lattice -->
+	<checkMode>normal</checkMode>
+	<!-- real or simulated -->
+	<mode>real</mode>
+</config>
