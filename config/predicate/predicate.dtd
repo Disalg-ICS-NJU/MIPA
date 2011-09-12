@@ -1,5 +1,5 @@
 <!ELEMENT predicate (CGSs, specification)>
-<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE) #REQUIRED>
+<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE) #REQUIRED>
 
 <!-- CGS definition -->
 <!ELEMENT CGSs (CGS)+>

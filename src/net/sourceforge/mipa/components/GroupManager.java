@@ -36,14 +36,13 @@ import net.sourceforge.mipa.predicatedetection.NodeType;
 import net.sourceforge.mipa.predicatedetection.PredicateType;
 import net.sourceforge.mipa.predicatedetection.Structure;
 
-
 class PredicateInfo {
-	public String predicateID;
-	
-	public ArrayList<String> checkers;
-	
-	public ArrayList<String> normalProcesses;
-	
+    public String predicateID;
+
+    public ArrayList<String> checkers;
+
+    public ArrayList<String> normalProcesses;
+
 }
 
 /**
@@ -58,11 +57,11 @@ public class GroupManager {
     // private ContextRetrieving retrieving;
 
     private ResourceManager resourceManager;
-    
+
     private HashMap<String, PredicateInfo> predicates;
 
     private Broker broker;
-    
+
     private Structure specification;
 
     public GroupManager(ResourceManager resourceManager) {
@@ -70,57 +69,59 @@ public class GroupManager {
         this.broker = null;
         predicates = new HashMap<String, PredicateInfo>();
     }
-    
+
     public void setBroker(Broker broker) {
-    	this.broker = broker;
+        this.broker = broker;
     }
 
     public PredicateInfo getPredicateInfo(String predicateID) {
-    	if(predicates.containsKey(predicateID)) {
-    		return predicates.get(predicateID);
-    	}
-    	return null;
+        if (predicates.containsKey(predicateID)) {
+            return predicates.get(predicateID);
+        }
+        return null;
     }
-    
+
     public void removePredicateInfo(String predicateID) {
-    	if(predicates.containsKey(predicateID)) predicates.remove(predicateID);
+        if (predicates.containsKey(predicateID))
+            predicates.remove(predicateID);
     }
-    
+
     public String createGroups(Structure s, PredicateType predicateType,
             String callback) {
         specification = s;
-        
+
         String predicateID = null;
         IDManager idManager = MIPAResource.getIDManager();
         try {
-        	predicateID = idManager.getID(Catalog.Predicate);
-        } catch(Exception e) {
-        	e.printStackTrace();
+            predicateID = idManager.getID(Catalog.Predicate);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        
+
         Map<String, AbstractGroup> groups = structureGrouping(s, predicateType);
         analyzeDistribution(groups);
-        PredicateInfo info = parseGroups(groups, predicateType, callback, predicateID);
+        PredicateInfo info = parseGroups(groups, predicateType, callback,
+                predicateID);
 
         info.predicateID = predicateID;
         predicates.put(predicateID, info);
-        
+
         if (DEBUG) {
-        	System.out.println("predicates info:");
-        	PredicateInfo pInfo = predicates.get(predicateID);
-        	System.out.println("\tpredicate id: " + pInfo.predicateID);
-        	System.out.println("\tcheckers:");
-        	for(int i = 0; i < pInfo.checkers.size(); i++) 
-        		System.out.println("\t\t" + pInfo.checkers.get(i));
-        	System.out.println("\tnormal processes:");
-        	for(int i = 0; i < pInfo.normalProcesses.size(); i++)
-        		System.out.println("\t\t" + pInfo.normalProcesses.get(i));
+            System.out.println("predicates info:");
+            PredicateInfo pInfo = predicates.get(predicateID);
+            System.out.println("\tpredicate id: " + pInfo.predicateID);
+            System.out.println("\tcheckers:");
+            for (int i = 0; i < pInfo.checkers.size(); i++)
+                System.out.println("\t\t" + pInfo.checkers.get(i));
+            System.out.println("\tnormal processes:");
+            for (int i = 0; i < pInfo.normalProcesses.size(); i++)
+                System.out.println("\t\t" + pInfo.normalProcesses.get(i));
         }
-        
+
         if (EXPERIMENT) {
             Runtime.getRuntime().gc();
         }
-        
+
         return predicateID;
     }
 
@@ -131,20 +132,20 @@ public class GroupManager {
         Structure CGSsNode = structure.get(0);
         Structure GSENode = structure.get(1);
         Structure groupNode;
-        if (predicateType.equals(PredicateType.SEQUENCE)) {
-            Structure GSE = new Composite(NodeType.GSE,"GSE");
-            Structure CGS = new Composite(NodeType.CGS,"CGS");
+        if (predicateType.equals(PredicateType.SEQUENCE)
+                || predicateType.equals(PredicateType.SURSEQUENCE)) {
+            Structure GSE = new Composite(NodeType.GSE, "GSE");
+            Structure CGS = new Composite(NodeType.CGS, "CGS");
             GSE.add(CGS);
             ArrayList<Structure> CGSNode = CGSsNode.getChildren();
-            for(int i=0;i<CGSNode.size();i++) {
+            for (int i = 0; i < CGSNode.size(); i++) {
                 ArrayList<Structure> LPsNode = CGSNode.get(i).getChildren();
-                for(int j=0;j<LPsNode.size();j++) {
+                for (int j = 0; j < LPsNode.size(); j++) {
                     CGS.add(LPsNode.get(j));
                 }
             }
             groupNode = GSE;
-        }
-        else {
+        } else {
             groupNode = GSENode;
         }
         IDManager idManager = MIPAResource.getIDManager();
@@ -291,57 +292,132 @@ public class GroupManager {
                         + localPredicateToNormalProcess.get(lp));
             }
         }
-        
+
         Structure node = specification.getChildren().get(0);
-        for(int i=0;i<node.getChildren().size();i++) {
+        for (int i = 0; i < node.getChildren().size(); i++) {
             Structure CGS = node.getChildren().get(i);
-            for(int j=0;j<CGS.getChildren().size();j++) {
+            for (int j = 0; j < CGS.getChildren().size(); j++) {
                 Structure LP = CGS.getChildren().get(j);
-                assert(LP instanceof LocalPredicate);
-                String normalProcess = localPredicateToNormalProcess.get(((LocalPredicate)LP));
-                ((LocalPredicate)LP).setNormalProcess(normalProcess);
+                assert (LP instanceof LocalPredicate);
+                String normalProcess = localPredicateToNormalProcess
+                        .get(((LocalPredicate) LP));
+                ((LocalPredicate) LP).setNormalProcess(normalProcess);
             }
         }
-        
+
         switch (type) {
         case OGA:
             allocateAsOGA(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID,
+                    maxLevel);
             break;
         case SCP:
             allocateAsSCP(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID,
+                    maxLevel);
             break;
         case WCP:
             allocateAsWCP(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID,
+                    maxLevel);
             break;
         case CADA:
             allocateAsCADA(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID,
+                    maxLevel);
             break;
         case SEQUENCE:
             allocateAsSequence(groups, groupToChecker,
-                    localPredicateToNormalProcess, callback, predicateID, maxLevel);
+                    localPredicateToNormalProcess, callback, predicateID,
+                    maxLevel);
+            break;
+        case SURSEQUENCE:
+            allocateAsSurfaceSequence(groups, groupToChecker,
+                    localPredicateToNormalProcess, callback, predicateID,
+                    maxLevel);
             break;
         default:
             System.out
                     .println("This predicate type have not been implemented yet.");
         }
-        
-        
+
         PredicateInfo info = new PredicateInfo();
         ArrayList<String> checkers = new ArrayList<String>();
         ArrayList<String> normalProcesses = new ArrayList<String>();
-        for(String s : groupToChecker.keySet()) {
-        	checkers.add(groupToChecker.get(s));
+        for (String s : groupToChecker.keySet()) {
+            checkers.add(groupToChecker.get(s));
         }
-        for(LocalPredicate lp : localPredicateToNormalProcess.keySet()) {
-        	normalProcesses.add(localPredicateToNormalProcess.get(lp));
+        for (LocalPredicate lp : localPredicateToNormalProcess.keySet()) {
+            normalProcesses.add(localPredicateToNormalProcess.get(lp));
         }
         info.checkers = checkers;
         info.normalProcesses = normalProcesses;
         return info;
+    }
+
+    private void allocateAsSurfaceSequence(Map<String, AbstractGroup> groups,
+            Map<String, String> groupToChecker,
+            Map<LocalPredicate, String> localPredicateToNormalProcess,
+            String callback, String predicateID, int maxLevel) {
+        // TODO Auto-generated method stub
+        IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+
+        // start checker for level > 0
+        for (int i = maxLevel; i > 0; i--) {
+
+        }
+
+        // check the level == 0
+        for (String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if (g.getLevel() == 0) {
+                String gid = g.getGroupId();
+
+                // current Implementation is that father of sequence checker is
+                // null;
+
+                ArrayList<Object> children = g.getChildren();
+                ArrayList<String> owners = new ArrayList<String>();
+                ArrayList<String> members = new ArrayList<String>();
+                owners.add(groupToChecker.get(gid));
+                for (int i = 0; i < children.size(); i++) {
+                    members.add(localPredicateToNormalProcess.get(children
+                            .get(i)));
+                }
+                // create group
+                String groupId = null;
+                try {
+                    groupId = idManager.getID(Catalog.Group);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Group ng = new Group(groupId, owners, members,
+                        PredicateType.SURSEQUENCE);
+                ng.setCoordinatorID(groupId);
+
+                try {
+                    coordinator.newCoordinator(ng);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String checkerName = ng.getOwners().get(0);
+                String[] normalProcesses = new String[ng.getMembers().size()];
+                ng.getMembers().toArray(normalProcesses);
+                CheckerFactory.createSequenceSurfaceChecker(callback,
+                        predicateID, checkerName, normalProcesses,
+                        specification);
+
+                // create Normal Processes.
+                for (int i = 0; i < children.size(); i++) {
+                    broker.registerLocalPredicate((LocalPredicate) children
+                            .get(i), localPredicateToNormalProcess.get(children
+                            .get(i)), ng);
+                }
+            }
+        }
     }
 
     private void allocateAsSequence(Map<String, AbstractGroup> groups,
@@ -363,7 +439,8 @@ public class GroupManager {
             if (g.getLevel() == 0) {
                 String gid = g.getGroupId();
 
-                // current Implementation is that father of sequence checker is null;
+                // current Implementation is that father of sequence checker is
+                // null;
 
                 ArrayList<Object> children = g.getChildren();
                 ArrayList<String> owners = new ArrayList<String>();
@@ -394,8 +471,8 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createSequenceChecker(callback, predicateID, checkerName,
-                        normalProcesses, specification);
+                CheckerFactory.createSequenceChecker(callback, predicateID,
+                        checkerName, normalProcesses, specification);
 
                 // create Normal Processes.
                 for (int i = 0; i < children.size(); i++) {
@@ -436,10 +513,9 @@ public class GroupManager {
                     }
                     String[] childrenArray = new String[childrenList.size()];
                     childrenList.toArray(childrenArray);
-                    CheckerFactory
-                            .createOGAChecker(callback, predicateID, groupToChecker.get(g
-                                    .getGroupId()), fatherArray, childrenArray,
-                                    0);
+                    CheckerFactory.createOGAChecker(callback, predicateID,
+                            groupToChecker.get(g.getGroupId()), fatherArray,
+                            childrenArray, 0);
                 }
             }
         }
@@ -462,8 +538,9 @@ public class GroupManager {
                 }
                 String[] childrenArray = new String[childrenList.size()];
                 childrenList.toArray(childrenArray);
-                CheckerFactory.createOGAChecker(null, predicateID, groupToChecker.get(g
-                        .getGroupId()), fatherArray, childrenArray, 1);
+                CheckerFactory.createOGAChecker(null, predicateID,
+                        groupToChecker.get(g.getGroupId()), fatherArray,
+                        childrenArray, 1);
             }
         }
 
@@ -528,7 +605,8 @@ public class GroupManager {
         }
     }
 
-    public void parseOGAStructure(Structure s, String callback, String predicateID) {
+    public void parseOGAStructure(Structure s, String callback,
+            String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
         assert (children != null);
@@ -628,8 +706,8 @@ public class GroupManager {
         topCheckers.toArray(topCheckersArray);
         String[] subCheckersArray = new String[subCheckers.size()];
         subCheckers.toArray(subCheckersArray);
-        CheckerFactory.createOGAChecker(callback, predicateID, topCheckers.get(0), null,
-                subCheckersArray, 0);
+        CheckerFactory.createOGAChecker(callback, predicateID, topCheckers
+                .get(0), null, subCheckersArray, 0);
 
         // create sub checkers in OGA.
         for (int i = 0; i < subCheckers.size(); i++) {
@@ -716,8 +794,8 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createSCPChecker(callback, predicateID, checkerName,
-                        normalProcesses);
+                CheckerFactory.createSCPChecker(callback, predicateID,
+                        checkerName, normalProcesses);
 
                 // create Normal Processes.
                 for (int i = 0; i < children.size(); i++) {
@@ -733,7 +811,8 @@ public class GroupManager {
      * 
      * @param s
      */
-    public void parseSCPStructure(Structure s, String callback, String predicateID) {
+    public void parseSCPStructure(Structure s, String callback,
+            String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
         if (s.getNodeType() == NodeType.GSE) {
@@ -849,8 +928,8 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createCADAChecker(callback, predicateID, checkerName,
-                        normalProcesses);
+                CheckerFactory.createCADAChecker(callback, predicateID,
+                        checkerName, normalProcesses);
 
                 // create Normal Processes.
                 for (int i = 0; i < children.size(); i++) {
@@ -911,8 +990,8 @@ public class GroupManager {
                 String checkerName = ng.getOwners().get(0);
                 String[] normalProcesses = new String[ng.getMembers().size()];
                 ng.getMembers().toArray(normalProcesses);
-                CheckerFactory.createWCPChecker(callback, predicateID, checkerName,
-                        normalProcesses);
+                CheckerFactory.createWCPChecker(callback, predicateID,
+                        checkerName, normalProcesses);
 
                 // create Normal Processes.
                 for (int i = 0; i < children.size(); i++) {
@@ -929,7 +1008,8 @@ public class GroupManager {
      * @param s
      * @param callback
      */
-    public void parseWCPStructure(Structure s, String callback, String predicateID) {
+    public void parseWCPStructure(Structure s, String callback,
+            String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
         if (s.getNodeType() == NodeType.GSE) {

@@ -34,6 +34,7 @@ import net.sourceforge.mipa.components.ExponentDelayMessageDispatcher;
 import net.sourceforge.mipa.components.GroupManager;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.MessageDispatcher;
+import net.sourceforge.mipa.components.NoDelayMessageDispatcher;
 import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.components.rm.SimpleResourceManager;
 import net.sourceforge.mipa.naming.IDManager;

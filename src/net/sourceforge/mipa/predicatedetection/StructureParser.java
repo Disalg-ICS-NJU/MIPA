@@ -122,7 +122,13 @@ public class StructureParser {
             node = node.getNextSibling();
             if(node.getNodeType() == Node.ELEMENT_NODE) {
                 if (node.getNodeName().equals("GSE")) {
-                    Structure GSENode = new Composite(NodeType.GSE, "GSE");
+                    Structure GSENode = null;
+                    if(prefix.equals("def")) {
+                        GSENode = new Composite(NodeType.DEF, "GSE");
+                    }
+                    else{
+                        GSENode = new Composite(NodeType.POS, "GSE");
+                    }
                     result.add(GSENode);
                     if(DEBUG){
                         System.out.println("----GSE");

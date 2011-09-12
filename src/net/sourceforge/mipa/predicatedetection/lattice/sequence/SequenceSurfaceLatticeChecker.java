@@ -38,8 +38,8 @@ import net.sourceforge.mipa.predicatedetection.NodeType;
 import net.sourceforge.mipa.predicatedetection.RegularExpression;
 import net.sourceforge.mipa.predicatedetection.State;
 import net.sourceforge.mipa.predicatedetection.Structure;
-import net.sourceforge.mipa.predicatedetection.lattice.AbstractLatticeNode;
-import net.sourceforge.mipa.predicatedetection.lattice.LatticeChecker;
+import net.sourceforge.mipa.predicatedetection.lattice.AbstractLatticeIDNode;
+import net.sourceforge.mipa.predicatedetection.lattice.LatticeSurfaceChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.LocalState;
 
 /**
@@ -47,28 +47,25 @@ import net.sourceforge.mipa.predicatedetection.lattice.LocalState;
  * @author Yiling Yang <csylyang@gmail.com>
  * 
  */
-public class SequenceLatticeChecker extends LatticeChecker {
+public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
     private static final long serialVersionUID = -4389010288731310197L;
 
-    private SequenceLatticeNode precedeNode = null;;
+    // private SequenceLatticeIDNode precedeNode = null;;
     private PrintWriter out = null;
     private PrintWriter debug = null;
     private int count;
     private HashMap<String, ArrayList<String>> CGSToNPs;
     private RegularExpression predicate;
     private Automaton automaton;
-    private boolean flag = false;
-    private PrintWriter outTime = null;
-    
-    public SequenceLatticeChecker(ResultCallback application, String predicateID, 
-            String checkerName, String[] normalProcesses,
+    private NodeType type;
+
+    public SequenceSurfaceLatticeChecker(ResultCallback application,
+            String predicateID, String checkerName, String[] normalProcesses,
             Structure specification) {
-        // TODO Auto-generated constructor stub
         super(application, predicateID, checkerName, normalProcesses);
         try {
-            out = new PrintWriter(LOG_DIRECTORY + "/Sequence.log");
-            debug = new PrintWriter(LOG_DIRECTORY + "/Sequence_Debug.log");
-            outTime = new PrintWriter(LOG_DIRECTORY + "/Sequence_Time.log");
+            out = new PrintWriter(LOG_DIRECTORY + "/SurSequence.log");
+            debug = new PrintWriter(LOG_DIRECTORY + "/SurSequence_Debug.log");
             out.println("Start...");
             debug.println("Start...");
         } catch (Exception e) {
@@ -78,25 +75,141 @@ public class SequenceLatticeChecker extends LatticeChecker {
         CGSToNPs = new HashMap<String, ArrayList<String>>();
         getCGSToNPs(specification);
         parsePredicateToAutomaton(specification);
+        ((SequenceLatticeIDNode) getStartNode()).addReachedStates(automaton
+                .getInitialState());
+        ((SequenceLatticeIDNode) getStartNode()).setVisited(true);
     }
 
-    @Override
-    public void check(AbstractLatticeNode startNode,
-            AbstractLatticeNode currentNode) {
-        // TODO Auto-generated method stub
-        if(flag == false) {
-            Long start = (new Date()).getTime();
-            ((SequenceLatticeNode) currentNode).setTailFlag(true);
-            detectSequence((SequenceLatticeNode) currentNode);
-            precedeNode = (SequenceLatticeNode) currentNode;
-            ((SequenceLatticeNode) currentNode).setVisited(true);
-            long end = (new Date()).getTime();
-            outTime.println(end-start);
-            outTime.flush();
+    public void check(AbstractLatticeIDNode currentNode) {
+        if (getFlag() == false) {
+            boolean result = false;
+            if (type == NodeType.DEF) {
+                result = true;
+            } else if (type == NodeType.POS) {
+                result = false;
+            }
+            
+            Set<String> keySet = getMappedLattice().keySet();
+            Iterator<String> it = keySet.iterator();
+            while (it.hasNext()) {
+                String ind = it.next();
+                String[] index = ind.split(" ");
+                boolean flag = false;
+                for (int i = 0; i < children.length; i++) {
+                    if (Integer.valueOf(index[i]) == getLocalStateSet()
+                            .get(i).size() - 1) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag == true){
+                    if (type == NodeType.DEF) {
+                        result = result && ((SequenceLatticeIDNode)getMappedLattice().get(ind)).getFlagInclusion();
+                        if (result == false) {
+                            return;
+                        }
+                    } else if (type == NodeType.POS) {
+                        result = ((SequenceLatticeIDNode)getMappedLattice().get(ind)).getFlagIntersection();
+                        if (result == true) {
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            
+            /*ArrayList<SequenceLatticeIDNode> set = new ArrayList<SequenceLatticeIDNode>();
+            for (int i = 0; i < children.length; i++) {
+                if (getExtremaSurfaceNodes()[i] != null) {
+                    if (!set
+                            .contains((SequenceLatticeIDNode) (getExtremaSurfaceNodes()[i]))) {
+                        set
+                                .add((SequenceLatticeIDNode) getExtremaSurfaceNodes()[i]);
+                    }
+                }
+            }
+
+            
+            while (!set.isEmpty()) {
+                SequenceLatticeIDNode node = set.remove(0);
+                if (type == NodeType.DEF) {
+                    result = result && node.getFlagInclusion();
+                    if (result == false) {
+                        return;
+                    }
+                } else if (type == NodeType.POS) {
+                    result = node.getFlagIntersection();
+                    if (result == true) {
+                        break;
+                    }
+                }
+                ArrayList<AbstractLatticeIDNode> sub = sub(node);
+                if (!sub.isEmpty()) {
+                    int num = sub.size();
+                    for (int j = 0; j < num; j++) {
+                        SequenceLatticeIDNode subNode = (SequenceLatticeIDNode) sub
+                                .remove(0);
+                        if (!set.contains(subNode)) {
+                            set.add(subNode);
+                        }
+                    }
+                }
+            }*/
+
+            if (result == true) {
+                if(count == 0) {
+                    try {
+                        application.callback(predicateID, String.valueOf(true));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                long time_1 = (new Date()).getTime();
+
+                count++;
+                if(count == 1) {
+                    out.println(count + ": ");
+                    out.println("==========surface nodes==========");
+    
+                    keySet = getMappedLattice().keySet();
+                    it = keySet.iterator();
+                    while (it.hasNext()) {
+                        String id = it.next();
+                        String[] index = id.split(" ");
+                        boolean flag = false;
+                        for (int i = 0; i < children.length; i++) {
+                            if (Integer.valueOf(index[i]) == getLocalStateSet()
+                                    .get(i).size() - 1) {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if(flag == true){
+                            out.print("id: " + id);
+                            out.print(" reachedStates: ");
+                            Iterator<State> iterator = ((SequenceLatticeIDNode) getMappedLattice()
+                                    .get(id)).getReachedStates().iterator();
+                            while (iterator.hasNext()) {
+                                out.print(iterator.next().getName() + " ");
+                            }
+                            out.print("Intevals: ");
+                            for (int i = 0; i < children.length; i++) {
+                                String end = i + 1 != children.length ? " " : " \r\n";
+                                out.print(((SequenceLatticeIDNode) getMappedLattice()
+                                        .get(id)).getGlobalState()[i].getintervalID() + end);
+                                out.flush();
+                            }
+                        }
+                    }
+                    out.flush();
+                }
+                setFlag(true);//
+                wastedTime += (new Date()).getTime() - time_1;
+            }
         }
     }
 
-    private void computeCGS(SequenceLatticeNode node) {
+    private void computeCGS(SequenceLatticeIDNode node) {
         Set<String> CGSs = CGSToNPs.keySet();
         Iterator<String> it = CGSs.iterator();
         while (it.hasNext()) {
@@ -109,105 +222,71 @@ public class SequenceLatticeChecker extends LatticeChecker {
                 assert (c.length == 2);
                 int npIndex = Integer.valueOf(c[1]);
                 result = result
-                        && (node.getglobalState()[npIndex].getlocalPredicate());
+                        && (node.getGlobalState()[npIndex].getlocalPredicate());
             }
             if (result == true) {
                 node.addSatisfiedPredicates(CGS.charAt(0));
             }
         }
-        //add {}
-        if(node.getSatisfiedPredicates().trim().equals("")) {
+        // add {}
+        if (node.getSatisfiedPredicates().trim().equals("")) {
             node.addSatisfiedPredicates('z');
         }
+        node.setVisited(true);
     }
 
-    private void detectSequence(SequenceLatticeNode node) {
-        // TODO Auto-generated method stub
+    private void detectSequence(SequenceLatticeIDNode node) {
         computeCGS(node);
-        ArrayList<SequenceLatticeNode> precede = new ArrayList<SequenceLatticeNode>();
-        for (int i = 0; i < node.getprevious().size(); i++) {
-            precede.add((SequenceLatticeNode) node.getprevious().get(i));
+        ArrayList<SequenceLatticeIDNode> precede = new ArrayList<SequenceLatticeIDNode>();
+        ArrayList<AbstractLatticeIDNode> prec = prec(node);
+        for (int i = 0; i < prec.size(); i++) {
+            precede.add((SequenceLatticeIDNode) prec.get(i));
         }
 
-        // if the node is the initial node, precede is null.
-        if (precede.size() == 0) {
-            precedeNode = node;
-            node.addReachedStates(automaton.getInitialState());
-        }
-        else {
-            Iterator<SequenceLatticeNode> it = precede.iterator();
-            while (it.hasNext()) {
-                SequenceLatticeNode predNode = it.next();
-                if (predNode.getVisited() == false) {
-                    detectSequence(predNode);
-                    predNode.setVisited(true);
-                }
-            }
-    
-            it = precede.iterator();
-            while (it.hasNext()) {
-                SequenceLatticeNode preNode = it.next();
-                HashSet<State> precedeState = preNode.getReachedStates();
-                Iterator<State> iterator = precedeState.iterator();
-                while (iterator.hasNext()) {
-                    State state = iterator.next();
-                    String[] satisfiedPredicate = node.getSatisfiedPredicates()
-                            .split(" ");
-                    for (int i = 0; i < satisfiedPredicate.length; i++) {
-                        if(!satisfiedPredicate[i].equals("")) {
-                            char c = satisfiedPredicate[i].charAt(0);
-                            State step = state.step(c);
-                            node.addReachedStates(step);
-                        }
+        /*
+         * if the node is the initial node, precede is null. if (node.getID() ==
+         * getStartNode().getID()) {
+         * node.addReachedStates(automaton.getInitialState()); } else {
+         */
+        /*
+         * Iterator<SequenceLatticeIDNode> it = precede.iterator(); while
+         * (it.hasNext()) { SequenceLatticeIDNode predNode = it.next(); if
+         * (predNode.getVisited() == false) { detectSequence(predNode);
+         * predNode.setVisited(true); } }
+         */
+
+        Iterator<SequenceLatticeIDNode> it = precede.iterator();
+        while (it.hasNext()) {
+            SequenceLatticeIDNode preNode = it.next();
+            HashSet<State> precedeState = preNode.getReachedStates();
+            Iterator<State> iterator = precedeState.iterator();
+            while (iterator.hasNext()) {
+                State state = iterator.next();
+                String[] satisfiedPredicate = node.getSatisfiedPredicates()
+                        .split(" ");
+                for (int i = 0; i < satisfiedPredicate.length; i++) {
+                    if (!satisfiedPredicate[i].equals("")) {
+                        char c = satisfiedPredicate[i].charAt(0);
+                        State step = state.step(c);
+                        node.addReachedStates(step);
                     }
-                }
-            }
-            
-            if (node.getTailFlag() == true) {
-                computePredicate(node);
-                //pos: Intersection
-                //def: Inclusion
-                if (node.getFlagIntersection() == true) {
-                    // detect Def(sequence),output the information
-                    try {
-                        application.callback(predicateID, String.valueOf(true));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    count++;
-                    out.print(count + ": ");
-                    String[] s = node.getID();
-                    for (int i = 0; i < s.length; i++) {
-                        out.print(s[i] + " ");
-                    }
-                    out.print(": reachedStates: ");
-                    Iterator<State> iterator = node.getReachedStates().iterator();
-                    while(iterator.hasNext()) {
-                        out.print(iterator.next().getName()+" ");
-                    }
-                    out.print(": ");
-                    out.println("tail: "+node.getTailFlag());
-                    out.print("IntervalID: ");
-                    for(int i=0;i<node.getglobalState().length;i++) {
-                        out.print(node.getglobalState()[i].getintervalID() + " ");
-                    }
-                    out.println();
-                    out.flush();
-                    flag = true;
                 }
             }
         }
-        if(DEBUG) {
+        computePredicate(node);
+        /* } */
+        if (DEBUG) {
+            long time_1 = (new Date()).getTime();
             String[] s = node.getID();
             for (int i = 0; i < s.length; i++) {
                 debug.print(s[i] + " ");
                 debug.flush();
             }
             debug.print(": ");
-            LocalState[] gs = node.getglobalState();
+            LocalState[] gs = node.getGlobalState();
             for (int i = 0; i < gs.length; i++) {
                 // String end = i + 1 != children.length ? " " : "\r\n";
-                debug.print(gs[i].getlocalPredicate()+ " ");
+                debug.print(gs[i].getlocalPredicate() + " ");
                 debug.flush();
             }
             debug.print(": SatisfiedPredicates: ");
@@ -216,17 +295,17 @@ public class SequenceLatticeChecker extends LatticeChecker {
             debug.print("reachedStates: ");
             debug.flush();
             Iterator<State> iterator = node.getReachedStates().iterator();
-            while(iterator.hasNext()) {
-                debug.print(iterator.next().getName()+" ");
+            while (iterator.hasNext()) {
+                debug.print(iterator.next().getName() + " ");
                 debug.flush();
             }
-            debug.print(": ");
-            debug.println("tail: "+node.getTailFlag());
+            debug.println();
             debug.flush();
+            wastedTime += (new Date()).getTime() - time_1;
         }
     }
 
-    private void computePredicate(SequenceLatticeNode node) {
+    private void computePredicate(SequenceLatticeIDNode node) {
         boolean flagIntersection = false;
         boolean flagInclusion = true;
         HashSet<State> reachedStates = node.getReachedStates();
@@ -252,20 +331,18 @@ public class SequenceLatticeChecker extends LatticeChecker {
                 break;
             }
         }
-        if(reachedStates.isEmpty()) {
+        if (reachedStates.isEmpty()) {
             node.setFlagInclusion(false);
             node.setFlagIntersection(false);
-        }
-        else {
+        } else {
             node.setFlagInclusion(flagInclusion);
             node.setFlagIntersection(flagIntersection);
         }
     }
 
     @Override
-    public SequenceLatticeNode createNode(LocalState[] globalState, String[] s) {
-        // TODO Auto-generated method stub
-        SequenceLatticeNode node = new SequenceLatticeNode(globalState, s);
+    public SequenceLatticeIDNode createNode(LocalState[] globalState, String[] s) {
+        SequenceLatticeIDNode node = new SequenceLatticeIDNode(globalState, s);
         return node;
     }
 
@@ -288,6 +365,7 @@ public class SequenceLatticeChecker extends LatticeChecker {
 
     private void parsePredicateToAutomaton(Structure specification) {
         Structure GSE = specification.getChildren().get(1);
+        type = GSE.getNodeType();
         predicate = parsePredicateToRegExp(GSE);
         predicate = modifyRegularExpression(predicate);
         automaton = parseRegExpToAutomaton(predicate);
@@ -318,20 +396,23 @@ public class SequenceLatticeChecker extends LatticeChecker {
             System.out.println("========================================");
             System.out.println("Parse regular expression to automaton:");
         }
+        long time_1 = (new Date()).getTime();
         Automaton a = new Automaton(regularExpression);
+        long time_2 = (new Date()).getTime();
         if (DEBUG) {
             System.out.println(a.toString());
             System.out.println("Parse over");
+            System.out.println("Parse time: " + (time_2 - time_1));
             System.out.println("----------------------------------------");
             System.out.println();
         }
-        if(DEBUG) {
+        if (DEBUG) {
             debug.print("initialState: ");
             debug.println(a.getInitialState().getName());
             debug.print("acceptStates: ");
             Iterator<State> it = a.getAcceptStates().iterator();
-            while(it.hasNext()) {
-                debug.print(it.next().getName()+" ");
+            while (it.hasNext()) {
+                debug.print(it.next().getName() + " ");
             }
             debug.println();
             debug.flush();
@@ -378,9 +459,9 @@ public class SequenceLatticeChecker extends LatticeChecker {
                 result += "|(" + identifier + ")";
             }
         }
-        //add {}
+        // add {}
         result += "|(" + "z" + ")";
-        
+
         result = "((" + result + ")*)";
         result = result + expression + result;
         RegularExpression predicate = new RegularExpression(result);
@@ -450,5 +531,17 @@ public class SequenceLatticeChecker extends LatticeChecker {
         }
         }
         return result;
+    }
+
+    public void checkOnNode(AbstractLatticeIDNode node) {
+        // TODO Auto-generated method stub
+        detectSequence((SequenceLatticeIDNode) node);
+    }
+
+    public void repeatCallBack() {
+        // TODO Auto-generated method stub
+        if (DEBUG) {
+            System.out.println("=====repeatCallBack=====");
+        }
     }
 }
