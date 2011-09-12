@@ -28,11 +28,17 @@ public class LocalState {
 
 	protected int processID;
 	
-	protected int intervalID;
+    protected int intervalID;
 
 	protected LatticeVectorClock vc;
 
 	protected boolean localPredicate;
+	
+	public LocalState(int pID, LatticeVectorClock lvc, boolean lp) {
+        processID = pID;
+        vc = new LatticeVectorClock(lvc);
+        localPredicate = lp;
+    }
 
 	public LocalState(int pID, int iID, LatticeVectorClock lvc, boolean lp) {
 		processID = pID;
@@ -59,4 +65,11 @@ public class LocalState {
 		return vc;
 	}
 
+	public int getProcessID() {
+        return processID;
+    }
+
+    public void setProcessID(int processID) {
+        this.processID = processID;
+    }
 }

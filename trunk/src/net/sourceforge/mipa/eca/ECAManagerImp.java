@@ -244,6 +244,13 @@ public class ECAManagerImp implements ECAManager {
                             sequenceNP, 0);
                     action = sequenceNP;
                     break;
+                case SURSEQUENCE:
+                    SequenceLatticeNormalProcess surSequenceNP = new SequenceLatticeNormalProcess(
+                            name, checkers, normalProcesses);
+                    npStub = (NormalProcess) UnicastRemoteObject.exportObject(
+                            surSequenceNP, 0);
+                    action = surSequenceNP;
+                    break;
                 default:
                     System.out.println("Type " + g.getType()
                             + " has not been defined.");

@@ -46,7 +46,8 @@ public class DataSourceImp implements DataSource {
                                                              throws RemoteException {
 
         if(DEBUG) {
-            System.out.println("attaching condtion to data source...");
+            System.out.println();
+            System.out.println("attaching condition to data source...");
         }
         
         if (map.containsKey(eventName) == false) {
