@@ -19,67 +19,46 @@
  */
 package net.sourceforge.mipa;
 
-import java.io.PrintWriter;
-import java.rmi.RemoteException;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.rmi.NotBoundException;
 import net.sourceforge.mipa.application.AbstractApplication;
+import net.sourceforge.mipa.application.OnRegister;
+import net.sourceforge.mipa.application.ResultCallback;
+import net.sourceforge.mipa.components.MIPAResource;
 
-/**
- * MIPA application.
- *
- * @author Jianping Yu <jianp.yue@gmail.com>
- */
 public class Application extends AbstractApplication {
-    
-    int count;
-    
-    PrintWriter out;
-    /**
-     * <code>Application</code> construction.
-     * 
-     * @param fileName
-     *            a file contains predicate
-     */
-    public Application(String fileName) {
-        super(fileName);
-        count = 0;
-        try {
-            out = new PrintWriter("log/application_count.log");
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @Override
-    public synchronized void callback(String predicateID, String value) throws RemoteException {
-        //TODO implements application logic
-        System.out.println("Result returns:");
-        System.out.println("\t" + predicateID + "\t" + value);
-        count++;
-        System.out.println("count is " + count);
-        try {
-            out.println(count);
-            out.flush();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static void main(String[] args) {
-        int count = Integer.parseInt(args[1]);
-        for(int i = 0; i < count; i++) {
-            Application app = new Application("config/config.xml");
-            String predicateID = app.register("config/predicate/" + args[0]);
-            System.out.println(i);
-            /*
-            try {
-            	Thread.sleep(5000);
-            } catch (Exception e) {
-            	
-            }
-            System.out.println("application stop");
-            app.unregister(predicateID);
-            */
-        }
-    }
+	public Application() {
+		super();
+	}
+
+	public void run() throws NotBoundException, IOException {
+		System.out.println("Context-aware application starts successfully.");
+		while(true) {
+			System.out.println("----------------------------");
+			System.out.println("1: Register predicate");
+			System.out.println("2: UnRegister predicate");
+			System.out.println("3: Exit");
+			System.out.println("Please enter the function number:");
+			BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+			String input = in.readLine();
+			if(input.trim().equals("1")) {
+				MIPAResource.setCheckMode("normal");
+				ResultCallback onRegister = new OnRegister();
+				register("config/predicate/fire.xml", onRegister, "fire");
+			}else if(input.trim().equals("2")) {
+				unregister("fire");
+			}
+			else if(input.trim().equals("3")) {
+				System.exit(0);
+			}
+		}
+	}
+
+	public static void main(String[] args) throws NotBoundException, IOException {
+		Application app = new Application();
+		app.run();
+	}
 }

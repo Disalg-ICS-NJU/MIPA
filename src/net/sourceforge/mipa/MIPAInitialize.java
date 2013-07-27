@@ -24,6 +24,8 @@ import static config.Debug.DEBUG;
 
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.components.Broker;
 import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.ContextModeling;
@@ -52,6 +54,7 @@ import net.sourceforge.mipa.tools.GCRunner;
  */
 public class MIPAInitialize {
 
+	private static Logger logger = Logger.getLogger(MIPAInitialize.class);
     /**
      * initialize MIPA Infrastructure.
      * 
@@ -70,6 +73,7 @@ public class MIPAInitialize {
 
             if (DEBUG) {
                 System.out.println("Creating IDManager...");
+                logger.info("Creating IDManager...");
             }
 
             IDManagerImp idManager = new IDManagerImp();
@@ -80,6 +84,7 @@ public class MIPAInitialize {
 
             if (DEBUG) {
                 System.out.println("Creating ContextRegister...");
+                logger.info("Creating ContextRegister...");
             }
 
             ContextModeling contextModeling = new ContextModeling();
@@ -119,6 +124,7 @@ public class MIPAInitialize {
 
             if (DEBUG) {
                 System.out.println("Creating PredicateParser...");
+                logger.info("Creating PredicateParser...");
             }
             
             GroupManager groupManager 
@@ -157,18 +163,22 @@ public class MIPAInitialize {
     public static void main(String[] args) {
         // start naming service
         NamingService service = new NamingService();
-        System.out.println("MIPA system Naming Service starts sucessfully.");
+        System.out.println("MIPA system Naming Service starts successfully.");
+        logger.info("MIPA system Naming Service starts successfully.");
         service.startService();
         
         boolean result = new MIPAInitialize().initialize();
         if (result == true) {
             System.out.println("Initialization finished.");
+            logger.info("Initialization finished.");
         } else {
             System.out.println("Error occurs when initializing");
+            logger.error("Error occurs when initializing");
         }
 
         if (DEBUG) {
-            System.out.println(MIPAResource.getNamingAddress());
+            //System.out.println(MIPAResource.getNamingAddress());
+            logger.info(MIPAResource.getNamingAddress());
         }
     }
 }

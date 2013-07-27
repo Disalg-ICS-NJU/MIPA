@@ -22,6 +22,8 @@ package net.sourceforge.mipa.predicatedetection;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.application.ResultCallback;
+
 import org.w3c.dom.Document;
 
 /**
@@ -40,6 +42,6 @@ public interface PredicateParserMethod extends Remote {
      * @return preidcate ID
      * @throws RemoteException
      */
-    public String parsePredicate(String applicationName, Document predicate)
+    public String parsePredicate(ResultCallback callback, Document predicate)
                                                                           throws RemoteException;
 }

@@ -22,22 +22,24 @@ package net.sourceforge.mipa.test;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sourceforge.mipa.application.ResultCallback;
+
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class TimeCost {
     
-    public static Map<String, TimeInfo> map 
-                        = new HashMap<String, TimeInfo>();
+    public static Map<ResultCallback, TimeInfo> map 
+                        = new HashMap<ResultCallback, TimeInfo>();
     
-    public static TimeInfo get(String name) {
+    public static TimeInfo get(ResultCallback name) {
         if(map.containsKey(name) == false) return null;
         
         return map.get(name);
     }
     
-    public static void put(String name, TimeInfo value) {
+    public static void put(ResultCallback name, TimeInfo value) {
         map.put(name, value);
     }
 }

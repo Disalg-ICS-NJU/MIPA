@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.predicatedetection.Automaton;
 import net.sourceforge.mipa.predicatedetection.Composite;
@@ -59,6 +61,7 @@ public class SequenceLatticeChecker extends LatticeChecker {
     private Automaton automaton;
     private boolean flag = false;
     private PrintWriter outTime = null;
+    private static Logger logger = Logger.getLogger(SequenceLatticeChecker.class);
     
     public SequenceLatticeChecker(ResultCallback application, String predicateID, 
             String checkerName, String[] normalProcesses,
@@ -170,7 +173,7 @@ public class SequenceLatticeChecker extends LatticeChecker {
                 if (node.getFlagIntersection() == true) {
                     // detect Def(sequence),output the information
                     try {
-                        application.callback(predicateID, String.valueOf(true));
+                        application.callback(String.valueOf(true));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -296,6 +299,7 @@ public class SequenceLatticeChecker extends LatticeChecker {
     private void printCGSToNPs() {
         System.out.println("========================================");
         System.out.println("Print CGS name to NPs:");
+        logger.info("========Print CGS name to NPs:========");
         Set<String> names = CGSToNPs.keySet();
         Iterator<String> it = names.iterator();
         while (it.hasNext()) {
@@ -307,16 +311,20 @@ public class SequenceLatticeChecker extends LatticeChecker {
                 result += NPs.get(i) + "  ";
             }
             System.out.println(result);
+            logger.info(result);
         }
         System.out.println("Print over");
         System.out.println("----------------------------------------");
         System.out.println();
+        logger.info("------------Print over-----------------");
     }
 
     private Automaton parseRegExpToAutomaton(RegularExpression regularExpression) {
         if (DEBUG) {
             System.out.println("========================================");
             System.out.println("Parse regular expression to automaton:");
+            logger.info("========================================");
+            logger.info("Parse regular expression to automaton:");
         }
         Automaton a = new Automaton(regularExpression);
         if (DEBUG) {
@@ -324,6 +332,8 @@ public class SequenceLatticeChecker extends LatticeChecker {
             System.out.println("Parse over");
             System.out.println("----------------------------------------");
             System.out.println();
+            logger.info(a.toString());
+            logger.info("-------------Parse over----------------");
         }
         if(DEBUG) {
             debug.print("initialState: ");
@@ -343,6 +353,8 @@ public class SequenceLatticeChecker extends LatticeChecker {
         if (DEBUG) {
             System.out.println("========================================");
             System.out.println("Parse predicate to regular expression:");
+            logger.info("========================================");
+            logger.info("Parse predicate to regular expression:");
         }
         String string = "";
         for (int i = 0; i < GSE.getChildren().size(); i++) {
@@ -354,6 +366,8 @@ public class SequenceLatticeChecker extends LatticeChecker {
             System.out.println("Parse over");
             System.out.println("----------------------------------------");
             System.out.println();
+            logger.info(string);
+            logger.info("-------------Parse over----------------");
         }
         return predicate;
     }
@@ -363,6 +377,8 @@ public class SequenceLatticeChecker extends LatticeChecker {
         if (DEBUG) {
             System.out.println("========================================");
             System.out.println("Modify regular expression:");
+            logger.info("========================================");
+            logger.info("Modify regular expression:");
         }
         HashSet<String> identifiers = regularExpression.getIdentifiers();
         String expression = regularExpression.getRegularExpression();
@@ -389,6 +405,8 @@ public class SequenceLatticeChecker extends LatticeChecker {
             System.out.println("Modify over");
             System.out.println("----------------------------------------");
             System.out.println();
+            logger.info(result);
+            logger.info("------------Modify over-------------");
         }
         return predicate;
     }
@@ -445,6 +463,8 @@ public class SequenceLatticeChecker extends LatticeChecker {
         }
         default: {
             System.out.println("Parse error: not defined connector: "
+                    + nodeType.toString());
+            logger.error("Parse error: not defined connector: "
                     + nodeType.toString());
             break;
         }

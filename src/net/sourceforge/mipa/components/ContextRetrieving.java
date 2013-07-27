@@ -66,4 +66,8 @@ public class ContextRetrieving {
         }
         return mapEntityId.get(context);
     }
+    
+    public synchronized void removeEntityID(String context) {
+    	mapEntityId.remove(context);
+}
 }

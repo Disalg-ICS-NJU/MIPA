@@ -29,6 +29,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.CheckMode;
 import net.sourceforge.mipa.components.Coordinator;
@@ -45,7 +47,6 @@ import net.sourceforge.mipa.predicatedetection.normal.cada.CADANormalProcess;
 import net.sourceforge.mipa.predicatedetection.normal.oga.OGANormalProcess;
 import net.sourceforge.mipa.predicatedetection.normal.scp.SCPNormalProcess;
 import net.sourceforge.mipa.predicatedetection.normal.wcp.WCPNormalProcess;
-import net.sourceforge.mipa.test.TimeInfo;
 
 
 class NormalProcessResource {
@@ -70,6 +71,8 @@ public class ECAManagerImp implements ECAManager {
     private DataSource dataSource;
     
     private HashMap<String, NormalProcessResource> resourceMap;
+    
+    private static Logger logger = Logger.getLogger(ECAManagerImp.class);
 
     public ECAManagerImp(BrokerInterface broker, DataSource dataSource,
             String ecaManagerName) {
@@ -120,6 +123,7 @@ public class ECAManagerImp implements ECAManager {
             Atom atom = arrayList.get(i);
             if (DEBUG) {
                 System.out.print(" " + atom.getName());
+                logger.info(atom.getName());
             }
             try {
             	dataSource.detach(condition, atom.getName());
@@ -143,9 +147,9 @@ public class ECAManagerImp implements ECAManager {
     public void registerLocalPredicate(LocalPredicate localPredicate,
             String name, Group g) throws RemoteException {
         // EXPERIMENT
-        TimeInfo timeInfo = new TimeInfo();
+        //TimeInfo timeInfo = new TimeInfo();
         if (EXPERIMENT) {
-            timeInfo.item_1_begin = System.nanoTime();
+            //timeInfo.item_1_begin = System.nanoTime();
         }
 
         try {
@@ -155,6 +159,7 @@ public class ECAManagerImp implements ECAManager {
 
             if (DEBUG) {
                 System.out.println("Get normal process: " + name);
+                logger.info("Get normal process: " + name);
             }
 
             String[] checkers = new String[g.getOwners().size()];
@@ -204,10 +209,12 @@ public class ECAManagerImp implements ECAManager {
                     action = cadaNP;
                     break;
                 case SEQUENCE:
-
+                case CTL:
                     break;
                 default:
                     System.out.println("Type " + g.getType()
+                            + " has not been defined.");
+                    logger.error("Type " + g.getType()
                             + " has not been defined.");
                 }
             } else if (checkMode == CheckMode.LATTICE) {
@@ -251,8 +258,17 @@ public class ECAManagerImp implements ECAManager {
                             surSequenceNP, 0);
                     action = surSequenceNP;
                     break;
+                case CTL:
+                    SequenceLatticeNormalProcess ctlSequenceNP = new SequenceLatticeNormalProcess(
+                            name, checkers, normalProcesses);
+                    npStub = (NormalProcess) UnicastRemoteObject.exportObject(
+                    		ctlSequenceNP, 0);
+                    action = ctlSequenceNP;
+                    break;
                 default:
                     System.out.println("Type " + g.getType()
+                            + " has not been defined.");
+                    logger.error("Type " + g.getType()
                             + " has not been defined.");
                 }
             }
@@ -265,13 +281,15 @@ public class ECAManagerImp implements ECAManager {
             // attaching condition to data source.
 
             if (DEBUG) {
-                System.out.println("local predicate includes:");
+                System.out.println("Local predicate includes:");
+                logger.info("Local predicate includes:");
             }
             ArrayList<Atom> arrayList = localPredicate.getAtoms();
             for (int i = 0; i < arrayList.size(); i++) {
                 Atom atom = arrayList.get(i);
                 if (DEBUG) {
                     System.out.print(" " + atom.getName());
+                    logger.info(atom.getName());
                 }
                 dataSource.attach(everything, atom.getName());
             }
@@ -286,20 +304,21 @@ public class ECAManagerImp implements ECAManager {
                 System.out.println(".");
                 System.out
                         .println("binding condition to data source successful.");
+                logger.info("Binding condition to data source successful.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (EXPERIMENT) {
-            timeInfo.item_1_end = System.nanoTime();
+            //timeInfo.item_1_end = System.nanoTime();
         }
 
         if (EXPERIMENT) {
             try {
-                PrintWriter out = new PrintWriter(new FileWriter(
-                        "log/eca_time_cost", true), true);
-                out.println((timeInfo.item_1_end - timeInfo.item_1_begin));
+                //PrintWriter out = new PrintWriter(new FileWriter(
+                //        "log/eca_time_cost", true), true);
+                //out.println((timeInfo.item_1_end - timeInfo.item_1_begin));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -326,4 +345,12 @@ public class ECAManagerImp implements ECAManager {
             e.printStackTrace();
         }
     }
+
+	public HashMap<String, NormalProcessResource> getResourceMap() {
+		return resourceMap;
+	}
+
+	public void setResourceMap(HashMap<String, NormalProcessResource> resourceMap) {
+		this.resourceMap = resourceMap;
+	}
 }

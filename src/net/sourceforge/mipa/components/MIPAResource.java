@@ -224,7 +224,11 @@ public class MIPAResource {
         return messageDispatcher;
     }
 
-    /**
+    public static void setMessageDispatcher(MessageDispatcher messageDispatcher) {
+		MIPAResource.messageDispatcher = messageDispatcher;
+	}
+
+	/**
      * @return the checkMode
      */
     public static CheckMode getCheckMode() {
@@ -236,7 +240,22 @@ public class MIPAResource {
             return CheckMode.NORMAL;
     }
     
-    public static Mode getMode() {
+    /**
+     * @return the checkMode
+     */
+    public static void setCheckMode(String string) {
+        checkMode = string;
+    }
+    
+    public static void setBroker(BrokerInterface broker) {
+		MIPAResource.broker = broker;
+	}
+
+	public static void setIDManager(IDManager idManager) {
+		MIPAResource.idManager = idManager;
+	}
+
+	public static Mode getMode() {
         if(mode.equals("simulated"))
             return Mode.SIMULATED;
         else if(mode.equals("real"))

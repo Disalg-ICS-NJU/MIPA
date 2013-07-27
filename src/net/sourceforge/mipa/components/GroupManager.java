@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.naming.Catalog;
 import net.sourceforge.mipa.naming.IDManager;
@@ -51,6 +54,8 @@ class PredicateInfo {
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class GroupManager {
+
+	private static Logger logger = Logger.getLogger(GroupManager.class);
 
     // private ContextModeling modeling;
 
@@ -87,7 +92,7 @@ public class GroupManager {
     }
 
     public String createGroups(Structure s, PredicateType predicateType,
-            String callback) {
+    		ResultCallback callback) {
         specification = s;
 
         String predicateID = null;
@@ -102,20 +107,35 @@ public class GroupManager {
         analyzeDistribution(groups);
         PredicateInfo info = parseGroups(groups, predicateType, callback,
                 predicateID);
+        if(info == null) {
+        	return null;
+        }
 
         info.predicateID = predicateID;
         predicates.put(predicateID, info);
 
+		// add logger for this method
         if (DEBUG) {
             System.out.println("predicates info:");
+            logger.info("Predicates info:");
+            
             PredicateInfo pInfo = predicates.get(predicateID);
             System.out.println("\tpredicate id: " + pInfo.predicateID);
             System.out.println("\tcheckers:");
-            for (int i = 0; i < pInfo.checkers.size(); i++)
+            
+            logger.info("Predicate id is: " + pInfo.predicateID);
+        	logger.info("Checkers:");
+            
+            for (int i = 0; i < pInfo.checkers.size(); i++) {
                 System.out.println("\t\t" + pInfo.checkers.get(i));
+                logger.info(pInfo.checkers.get(i));
+            }
             System.out.println("\tnormal processes:");
-            for (int i = 0; i < pInfo.normalProcesses.size(); i++)
+            logger.info("Normal processes:");
+            for (int i = 0; i < pInfo.normalProcesses.size(); i++) {
                 System.out.println("\t\t" + pInfo.normalProcesses.get(i));
+                logger.info(pInfo.normalProcesses.get(i));
+            }
         }
 
         if (EXPERIMENT) {
@@ -133,7 +153,8 @@ public class GroupManager {
         Structure GSENode = structure.get(1);
         Structure groupNode;
         if (predicateType.equals(PredicateType.SEQUENCE)
-                || predicateType.equals(PredicateType.SURSEQUENCE)) {
+                || predicateType.equals(PredicateType.SURSEQUENCE)
+                || predicateType.equals(PredicateType.CTL)) {
             Structure GSE = new Composite(NodeType.GSE, "GSE");
             Structure CGS = new Composite(NodeType.CGS, "CGS");
             GSE.add(CGS);
@@ -195,9 +216,12 @@ public class GroupManager {
 
         if (DEBUG) {
             System.out.println("Groups inforamtion: ");
+            logger.info("Groups inforamtion: ");
             for (String str : groups.keySet()) {
                 AbstractGroup g = groups.get(str);
                 System.out.println("\t" + str + " : " + g.getLevel() + " , "
+                        + g.getFather());
+                logger.info(str + " : " + g.getLevel() + " , "
                         + g.getFather());
             }
         }
@@ -209,7 +233,7 @@ public class GroupManager {
     }
 
     private PredicateInfo parseGroups(Map<String, AbstractGroup> groups,
-            PredicateType type, String callback, String predicateID) {
+            PredicateType type, ResultCallback callback, String predicateID) {
 
         IDManager idManager = MIPAResource.getIDManager();
 
@@ -280,15 +304,20 @@ public class GroupManager {
         if (DEBUG) {
             System.out.println("Debugging message: ");
             System.out.println("\tGroup To Checker: ");
+            logger.info("Group To Checker: ");
             for (String s : groupToChecker.keySet()) {
                 System.out.println("\t\t" + s + " : " + groupToChecker.get(s));
+                logger.info(s + " : " + groupToChecker.get(s));
             }
 
             System.out.println("\t local predicate: ");
+            logger.info("Local predicate: ");
             for (LocalPredicate lp : localPredicateToNormalProcess.keySet()) {
                 // System.out.println("\t\t" + lp.getName() + " : " +
                 // localPredicateToNormalProcess.get(lp));
                 System.out.println("\t\t" + lp.toString() + " : "
+                        + localPredicateToNormalProcess.get(lp));
+                logger.info(lp.toString() + " : "
                         + localPredicateToNormalProcess.get(lp));
             }
         }
@@ -304,6 +333,7 @@ public class GroupManager {
                 ((LocalPredicate) LP).setNormalProcess(normalProcess);
             }
         }
+        boolean flag = true;
 
         switch (type) {
         case OGA:
@@ -312,7 +342,7 @@ public class GroupManager {
                     maxLevel);
             break;
         case SCP:
-            allocateAsSCP(groups, groupToChecker,
+        	flag = allocateAsSCP(groups, groupToChecker,
                     localPredicateToNormalProcess, callback, predicateID,
                     maxLevel);
             break;
@@ -336,11 +366,20 @@ public class GroupManager {
                     localPredicateToNormalProcess, callback, predicateID,
                     maxLevel);
             break;
+        case CTL:
+        	allocateAsCTL(groups,groupToChecker,
+        			localPredicateToNormalProcess, callback, predicateID,
+        			maxLevel);
+        	break;
         default:
             System.out
                     .println("This predicate type have not been implemented yet.");
         }
-
+        
+        if(flag == false) {
+        	return null;
+        }
+        
         PredicateInfo info = new PredicateInfo();
         ArrayList<String> checkers = new ArrayList<String>();
         ArrayList<String> normalProcesses = new ArrayList<String>();
@@ -354,11 +393,76 @@ public class GroupManager {
         info.normalProcesses = normalProcesses;
         return info;
     }
+    
+    private void allocateAsCTL(Map<String, AbstractGroup> groups,
+			Map<String, String> groupToChecker,
+			Map<LocalPredicate, String> localPredicateToNormalProcess,
+			ResultCallback callback, String predicateID, int maxLevel)
+	{
+		// TODO need be verified ?
+    	
+    	IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+
+        // start checker for level > 0
+        for (int i = maxLevel; i > 0; i--) {
+
+        }
+
+        // check the level == 0
+        for (String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if (g.getLevel() == 0) {
+                String gid = g.getGroupId();
+
+                // current Implementation is that father of sequence checker is null;
+
+                ArrayList<Object> children = g.getChildren();
+                ArrayList<String> owners = new ArrayList<String>();
+                ArrayList<String> members = new ArrayList<String>();
+                owners.add(groupToChecker.get(gid));
+                for (int i = 0; i < children.size(); i++) {
+                    members.add(localPredicateToNormalProcess.get(children
+                            .get(i)));
+                }
+                // create group
+                String groupId = null;
+                try {
+                    groupId = idManager.getID(Catalog.Group);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Group ng = new Group(groupId, owners, members,
+                        PredicateType.CTL);
+                ng.setCoordinatorID(groupId);
+
+                try {
+                    coordinator.newCoordinator(ng);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String checkerName = ng.getOwners().get(0);
+                String[] normalProcesses = new String[ng.getMembers().size()];
+                ng.getMembers().toArray(normalProcesses);
+                CheckerFactory.createCTLChecker(callback, predicateID, checkerName,
+                        normalProcesses, specification);
+
+                // create Normal Processes.
+                for (int i = 0; i < children.size(); i++) {
+                    broker.registerLocalPredicate((LocalPredicate) children
+                            .get(i), localPredicateToNormalProcess.get(children
+                            .get(i)), ng);
+                }
+            }
+        }
+	}
 
     private void allocateAsSurfaceSequence(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, String predicateID, int maxLevel) {
+            ResultCallback callback, String predicateID, int maxLevel) {
         // TODO Auto-generated method stub
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -423,7 +527,7 @@ public class GroupManager {
     private void allocateAsSequence(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, String predicateID, int maxLevel) {
+            ResultCallback callback, String predicateID, int maxLevel) {
         // TODO Auto-generated method stub
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -487,7 +591,7 @@ public class GroupManager {
     private void allocateAsOGA(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, String predicateID, int maxLevel) {
+            ResultCallback callback, String predicateID, int maxLevel) {
 
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -580,6 +684,7 @@ public class GroupManager {
                 }
 
                 System.out.println("sub group id: " + normalProcessGroup);
+                logger.info("sub group id: " + normalProcessGroup);
                 ArrayList<String> fatherList = new ArrayList<String>();
                 fatherList.add(groupToChecker.get(gid));
 
@@ -605,7 +710,7 @@ public class GroupManager {
         }
     }
 
-    public void parseOGAStructure(Structure s, String callback,
+    public void parseOGAStructure(Structure s, ResultCallback callback,
             String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
@@ -677,26 +782,35 @@ public class GroupManager {
 
         if (DEBUG) {
             System.out.println("Top Checker:");
+            logger.info("Top Checker:");
             for (int i = 0; i < topCheckers.size(); i++) {
                 System.out.println("\t" + topCheckers.get(i));
+                logger.info(topCheckers.get(i));
             }
 
             System.out.println("Sub Checkers:");
+            logger.info("Sub Checkers:");
             for (int i = 0; i < subCheckers.size(); i++) {
                 System.out.println("\t" + subCheckers.get(i));
+                logger.info(subCheckers.get(i));
             }
 
             System.out.println("Normal Processes:");
+            logger.info("Normal Processes:");
             for (int i = 0; i < normalProcesses.size(); i++) {
                 System.out.println("\t" + normalProcesses.get(i));
+                logger.info(normalProcesses.get(i));
             }
 
             System.out.println("Mapping:");
+            logger.info("Mapping:");
             for (int i = 0; i < subCheckers.size(); i++) {
                 System.out.println("\t" + subCheckers.get(i));
+                logger.info(subCheckers.get(i));
                 ArrayList<String> m = subGroups.get(subCheckers.get(i));
                 for (int j = 0; j < m.size(); j++) {
                     System.out.println("\t\t" + m.get(j));
+                    logger.info(m.get(j));
                 }
             }
         }
@@ -744,10 +858,10 @@ public class GroupManager {
         }
     }
 
-    private void allocateAsSCP(Map<String, AbstractGroup> groups,
+    private boolean allocateAsSCP(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, String predicateID, int maxLevel) {
+            ResultCallback callback, String predicateID, int maxLevel) {
 
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -799,19 +913,24 @@ public class GroupManager {
 
                 // create Normal Processes.
                 for (int i = 0; i < children.size(); i++) {
-                    broker.registerLocalPredicate((LocalPredicate) children
+                    boolean flag = broker.registerLocalPredicate((LocalPredicate) children
                             .get(i), localPredicateToNormalProcess.get(children
                             .get(i)), ng);
+                    if(flag == false) {
+                    	System.out.println("Cannot find the corresponding sensors!");
+                    	return false;
+                    }
                 }
             }
         }
+        return true;
     }
 
     /**
      * 
      * @param s
      */
-    public void parseSCPStructure(Structure s, String callback,
+    public void parseSCPStructure(Structure s, ResultCallback callback,
             String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 
@@ -880,7 +999,7 @@ public class GroupManager {
     private void allocateAsCADA(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, String predicateID, int maxLevel) {
+            ResultCallback callback, String predicateID, int maxLevel) {
 
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
@@ -944,7 +1063,7 @@ public class GroupManager {
     private void allocateAsWCP(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
-            String callback, String predicateID, int maxLevel) {
+            ResultCallback callback, String predicateID, int maxLevel) {
         IDManager idManager = MIPAResource.getIDManager();
         Coordinator coordinator = MIPAResource.getCoordinator();
 
@@ -1008,7 +1127,7 @@ public class GroupManager {
      * @param s
      * @param callback
      */
-    public void parseWCPStructure(Structure s, String callback,
+    public void parseWCPStructure(Structure s, ResultCallback callback,
             String predicateID) {
         ArrayList<Structure> children = s.getChildren();
 

@@ -89,9 +89,29 @@ public class SimpleResourceManager extends ResourceManager {
         try {
             modeling.map(resourceName, resourceName, valueType);
             retrieving.setEntityID(resourceName, entityId);
+            System.out.println("Sensor: "+resourceName+" registers successfully.");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
+    public synchronized void unRegisterResource(String resourceName, 
+            String valueType,
+            String entityId) {
+		try {
+			modeling.remove(resourceName, resourceName);
+			retrieving.removeEntityID(resourceName);
+			System.out.println("Sensor: "+resourceName+" unregisters successfully.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+    public ContextModeling getContextModeling() {
+    	return modeling;
+    }
+    
+    public ContextRetrieving getContextRetrieving() {
+    	return retrieving;
+    }
 }

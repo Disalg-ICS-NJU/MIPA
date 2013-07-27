@@ -23,6 +23,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.rm.ResourceManager;
 import net.sourceforge.mipa.eca.ECAManager;
 import net.sourceforge.mipa.naming.Catalog;
@@ -31,8 +32,11 @@ import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.LocalPredicate;
 import net.sourceforge.mipa.predicatedetection.PredicateParserMethod;
+import net.sourceforge.mipa.predicatedetection.lattice.ctl.CTLLatticeChecker;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
+
 
 /**
  *
@@ -52,6 +56,8 @@ public class Broker implements BrokerInterface {
     
     private HashMap<String, String> normalProcessToECAManager;
     
+    private static Logger logger = Logger.getLogger(Broker.class);
+    
     public Broker(ResourceManager resourceManager, GroupManager groupManager) {
         this.resourceManager = resourceManager;
         this.groupManager = groupManager;
@@ -66,13 +72,13 @@ public class Broker implements BrokerInterface {
     }
     */
     
-    public String registerPredicate(String applicationName, Document predicate) 
+    public String registerPredicate(ResultCallback callback, Document predicate) 
     												throws RemoteException {
     	if(predicateParser == null) {
     		predicateParser = MIPAResource.getPredicateParser();
     	}
     	
-    	String predicateID = predicateParser.parsePredicate(applicationName, predicate);
+    	String predicateID = predicateParser.parsePredicate(callback, predicate);
     	return predicateID;
     }
     
@@ -97,11 +103,13 @@ public class Broker implements BrokerInterface {
     		}
     		//remove checkers
     		System.out.println("remove checkers:");
+    		logger.info("remove checkers:");
     		Naming server = MIPAResource.getNamingServer();
     		try {
     			ArrayList<String> checkers = info.checkers;
     			for(int i = 0; i < checkers.size(); i++) {
     				System.out.println("\t" + checkers.get(i));
+    				logger.info("\t" + checkers.get(i));
     				server.unbind(checkers.get(i));
     			}
     		} catch (Exception e) {
@@ -113,7 +121,15 @@ public class Broker implements BrokerInterface {
     	
     }
     
-    private void unregisterLocalPredicate(String normalProcess, Group g) {
+    public GroupManager getGroupManager() {
+		return groupManager;
+	}
+
+	public void setGroupManager(GroupManager groupManager) {
+		this.groupManager = groupManager;
+	}
+
+	private void unregisterLocalPredicate(String normalProcess, Group g) {
     	String ecaManagerID = normalProcessToECAManager.get(normalProcess);
     	if(ecaManagerID != null) {
     		try {
@@ -140,9 +156,21 @@ public class Broker implements BrokerInterface {
     
     //FIXME it only supports that a high level context is mapping to only one low level context.
     //TODO it should support that a high level context is mapping to several low level contexts.
-    public void registerLocalPredicate(LocalPredicate lp, String normalProcessId, Group g) {
+    public boolean registerLocalPredicate(LocalPredicate lp, String normalProcessId, Group g) {
         try {
             ArrayList<Atom> arrayList = lp.getAtoms();
+            
+//            if(resourceManager == null)
+//            	System.err.println("null");
+//            System.err.println(arrayList.get(0).getName());
+//            if(resourceManager.findResource(arrayList.get(0).getName()) == null)
+//            	System.err.println("resourceManager.findResource = null");
+//            for(int i =0;i<resourceManager.findResource(arrayList.get(0).getName()).length;i++) {
+//            	System.err.println(resourceManager.findResource(arrayList.get(0).getName())[i]);
+//            }
+            if(resourceManager.findResource(arrayList.get(0).getName()) == null) {
+            	return false;
+            }
             String ecaManagerId = resourceManager.findResource(arrayList.get(0).getName())[0];
             
             for(int i = 0; i < arrayList.size(); i++) {
@@ -153,7 +181,10 @@ public class Broker implements BrokerInterface {
                                                        + " and "
                                                        + arrayList.get(i).getName()
                                                        + " are in different ECA.");
-                    
+                    logger.error("The sensors " + arrayList.get(0).getName()
+                                                       + " and "
+                                                       + arrayList.get(i).getName()
+                                                       + " are in different ECA.");
                 }
                 
                 //FIXME atom should be recreated, and doesn't reuse the atom in the arrayList. 
@@ -168,12 +199,31 @@ public class Broker implements BrokerInterface {
             
             System.out.println("find eca manager successfully.");
             System.out.println(ecaManagerId);
+            logger.info("Find eca manager "+ecaManagerId+" successfully.");
             ecaManager.registerLocalPredicate(lp, normalProcessId, g);
             normalProcessToECAManager.put(normalProcessId, ecaManagerId);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return true;
     }
+
+	public PredicateParserMethod getPredicateParser() {
+		return predicateParser;
+	}
+
+	public void setPredicateParser(PredicateParserMethod predicateParser) {
+		this.predicateParser = predicateParser;
+	}
+
+	public HashMap<String, String> getNormalProcessToECAManager() {
+		return normalProcessToECAManager;
+	}
+
+	public void setNormalProcessToECAManager(
+			HashMap<String, String> normalProcessToECAManager) {
+		this.normalProcessToECAManager = normalProcessToECAManager;
+	}
     
     /*
     public void registerLocalPredicate(LocalPredicate lp, String normalProcessId, Group g) {

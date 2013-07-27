@@ -22,6 +22,10 @@ import static config.Debug.DEBUG;
 
 import java.util.HashMap;
 
+import net.sourceforge.mipa.predicatedetection.ctl.CTLParser;
+import net.sourceforge.mipa.ui.predicate.PredicateDot;
+
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -32,12 +36,16 @@ import org.w3c.dom.NodeList;
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class StructureParser {
+	
+	private static Logger logger = Logger.getLogger(StructureParser.class);
+	
     HashMap<String,Structure> nameToCGS = new HashMap<String, Structure>();
     /** context mapping */
     // private ContextModeling contextMapping;
 
     public StructureParser() {
-        System.out.println("Testing constructor of STRUCTUREPARSER.");
+        //System.out.println("Testing constructor of STRUCTUREPARSER.");
+        logger.info("Testing constructor of STRUCTUREPARSER.");
     }
 
     /*
@@ -58,10 +66,13 @@ public class StructureParser {
         if(DEBUG){
             System.out.println("========================================");
             System.out.println("Parsing predicate:");
+            logger.info("========================================");
+            logger.info("Parsing predicate:");
         }
         NodeList elements = predicate.getElementsByTagName("CGSs");
         if(DEBUG){
             System.out.println("--CGSs");
+            logger.info("--CGSs");
         }
         if (elements != null) {
             for (int i = 0; i < elements.getLength(); i++) {
@@ -78,6 +89,7 @@ public class StructureParser {
                             String name = node.getAttributes().getNamedItem("name").getNodeValue();
                             if(DEBUG){
                                 System.out.println("----CGS:"+name);
+                                logger.info("----CGS:"+name);
                             }
                             Structure CGSNode = new Composite(NodeType.CGS,
                                                               name);
@@ -88,6 +100,7 @@ public class StructureParser {
                             else {
                                 if(DEBUG){
                                     System.out.println("Parse error: A CGS with the same name already exists:"+name);
+                                    logger.error("Parse error: A CGS with the same name already exists:"+name);
                                 }
                             }
                             for (Node LP = node.getFirstChild(); 
@@ -96,8 +109,17 @@ public class StructureParser {
                                 
                                 if (LP.getNodeType() == Node.ELEMENT_NODE) {
 
-                                    if (LP.getNodeName().equals("LP"))
-                                        CGSNode.add(parseLocalPredicate(LP));
+                                    if (LP.getNodeName().equals("LP")) {
+                                        LocalPredicate lp = parseLocalPredicate(LP);
+                                        if(lp == null) {
+                                        	return null;
+                                        }
+                                    	CGSNode.add(lp);
+                                        //CGSNode.add(parseLocalPredicate(LP));
+                                        
+                                        // write UI information into predicate.dot file
+                                    	PredicateDot.getInstance().write2PredicateDotLink(CGSNode, lp);
+                                    }
                                 } // :end if
                             } // :end for
                         } // :end if
@@ -106,10 +128,22 @@ public class StructureParser {
             } // :end for
         }
         
+        /************************************************************************
+         * if the type of predicate is CTL, then jump to parse ctl formula 
+         * 
+         * @see net.sourceforge.mipa.predicatedetection.CTLParser#parseCTLPart
+         */
+        if(PredicateIdentify.predicateIdentify(predicate) == PredicateType.CTL)
+        {
+        	result = CTLParser.getInstance().parseCTLPart(predicate, result,this);
+        	return result;
+        }
+        /************************************************************************/
         elements = predicate.getElementsByTagName("specification");
         if (elements != null) {
             if(DEBUG){
                 System.out.println("--specification");
+                logger.info("--specification");
             } 
             Node specification = elements.item(0);
             Node node = specification.getFirstChild(); 
@@ -117,6 +151,7 @@ public class StructureParser {
             String prefix = node.getAttributes().getNamedItem("value").getNodeValue();
             if(DEBUG){
                 System.out.println("----prefix: "+prefix);
+                logger.info("----prefix: "+prefix);
             }
             node = node.getNextSibling();
             node = node.getNextSibling();
@@ -132,6 +167,7 @@ public class StructureParser {
                     result.add(GSENode);
                     if(DEBUG){
                         System.out.println("----GSE");
+                        logger.info("----GSE");
                     }
                     for (Node element = node.getFirstChild(); 
                     element != null; 
@@ -150,6 +186,8 @@ public class StructureParser {
             System.out.println("Parsing predicate over");
             System.out.println("----------------------------------------");
             System.out.println();
+            logger.info("Parsing predicate over");
+            logger.info("----------------------------------------");
         }
         return result;
         
@@ -205,6 +243,7 @@ public class StructureParser {
         // TODO Auto-generated method stub
         if(DEBUG){
             System.out.println("--------ELEMENT");
+            logger.info("--------ELEMENT");
         }
         for (Node node = element.getFirstChild(); 
         node != null; 
@@ -213,6 +252,7 @@ public class StructureParser {
                 if (node.getNodeName().equals("zeroOrMore")) {
                     if(DEBUG){
                         System.out.println("------------ZEROORMORE");
+                        logger.info("------------ZEROORMORE");
                     }
                     Connector zeroOrMore = new Connector(NodeType.ZEROORMORE,"zeroOrMore");
                     zeroOrMore.setOperator(NodeType.ZEROORMORE);
@@ -232,6 +272,7 @@ public class StructureParser {
                 else if (node.getNodeName().equals("oneOrMore")) {
                     if(DEBUG){
                         System.out.println("------------ONEORMORE");
+                        logger.info("------------ONEORMORE");
                     }
                     Connector oneOrMore = new Connector(NodeType.ONEORMORE,"oneOrMore");
                     oneOrMore.setOperator(NodeType.ONEORMORE);
@@ -251,6 +292,7 @@ public class StructureParser {
                 else if (node.getNodeName().equals("choice")) {
                     if(DEBUG){
                         System.out.println("------------CHOICE");
+                        logger.info("------------CHOICE");
                     }
                     Connector choice = new Connector(NodeType.CHOICE,"choice");
                     choice.setOperator(NodeType.CHOICE);
@@ -270,6 +312,7 @@ public class StructureParser {
                 else if (node.getNodeName().equals("optional")) {
                     if(DEBUG){
                         System.out.println("------------OPTIONAL");
+                        logger.info("------------OPTIONAL");
                     }
                     Connector optional = new Connector(NodeType.OPTIONAL,"optional");
                     optional.setOperator(NodeType.OPTIONAL);
@@ -291,12 +334,14 @@ public class StructureParser {
                     Structure CGS = nameToCGS.get(name);
                     if(DEBUG){
                         System.out.println("--------------------CGS:"+name);
+                        logger.info("--------------------CGS:"+name);
                     }
                     return CGS;
                 }
                 else {
                     if(DEBUG){
                         System.out.println("Parse error: incorrect element:"+node.getNodeName());
+                        logger.error("Parse error: incorrect element:"+node.getNodeName());
                     }
                 }
             }
@@ -308,6 +353,7 @@ public class StructureParser {
         LocalPredicate LP = new LocalPredicate();
         if(DEBUG){
             System.out.println("--------LP");
+            logger.info("--------LP");
         }
         for (Node node = localPredicate.getFirstChild(); 
               node != null; 
@@ -315,7 +361,11 @@ public class StructureParser {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (node.getNodeName().equals("formula")) {
                     LP.add(parseFormula(LP,node));
-                }// :end if
+                }
+                else {
+                	System.out.println("Parsing error! Illegal predicate!");
+                	return null;
+                } 	// :end if
             }// :end if
         }// :end for
         return LP;
@@ -326,6 +376,7 @@ public class StructureParser {
         Formula formulaNode = new Formula(NodeType.FORMULA,"formula");
         if(DEBUG){
             System.out.println("------------formula");
+            logger.info("------------formula");
         }
         for (Node node = formula.getFirstChild(); 
             node != null; 
@@ -338,6 +389,7 @@ public class StructureParser {
                     quantifierNode.setOperator(operator);
                     if(DEBUG){
                         System.out.println("----------------quantifier: "+operator);
+                        logger.info("----------------quantifier: "+operator);
                     }
                     node = node.getNextSibling();
                     node = node.getNextSibling();
@@ -350,6 +402,8 @@ public class StructureParser {
                             //quantifierNode.setFather(formulaNode);
                             //subFormulaNode.setFather(formulaNode);
                             
+                            // write UI information into predicate.dot file
+                            PredicateDot.getInstance().write2PredicateDotLink(formulaNode, subFormulaNode);
                    //     }
                    // }
                 }
@@ -360,6 +414,7 @@ public class StructureParser {
                     unaryNode.setOperator(operator);
                     if(DEBUG){
                         System.out.println("----------------unary: "+operator);
+                        logger.info("----------------unary: "+operator);
                     }
                     node = node.getNextSibling();
                     node = node.getNextSibling();
@@ -368,6 +423,9 @@ public class StructureParser {
                     formulaNode.add(subFormulaNode);
                     //unaryNode.setFather(formulaNode);
                     //subFormulaNode.setFather(formulaNode);
+                    
+                    // write UI information into predicate.dot file
+                    PredicateDot.getInstance().write2PredicateDotLink(formulaNode, subFormulaNode);
                 }
                 else if(node.getNodeName().equals("atom"))
                 {
@@ -387,6 +445,7 @@ public class StructureParser {
                     binaryNode.setOperator(operator);
                     if(DEBUG){
                         System.out.println("----------------binary: "+operator);
+                        logger.info("----------------binary: "+operator);
                     }
                     node = node.getNextSibling();
                     node = node.getNextSibling();
@@ -397,10 +456,15 @@ public class StructureParser {
                     //binaryNode.setFather(formulaNode);
                     //subFormulaNode_1.setFather(formulaNode);
                     //subFormulaNode_2.setFather(formulaNode);
+                    
+                    // write UI information into predicate.dot file
+                    PredicateDot.getInstance().write2PredicateDotLink(formulaNode, subFormulaNode_1);
+                    PredicateDot.getInstance().write2PredicateDotLink(formulaNode, subFormulaNode_2);
                 }
                 else
                 {
                     System.out.println("Node "+node.getNodeName()+" existing here is illegal!");
+                    logger.error("Node "+node.getNodeName()+" existing here is illegal!");
                 }
             }
         }
@@ -411,6 +475,7 @@ public class StructureParser {
         Atom atomNode = new Atom(NodeType.ATOM,"atom");
         if(DEBUG){
             System.out.println("--------------------atom");
+            logger.info("--------------------atom");
         }
         String operator = atom.getAttributes().getNamedItem("operator").getNodeValue();
         String name = atom.getAttributes().getNamedItem("name").getNodeValue();
@@ -419,10 +484,18 @@ public class StructureParser {
             System.out.println("------------------------"+name);
             System.out.println("------------------------"+operator);
             System.out.println("------------------------"+value);
+            logger.info("------------------------"+name);
+            logger.info("------------------------"+operator);
+            logger.info("------------------------"+value);
         }
         atomNode.setOperator(operator);
         atomNode.setName(name);
         atomNode.setValue(value);
         return (Structure)atomNode;
+    }
+    
+    public HashMap<String,Structure> getName2CGS()
+    {
+    	return this.nameToCGS;
     }
 }

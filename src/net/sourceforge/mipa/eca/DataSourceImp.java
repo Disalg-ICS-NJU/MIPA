@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.eca.exception.ConditionNotFoundException;
 
 /**
@@ -36,6 +38,7 @@ public class DataSourceImp implements DataSource {
 
     /** map event name to <code>Condition</code> list */
     private Map<String, ArrayList<Condition>> map;
+    private static Logger logger = Logger.getLogger(DataSourceImp.class);
 
     public DataSourceImp() {
         map = new HashMap<String, ArrayList<Condition>>();
@@ -48,11 +51,13 @@ public class DataSourceImp implements DataSource {
         if(DEBUG) {
             System.out.println();
             System.out.println("attaching condition to data source...");
+            logger.info("Attaching condition to data source...");
         }
         
         if (map.containsKey(eventName) == false) {
             if(DEBUG) {
                 System.out.println("New event in data source...");
+                logger.info("New event in data source...");
             }
             ArrayList<Condition> list = new ArrayList<Condition>();
             list.add(condition);
@@ -60,6 +65,7 @@ public class DataSourceImp implements DataSource {
         } else {
             if(DEBUG) {
                 System.out.println("already contained event in data source...");
+                logger.info("Already contained event in data source...");
             }
             ArrayList<Condition> list = map.get(eventName);
             list.add(condition);
@@ -103,4 +109,12 @@ public class DataSourceImp implements DataSource {
 
         notifyCondition(eventName, values);
     }
+
+	public Map<String, ArrayList<Condition>> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<String, ArrayList<Condition>> map) {
+		this.map = map;
+	}
 }

@@ -22,6 +22,8 @@ package net.sourceforge.mipa.eca.preprocessing;
 import static config.Debug.DEBUG;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.eca.DataSource;
 
 /**
@@ -29,6 +31,8 @@ import net.sourceforge.mipa.eca.DataSource;
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class DataDisseminate {
+	
+	private static Logger logger = Logger.getLogger(DataDisseminate.class);
     
     private DataSource dataSource;
     
@@ -62,18 +66,23 @@ public class DataDisseminate {
             if(DEBUG) {
                 System.out.println("====================================================");
                 System.out.println(sensorAgentName + " sensor list:");
+                logger.info("====================================================");
+                logger.info(sensorAgentName + " sensor list:");
             }
             while(dataPool.size() > 0) {
                 if(DEBUG) {
                     String[] values = dataPool.get(0);
                     System.out.println("-----------------------------");
+                    logger.info("-----------------------------");
                     
                     for(int i = 0; i < values.length; i++) {
                         System.out.println("\t" + values[i]);
+                        logger.info("\t" + values[i]);
                     }
                 }
                 try {
-                    dataSource.update(sensorAgentName, dataPool.remove(0));
+                	if(dataSource!=null&&dataPool!=null&dataPool.size()>0)
+                		dataSource.update(sensorAgentName, dataPool.remove(0));
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

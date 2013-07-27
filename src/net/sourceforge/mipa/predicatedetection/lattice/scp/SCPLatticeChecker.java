@@ -129,7 +129,7 @@ public class SCPLatticeChecker extends LatticeChecker {
 						&& (node.getinsideflag() == false)) {
 					// detect SCP,out put the information
 					try {
-						application.callback(predicateID, String.valueOf(true));
+						application.callback(String.valueOf(true));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

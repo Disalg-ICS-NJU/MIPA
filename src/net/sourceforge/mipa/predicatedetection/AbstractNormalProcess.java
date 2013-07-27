@@ -24,6 +24,8 @@ import static config.Debug.DEBUG;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.components.AbstractSender;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
@@ -68,6 +70,8 @@ public abstract class AbstractNormalProcess
     protected int stopStatus; // STOP_REV_MSG or DESTROYED
     
     Thread thread;
+    
+    private static Logger logger = Logger.getLogger(AbstractNormalProcess.class);
 
     public AbstractNormalProcess(String name, String[] checkers,
                                  String[] normalProcesses) {
@@ -93,6 +97,7 @@ public abstract class AbstractNormalProcess
                 break;
             default:
                 System.out.println("wrong mode!");
+                logger.error("wrong mode!");
             break;
         }
     }
@@ -135,6 +140,7 @@ public abstract class AbstractNormalProcess
     
     public void stopReady() {
     	System.out.println(name + " stop ready");
+    	logger.info(name + " stop ready");
     	thread.interrupt();
     	thread = null;
     	Naming server = MIPAResource.getNamingServer();

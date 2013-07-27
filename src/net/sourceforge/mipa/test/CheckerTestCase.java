@@ -19,6 +19,7 @@
  */
 package net.sourceforge.mipa.test;
 
+import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ public class CheckerTestCase implements ResultCallback {
             normalProcesses[0] = idManager.getID(Catalog.NormalProcess);
             normalProcesses[1] = idManager.getID(Catalog.NormalProcess);
             
-            CheckerFactory.createSCPChecker(id, predicateID, checker, normalProcesses);
+            CheckerFactory.createSCPChecker(stub, predicateID, checker, normalProcesses);
             
             Communication checkerProcess = (Communication) server.lookup(checker);
             
@@ -168,8 +169,10 @@ public class CheckerTestCase implements ResultCallback {
             e.printStackTrace();
         }
     }
-    
-    public void callback(String predicateID, String value) {
-        System.out.println(value);
-    }
+
+	@Override
+	public void callback(String value) throws RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println(value);
+	}
 }

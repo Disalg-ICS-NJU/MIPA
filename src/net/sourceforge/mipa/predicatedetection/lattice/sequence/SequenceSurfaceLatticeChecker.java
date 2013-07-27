@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.predicatedetection.Automaton;
 import net.sourceforge.mipa.predicatedetection.Composite;
@@ -58,6 +60,7 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
     private RegularExpression predicate;
     private Automaton automaton;
     private NodeType type;
+    private static Logger logger = Logger.getLogger(SequenceSurfaceLatticeChecker.class);
 
     public SequenceSurfaceLatticeChecker(ResultCallback application,
             String predicateID, String checkerName, String[] normalProcesses,
@@ -159,7 +162,8 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
             if (result == true) {
                 if(count == 0) {
                     try {
-                        application.callback(predicateID, String.valueOf(true));
+                    	System.out.println("The predicate "+predicateID+" is satisfied.");
+                        application.callback(String.valueOf(true));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -218,9 +222,19 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
             ArrayList<String> NPs = CGSToNPs.get(CGS);
             for (int i = 0; i < NPs.size(); i++) {
                 String np = NPs.get(i);
-                String[] c = np.split("ss");
-                assert (c.length == 2);
-                int npIndex = Integer.valueOf(c[1]);
+                //String[] c = np.split("ss");
+                //assert (c.length == 2);
+                //int npIndex = Integer.valueOf(c[1]);
+                int npIndex=0;
+                //System.err.println(np);
+                for(int j=0;j<children.length;j++) {
+                	//System.err.println("Children: "+children[j]);
+                	if(children[j].equals(np)) {
+                		npIndex = j;
+                		//System.err.println("Find "+j);
+                		break;
+                	}
+                }
                 result = result
                         && (node.getGlobalState()[npIndex].getlocalPredicate());
             }
@@ -374,6 +388,7 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
     private void printCGSToNPs() {
         System.out.println("========================================");
         System.out.println("Print CGS name to NPs:");
+        logger.info("========Print CGS name to NPs:========");
         Set<String> names = CGSToNPs.keySet();
         Iterator<String> it = names.iterator();
         while (it.hasNext()) {
@@ -385,16 +400,20 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
                 result += NPs.get(i) + "  ";
             }
             System.out.println(result);
+            logger.info(result);
         }
         System.out.println("Print over");
         System.out.println("----------------------------------------");
         System.out.println();
+        logger.info("------------Print over-----------------");
     }
 
     private Automaton parseRegExpToAutomaton(RegularExpression regularExpression) {
         if (DEBUG) {
             System.out.println("========================================");
             System.out.println("Parse regular expression to automaton:");
+            logger.info("========================================");
+            logger.info("Parse regular expression to automaton:");
         }
         long time_1 = (new Date()).getTime();
         Automaton a = new Automaton(regularExpression);
@@ -405,6 +424,8 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
             System.out.println("Parse time: " + (time_2 - time_1));
             System.out.println("----------------------------------------");
             System.out.println();
+            logger.info(a.toString());
+            logger.info("-------------Parse over----------------");
         }
         if (DEBUG) {
             debug.print("initialState: ");
@@ -424,6 +445,8 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
         if (DEBUG) {
             System.out.println("========================================");
             System.out.println("Parse predicate to regular expression:");
+            logger.info("========================================");
+            logger.info("Parse predicate to regular expression:");
         }
         String string = "";
         for (int i = 0; i < GSE.getChildren().size(); i++) {
@@ -435,6 +458,8 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
             System.out.println("Parse over");
             System.out.println("----------------------------------------");
             System.out.println();
+            logger.info(string);
+            logger.info("-------------Parse over----------------");
         }
         return predicate;
     }
@@ -444,6 +469,8 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
         if (DEBUG) {
             System.out.println("========================================");
             System.out.println("Modify regular expression:");
+            logger.info("========================================");
+            logger.info("Modify regular expression:");
         }
         HashSet<String> identifiers = regularExpression.getIdentifiers();
         String expression = regularExpression.getRegularExpression();
@@ -470,6 +497,8 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
             System.out.println("Modify over");
             System.out.println("----------------------------------------");
             System.out.println();
+            logger.info(result);
+            logger.info("------------Modify over-------------");
         }
         return predicate;
     }
@@ -527,6 +556,8 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
         default: {
             System.out.println("Parse error: not defined connector: "
                     + nodeType.toString());
+            logger.error("Parse error: not defined connector: "
+                    + nodeType.toString());
             break;
         }
         }
@@ -542,6 +573,7 @@ public class SequenceSurfaceLatticeChecker extends LatticeSurfaceChecker {
         // TODO Auto-generated method stub
         if (DEBUG) {
             System.out.println("=====repeatCallBack=====");
+            logger.info("=====repeatCallBack=====");
         }
     }
 }

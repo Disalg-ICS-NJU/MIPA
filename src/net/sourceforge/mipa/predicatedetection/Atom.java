@@ -21,6 +21,8 @@ package net.sourceforge.mipa.predicatedetection;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 /**
  * The <code>Atom</code> class represents atom.
  *
@@ -39,6 +41,8 @@ public class Atom extends Composite {
     private String valueType;
     
     private boolean not;
+    
+    private static Logger logger = Logger.getLogger(Atom.class);
     
     public Atom(NodeType type, String name) {
         super(type, name);
@@ -146,6 +150,7 @@ public class Atom extends Composite {
                 return;
             } else {
                 System.out.println("The operator of String has not been defined.");
+                logger.error("The operator of String has not been defined.");
             }
             
         } else if (valueType.equals("Double") == true) {
@@ -189,11 +194,13 @@ public class Atom extends Composite {
                     }
                 } else {
                     System.out.println("The operator of Float has not been defined.");
+                    logger.error("The operator of String has not been defined.");
                 }
             }
             catch(NumberFormatException e)
             {
                 System.out.println("Number Format error.");
+                logger.error("Number Format error.");
             }
         } /*else if(valueType.equals("Boolean") == true) {
             
@@ -206,6 +213,7 @@ public class Atom extends Composite {
           }
         } */else {
             System.out.println("value type is undefined.");
+            logger.error("value type is undefined.");
         }
     }
     /*
@@ -239,4 +247,10 @@ public class Atom extends Composite {
         return true;
     }
     */
+    
+    @Override
+    public String toString()
+    {
+    	return name + "\t" + operator + "\t" + value; 
+    }
 }

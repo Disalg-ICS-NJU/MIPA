@@ -26,10 +26,10 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.GroupManager;
-import net.sourceforge.mipa.test.TimeCost;
-import net.sourceforge.mipa.test.TimeInfo;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
 /**
@@ -48,6 +48,7 @@ public class PredicateParser implements PredicateParserMethod {
 
     private PredicateValidation predicateValidation;
 
+    private static Logger logger = Logger.getLogger(PredicateParser.class);
     /**
      * default construction.
      */
@@ -57,18 +58,19 @@ public class PredicateParser implements PredicateParserMethod {
         this.groupManager = groupManager;
     }
 
-    public synchronized String parsePredicate(String applicationName,
+    public synchronized String parsePredicate(ResultCallback callback,
                                                 Document predicate)
                                                     throws RemoteException {
 
         if (DEBUG) {
             System.out.println("parsing predicate...");
+            logger.info("Parsing predicate...");
         }
         
         if (EXPERIMENT) {
-            TimeInfo t = new TimeInfo();
-            TimeCost.put(applicationName, t);
-            t.item_1_begin = System.nanoTime();
+            //TimeInfo t = new TimeInfo();
+            //TimeCost.put(callback, t);
+            //t.item_1_begin = System.nanoTime();
         }
         //only for debug
         //groupManager.setCallback(applicationName);
@@ -77,30 +79,32 @@ public class PredicateParser implements PredicateParserMethod {
 
         Structure predicateStructure = structureParser
                                                       .parseStructure(predicate);
-        
+        if(predicateStructure == null) {
+        	return null;
+        }
         if(EXPERIMENT) {
-            TimeInfo t = TimeCost.get(applicationName);
-            t.item_1_end = System.nanoTime();
+            //TimeInfo t = TimeCost.get(callback);
+            //t.item_1_end = System.nanoTime();
             
-            t.item_2_begin = System.nanoTime();
+            //t.item_2_begin = System.nanoTime();
         }
         
         if (! predicateValidation.validate(predicateStructure)) {
             return null;
         }
         
-        String predicateID = groupManager.createGroups(predicateStructure, type, applicationName);
+        String predicateID = groupManager.createGroups(predicateStructure, type, callback);
         
         if(EXPERIMENT) {
-            TimeInfo t = TimeCost.get(applicationName);
-            t.item_2_end = System.nanoTime();
+            //TimeInfo t = TimeCost.get(callback);
+            //t.item_2_end = System.nanoTime();
         }
         
         if(EXPERIMENT) {
-            TimeInfo t = TimeCost.get(applicationName);
+            //TimeInfo t = TimeCost.get(callback);
             try {
-                PrintWriter out = new PrintWriter(new FileWriter("log/time_cost", true), true);
-                out.println((t.item_1_end - t.item_1_begin) + " " + (t.item_2_end - t.item_2_begin) + " " + (t.item_2_end - t.item_1_begin));
+                //PrintWriter out = new PrintWriter(new FileWriter("log/time_cost", true), true);
+                //out.println((t.item_1_end - t.item_1_begin) + " " + (t.item_2_end - t.item_2_begin) + " " + (t.item_2_end - t.item_1_begin));
             } catch(Exception e) {
                 e.printStackTrace();
             }

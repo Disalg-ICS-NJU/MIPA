@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.Communication;
 import net.sourceforge.mipa.components.MIPAResource;
@@ -60,6 +62,8 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
     
     protected String predicateID;
     
+    private static Logger logger = Logger.getLogger(AbstractFIFOChecker.class);
+    
     public AbstractFIFOChecker(ResultCallback application, 
     						String predicateID,
                             String checkerName, 
@@ -92,6 +96,7 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
                 break;
             default:
                 System.out.println("wrong mode!");
+                logger.error("wrong mode!");
             break;
         }
         
@@ -103,6 +108,8 @@ public abstract class AbstractFIFOChecker implements Serializable, Communication
     {
         String normalProcess = message.getSenderID();
         int id = nameToID.get(normalProcess).intValue();
+        System.out.println(name+": receive message from "+normalProcess);
+        
 
         synchronized(msgBuffer) {
             add(msgBuffer.get(id), message);
