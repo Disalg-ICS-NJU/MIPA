@@ -19,10 +19,11 @@ public class OnCoordination extends UnicastRemoteObject implements ResultCallbac
 	@Override
 	public void callback(String value) throws RemoteException, MalformedURLException, NotBoundException {
 		if (value.equals("true")) {
-			Naming server = MIPAResource.getNamingServer();
-			RobotsManager robotsManager = (RobotsManager) server
-					.lookup("RobotsManager");
-			robotsManager.recovery();
+			//Naming server = MIPAResource.getNamingServer();
+			//RobotsManager robotsManager = (RobotsManager) server
+			//		.lookup("RobotsManager");
+			//robotsManager.recovery();
+			System.out.println("Recovering the system of robots...");
 		}
 	}
 
