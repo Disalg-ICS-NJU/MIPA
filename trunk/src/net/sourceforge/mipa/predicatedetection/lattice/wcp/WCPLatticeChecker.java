@@ -84,7 +84,7 @@ public class WCPLatticeChecker extends LatticeChecker {
 					LocalState[] gs = child.getglobalState();
 					for (int i = 0; i < gs.length; i++) {
 						try {
-							application.callback(predicateID, String.valueOf(true));
+							application.callback(String.valueOf(true));
 							String end = i + 1 != children.length ? " "
 									: "\r\n";
 							out.print("[" + gs[i].getvc().toString() + "]"

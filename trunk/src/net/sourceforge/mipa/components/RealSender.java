@@ -10,6 +10,8 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.naming.Naming;
 
 /**
@@ -22,6 +24,7 @@ public class RealSender extends AbstractSender implements Serializable {
     private static final long serialVersionUID = -773577183450412779L;
     private Naming server;
     private Map<String, Communication> comTable;
+    private static Logger logger = Logger.getLogger(RealSender.class);
     
     public RealSender() {
         server = MIPAResource.getNamingServer();
@@ -32,8 +35,10 @@ public class RealSender extends AbstractSender implements Serializable {
     public void send(Message message) {
         // TODO Auto-generated method stub
         if(DEBUG) {
-            System.out.println("Real-Mode Send:");
-            System.out.println("\t" + message.getSenderID() + " -> " + message.getReceiverID());
+            //System.out.println("Real-Mode Send:");
+            //System.out.println("\t" + message.getSenderID() + " -> " + message.getReceiverID());
+            logger.info("Real-Mode Send:");
+            logger.info(message.getSenderID() + " -> " + message.getReceiverID());
         }
         String receiveName = message.getReceiverID();
         try {

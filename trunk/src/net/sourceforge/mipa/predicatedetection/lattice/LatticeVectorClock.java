@@ -23,6 +23,8 @@ import static config.Debug.DEBUG;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.predicatedetection.VectorClock;
 
 /**
@@ -33,6 +35,8 @@ import net.sourceforge.mipa.predicatedetection.VectorClock;
 public class LatticeVectorClock extends VectorClock {
 
 	private static final long serialVersionUID = -367397072945972758L;
+	
+	private static Logger logger = Logger.getLogger(LatticeVectorClock.class);
 
 	public LatticeVectorClock(int number) {
 		super(number);
@@ -68,9 +72,11 @@ public class LatticeVectorClock extends VectorClock {
 
 		if (DEBUG) {
 			System.out.print("Normal Process " + id + ":\n\t");
+			logger.info("Normal Process " + id);
 			ArrayList<Long> list = getVectorClock();
 			for (int i = 0; i < list.size(); i++) {
 				System.out.print(list.get(i) + ", ");
+				logger.info(list.get(i) + ", ");
 			}
 			System.out.println();
 		}

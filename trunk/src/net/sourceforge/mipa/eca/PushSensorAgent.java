@@ -20,6 +20,9 @@
 package net.sourceforge.mipa.eca;
 
 import static config.Debug.DEBUG;
+
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.eca.preprocessing.DataDisseminate;
 import net.sourceforge.mipa.eca.sensor.Sensor;
 
@@ -34,6 +37,8 @@ public class PushSensorAgent extends SensorAgent {
     
     /** time gap between two data generations. */
     private long gap;
+    
+    private static Logger logger = Logger.getLogger(PushSensorAgent.class);
 
     public PushSensorAgent(DataDisseminate dataDisseminate, 
                              String name,
@@ -85,6 +90,7 @@ public class PushSensorAgent extends SensorAgent {
                 } else {
                     if(DEBUG) {
                         System.out.println("Sensor " + name + " Stopped!");
+                        logger.info("Sensor " + name + " Stopped!");
                     }
                     return;
                 }

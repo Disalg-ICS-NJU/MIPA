@@ -23,6 +23,8 @@ package net.sourceforge.mipa.naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.naming.NamingImp;
@@ -39,6 +41,8 @@ public class NamingService {
 
     /** registry address */
     private String address;
+    
+    private static Logger logger = Logger.getLogger(NamingService.class);
 
     /**
      * <code>NamingServer</code> construction.
@@ -71,6 +75,17 @@ public class NamingService {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * starts naming server.
+     */
+    public void stopService() {
+        try {
+            java.rmi.Naming.unbind("rmi://" + address + ":" + port + "/Naming");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param args
@@ -83,6 +98,10 @@ public class NamingService {
         System.out.println("Naming server information:");
         System.out.println("*\tIP address: " + service.address);
         System.out.println("*\tport: " + service.port);
+        logger.info("========== MIPA system Naming Service ==========");
+        logger.info("Naming server information:");
+        logger.info("*IP address: " + service.address);
+        logger.info("*Port: " + service.port);
         service.startService();
     }
 }

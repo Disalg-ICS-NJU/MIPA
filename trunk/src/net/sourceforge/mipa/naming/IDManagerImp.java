@@ -42,7 +42,6 @@ public class IDManagerImp implements IDManager {
 
     @Override
     public synchronized String getID(Catalog prefix) throws RemoteException {
-        
         if(prefix == Catalog.Numerical) {
             i++;
             return String.valueOf(i);
@@ -52,6 +51,7 @@ public class IDManagerImp implements IDManager {
         String ID = prefix.toString() + count;
         map.put(prefix, new Integer(count.intValue() + 1));
         
+        //System.err.println("Prefix: "+prefix+" "+ID);
         return ID;
     }
 

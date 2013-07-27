@@ -1,5 +1,5 @@
 <!ELEMENT predicate (CGSs, specification)>
-<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE) #REQUIRED>
+<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE|CTL) #REQUIRED>
 
 <!-- CGS definition -->
 <!ELEMENT CGSs (CGS)+>
@@ -16,9 +16,9 @@
 <!ELEMENT quantifier (#PCDATA)>
 <!ATTLIST quantifier value (universal|existential) #REQUIRED>
 <!ELEMENT binary EMPTY>
-<!ATTLIST binary value (conjunction|disjunction|imply) #REQUIRED>
+<!ATTLIST binary value (conjunction|disjunction|imply|EU|AU) #REQUIRED>
 <!ELEMENT unary EMPTY>
-<!ATTLIST unary value (not) #IMPLIED>
+<!ATTLIST unary value (not|EX|EF|EG|AX|AF|AG) #IMPLIED>
 
 <!-- operator: ==, great-than, not-great-than, less-than, not-less-than, etc. -->
 <!ELEMENT atom EMPTY>
@@ -28,7 +28,7 @@
 	value CDATA #REQUIRED>
 
 <!-- specification definition -->
-<!ELEMENT specification (prefix, GSE)>
+<!ELEMENT specification ((prefix, GSE)|(CTLFormula))>
 <!ELEMENT prefix EMPTY>
 <!ATTLIST prefix value (def|pos) #REQUIRED>
 
@@ -43,5 +43,7 @@
 <!ELEMENT cgs EMPTY>
 <!ATTLIST cgs name CDATA #REQUIRED>
 <!ELEMENT global (#PCDATA)>
+
+<!ELEMENT CTLFormula (cgs | (CTLFormula,binary,CTLFormula) | (unary, CTLFormula))>
 
 

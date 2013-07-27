@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE predicate SYSTEM "predicate.dtd" >
+<predicate type="CTL">
+  <CGSs>
+	<CGS name="g" value="conjunction">
+		<LP><formula><atom operator="less-than" name="light" value="500" /></formula></LP>
+	</CGS>
+	<CGS name="h" value="conjunction">
+		<LP><formula><atom operator="contain" name="RFID" value="tag_00001" /></formula></LP>
+	</CGS>
+  </CGSs>
+  	<specification>
+  		<CTLFormula>
+     		<CTLFormula><cgs name="g"/></CTLFormula>
+     		<binary value="EU" />
+     		<CTLFormula><cgs name="h"/></CTLFormula>
+   		</CTLFormula>
+	</specification>
+</predicate>
+
+

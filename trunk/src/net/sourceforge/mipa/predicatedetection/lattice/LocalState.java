@@ -19,12 +19,14 @@
  */
 package net.sourceforge.mipa.predicatedetection.lattice;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author tingting Hua<huatingting0820@gmail.com>
  * 
  */
-public class LocalState {
+public class LocalState implements Serializable{
 
 	protected int processID;
 	

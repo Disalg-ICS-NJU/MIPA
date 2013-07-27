@@ -46,5 +46,14 @@ public enum NodeType {
     ZEROORMORE,
     ONEORMORE,
     CHOICE,
-    OPTIONAL
+    OPTIONAL,
+    CTLFORMULA,
+    EX,
+    EU,
+    EF,
+    EG,
+    AX,
+    AU,
+    AF,
+    AG
 }

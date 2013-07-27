@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.application.ResultCallback;
 import net.sourceforge.mipa.components.AbstractSender;
 import net.sourceforge.mipa.components.Communication;
@@ -63,6 +65,8 @@ public abstract class AbstractGenericChecker implements Serializable, Communicat
     
     protected String predicateID;
     
+    private static Logger logger = Logger.getLogger(AbstractGenericChecker.class);
+    
     public AbstractGenericChecker(ResultCallback application, 
     						String predicateID,
                             String checkerName, 
@@ -97,6 +101,7 @@ public abstract class AbstractGenericChecker implements Serializable, Communicat
                 break;
             default:
                 System.out.println("wrong mode!");
+                logger.error("wrong mode!");
             break;
         }
         

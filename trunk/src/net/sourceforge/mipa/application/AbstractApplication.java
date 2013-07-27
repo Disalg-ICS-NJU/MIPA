@@ -24,6 +24,7 @@ import static config.Debug.DEBUG;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,121 +37,51 @@ import net.sourceforge.mipa.naming.Naming;
 
 import org.w3c.dom.Document;
 
-/**
- * provides application abstract method.
- * 
- * @author Jianping Yu <jianp.yue@gmail.com>
- */
-public abstract class AbstractApplication implements ResultCallback {
+public abstract class AbstractApplication {
 
-    /** application name binds in Naming server */
-    private String applicationName;
-
-    /** predicate represented by Document. */
-    //private Document predicate;
-
+    private HashMap<String, String> predicateNameToID;
+    
     public AbstractApplication() {
-    	try {
-    		String namingAddress = MIPAResource.getNamingAddress();
-
-            if (DEBUG) {
-                System.out.println("naming address is " + namingAddress);
-            }
-    		Naming server = MIPAResource.getNamingServer();
-            if (DEBUG) {
-                System.out.println("application lookup Naming successfully.");
-            }
-
-    		IDManager idManager = MIPAResource.getIDManager();
-    		applicationName = idManager.getID(Catalog.Application);
-
-    		ResultCallback stub = (ResultCallback) UnicastRemoteObject
-                                                   .exportObject(this,
-                                                                  0);
-    		server.bind(applicationName, stub);
-
-            if (DEBUG) {
-                System.out.println("application binds successfully.");
-            }
-            
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+    	predicateNameToID = new HashMap<String, String>();
     }
     
-    public AbstractApplication(String configFilename) {
-        this();
-    	//this.predicate = parseXml(xmlName);
-    }
-
-    public AbstractApplication(Document configFile) {
-    	this();
-        //this.predicate = xml;
-    }
-
-    public abstract void callback(String predicateID, String value) throws RemoteException;
-
-    /**
-     * register predicate
-     * 
-     * @param predicateFilename
-     *            predicate file name
-     * @return predicate ID
-     */
-    public String register(String predicateFilename) {
-
-    	Document predicate = parseXml(predicateFilename);
+    public String register(String predicateFile, ResultCallback callback, String predicateName) {
+    	Document predicate = parseXml(predicateFile);
     	String predicateID = null;
         try {
-
-            // get predicate parser and transfer xml document to it.
-
-            //PredicateParserMethod parser = MIPAResource.getPredicateParser();
             BrokerInterface broker = MIPAResource.getBroker();
-            if (DEBUG) {
-                System.out
-                          .println("application lookups predicate parser successfully.");
+            predicateID = broker.registerPredicate(callback, predicate);
+            if(predicateID == null) {
+            	System.out.println("Prediate: "+predicateName+" fails to register.");
+            	return null;
             }
-
-            //parser.parsePredicate(applicationName, predicate);
-            predicateID = broker.registerPredicate(applicationName, predicate);
-
+            predicateNameToID.put(predicateName, predicateID);
+            System.out.println("Prediate: "+predicateName+" registers successfully.");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return predicateID;
     }
-    
-    /**
-     * unregister the predicate.
-     */
-    public void unregister(String predicateID) {
+
+    public void unregister(String predicateName) {
+    	String predicateID = predicateNameToID.get(predicateName);
     	BrokerInterface broker = MIPAResource.getBroker();
     	try {
     		broker.unregisterPredicate(predicateID);
+    		predicateNameToID.remove(predicateName);
+    		System.out.println("Prediate: "+predicateName+" unregisters successfully.");
     	} catch(Exception e) {
     		e.printStackTrace();
     	}
     }
 
-
-    /**
-     * parse predicate to document.
-     * 
-     * @param fileName
-     *            a string
-     * @return predicate document
-     */
     private Document parseXml(String fileName) {
         Document doc = null;
         try {
             File f = new File(fileName);
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                                                    .newInstance();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(f);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

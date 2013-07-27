@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.predicatedetection.Atom;
 import net.sourceforge.mipa.predicatedetection.Composite;
 import net.sourceforge.mipa.predicatedetection.Connector;
@@ -44,6 +46,7 @@ public abstract class Condition implements Serializable {
     
     protected Composite localPredicate;
     protected HashMap<String, ArrayList<Atom>> map;
+    private static Logger logger = Logger.getLogger(Condition.class);
     /**
      * called by DataSource for notifying event change.
      * 
@@ -69,6 +72,7 @@ public abstract class Condition implements Serializable {
     {
         Formula formulaNode = (Formula)localPredicate.getChildren().get(0);
         System.out.println("parseLocalPredicate:");
+        logger.info("parseLocalPredicate:");
         return parseFormula(formulaNode);
     }
     
@@ -106,6 +110,7 @@ public abstract class Condition implements Serializable {
             else
             {
                 System.out.println("Non-defined node type: "+formula.getConnetor().getNodeType());
+                logger.error("Non-defined node type: "+formula.getConnetor().getNodeType());
             }
         }
         else //Atom

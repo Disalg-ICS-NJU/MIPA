@@ -23,9 +23,13 @@ import static config.Config.ENABLE_PHYSICAL_CLOCK;
 import static config.Config.LOG_DIRECTORY;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
+
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageType;
@@ -53,6 +57,8 @@ public class SCPNormalProcess extends AbstractNormalProcess {
     private PrintWriter out;
     
     private Map<String, Long> currentMessageCount;
+    
+    private ArrayList<Message> msgBuf;
     /**
      * @param name
      */
@@ -74,6 +80,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         if(ENABLE_PHYSICAL_CLOCK) {
             try {
                 out = new PrintWriter(LOG_DIRECTORY + "/" + name + ".log");
+                msgBuf = new ArrayList<Message>();
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -83,6 +90,12 @@ public class SCPNormalProcess extends AbstractNormalProcess {
 
     @Override
     public void receiveMsg(Message message) {
+    	
+    	if(ENABLE_PHYSICAL_CLOCK) {
+    		message.setPhysicalReceiveTime((new Date()).getTime());
+    		msgBuf.add(message);
+        }
+    	
         VectorClock timestamp = message.getTimestamp();
         currentClock.update(timestamp);
         firstflag = true;
@@ -125,11 +138,15 @@ public class SCPNormalProcess extends AbstractNormalProcess {
                 }
                 firstflag = false;
             }
+            System.out.println(name+": The value of the local predicate is changed.");
+    	}
+    	else{
+    		System.out.println(name+": The event is ignored because it does not change the value of the local predicate.");
     	}
         prevState = value;
     }
     
-    private void send(MessageType type, String receiverName, SCPMessageContent content) {
+    public void send(MessageType type, String receiverName, SCPMessageContent content) {
         Message m = new Message();
         m.setType(type);
         m.setSenderID(name);
@@ -137,6 +154,10 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         VectorClock current = new SCPVectorClock(currentClock);
         m.setTimestamp(current);
         m.setMessageContent(content);
+        
+        if(ENABLE_PHYSICAL_CLOCK) {
+        	m.setPhysicalSendTime((new Date()).getTime());
+        }
         
         if(currentMessageCount.containsKey(receiverName) == true) {
             long currentCount = currentMessageCount.get(receiverName);
@@ -161,5 +182,13 @@ public class SCPNormalProcess extends AbstractNormalProcess {
         // TODO Auto-generated method stub
         
     }
+
+	public ArrayList<Message> getMsgBuf() {
+		return msgBuf;
+	}
+
+	public void setMsgBuf(ArrayList<Message> msgBuf) {
+		this.msgBuf = msgBuf;
+	}
 
 }

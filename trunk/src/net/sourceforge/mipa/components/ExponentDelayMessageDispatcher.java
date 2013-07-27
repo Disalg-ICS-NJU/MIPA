@@ -24,6 +24,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintWriter;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.tools.ExponentDistribution;
 
 /**
@@ -36,6 +38,8 @@ public class ExponentDelayMessageDispatcher extends GenericMessageDispatcher {
     
     double lambda;
     
+    private static Logger logger = Logger.getLogger(ExponentDelayMessageDispatcher.class);
+    
     public ExponentDelayMessageDispatcher() {
         super();
 
@@ -47,7 +51,10 @@ public class ExponentDelayMessageDispatcher extends GenericMessageDispatcher {
             lambda = Double.parseDouble(rd.readLine());
             
             if(DEBUG) {
-                System.out.println("message dispatcher lambda is " + lambda);
+            	if(MIPAResource.getMode().equals(Mode.SIMULATED)) {
+            		System.out.println("message dispatcher lambda is " + lambda);
+            		logger.info("message dispatcher lambda is " + lambda);
+            	}
             }
             
         } catch (Exception e) {

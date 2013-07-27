@@ -62,6 +62,12 @@ public class ContextModeling {
         mapContext.put(highContext, lowContext);
         mapValueType.put(lowContext, valueType);
     }
+    
+    public synchronized void remove(String highContext, 
+            String lowContext) {
+    	mapContext.remove(highContext);
+    	mapValueType.remove(lowContext);
+}
 
     /**
      * gets mapping low context.

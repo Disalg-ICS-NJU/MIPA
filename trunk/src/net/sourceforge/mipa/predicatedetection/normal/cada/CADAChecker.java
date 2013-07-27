@@ -215,7 +215,7 @@ public class CADAChecker extends AbstractFIFOChecker {
                 if (found.equals("early-detection")
                         ||found.equals("concurrency-detection")) {
                     try {
-                        application.callback(predicateID, String.valueOf(true));
+                        application.callback(String.valueOf(true));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

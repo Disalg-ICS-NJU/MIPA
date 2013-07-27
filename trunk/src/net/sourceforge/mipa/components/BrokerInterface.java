@@ -22,6 +22,8 @@ package net.sourceforge.mipa.components;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import net.sourceforge.mipa.application.ResultCallback;
+
 import org.w3c.dom.Document;
 
 /**
@@ -56,7 +58,7 @@ public interface BrokerInterface extends Remote {
      * @return predicate ID
      * @throws RemoteException
      */
-    public String registerPredicate(String applicationName, Document predicate)
+    public String registerPredicate(ResultCallback callback, Document predicate)
     									throws RemoteException;
     
     /**

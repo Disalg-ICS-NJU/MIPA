@@ -27,6 +27,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.components.BrokerInterface;
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.eca.DataSource;
@@ -46,6 +48,8 @@ import net.sourceforge.mipa.tools.GCRunner;
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class ECAInitialize {
+	
+	private static Logger logger = Logger.getLogger(ECAInitialize.class);
     /**
      * initialize method.
      */
@@ -99,14 +103,17 @@ public class ECAInitialize {
                 String pattern = ".*xml";
                 if(Pattern.matches(pattern, files[i])) {
                     System.out.println(files[i]);
+                    logger.info(files[i]);
                     resources.add(sensorPlugin.load(config.Config.SENSORS_CONFIG_DIRECTORY + files[i]));
                 }
             }
             
             if (DEBUG) {
                 System.out.println("resources value: ");
+                logger.info("resources value: ");
                 for (int i = 0; i < resources.size(); i++) {
                     System.out.println(resources.get(i).getName());
+                    logger.info(resources.get(i).getName());
                 }
                 System.out.println();
             }

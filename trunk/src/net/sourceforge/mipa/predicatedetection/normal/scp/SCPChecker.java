@@ -41,6 +41,8 @@ public class SCPChecker extends AbstractFIFOChecker {
     
     private PrintWriter out = null;
     
+    int number = 0;
+    
     /**
      * @param application
      * @param checkerName
@@ -80,7 +82,7 @@ public class SCPChecker extends AbstractFIFOChecker {
         check(messages);
     }
     
-    private void check(ArrayList<Message> messages) {
+    public void check(ArrayList<Message> messages) {
         String normalProcess = messages.get(0).getSenderID();
         int id = nameToID.get(normalProcess).intValue();
         
@@ -145,7 +147,11 @@ public class SCPChecker extends AbstractFIFOChecker {
                 }
                 if (found == true) {
                     try {
-                        application.callback(predicateID, String.valueOf(true));
+                    	if(number ==0) {
+                    		System.out.println("The predicate "+ predicateID + " is satisfied.");
+                    		application.callback(String.valueOf(true));
+                    		number++;
+                    	}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

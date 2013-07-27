@@ -56,6 +56,10 @@ public class Message implements Serializable {
     /** message content */
     private MessageContent messageContent = null;
     
+    private long physicalSendTime;
+    
+    private long physicalReceiveTime;
+    
     
     /** SCP message content */
     //private SCPMessageContent scpMessageContent = null;
@@ -182,6 +186,22 @@ public class Message implements Serializable {
     public MessageContent getMessageContent() {
         return messageContent;
     }
+
+	public long getPhysicalReceiveTime() {
+		return physicalReceiveTime;
+	}
+
+	public void setPhysicalReceiveTime(long physicalReceiveTime) {
+		this.physicalReceiveTime = physicalReceiveTime;
+	}
+
+	public long getPhysicalSendTime() {
+		return physicalSendTime;
+	}
+
+	public void setPhysicalSendTime(long physicalSendTime) {
+		this.physicalSendTime = physicalSendTime;
+	}
 
     /**
      * @param scpMessageContent the scpMessageContent to set

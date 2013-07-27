@@ -42,6 +42,8 @@ public class WCPChecker extends AbstractFIFOChecker {
     
     private PrintWriter out = null;
     
+    private int number = 0;
+    
     public WCPChecker(ResultCallback application, String predicateID, String checkerName,
             String[] normalProcesses) {
         super(application, predicateID, checkerName, normalProcesses);
@@ -135,7 +137,11 @@ public class WCPChecker extends AbstractFIFOChecker {
                 }
                 if (found == true) {
                     try {
-                        application.callback(predicateID, String.valueOf(true));
+                    	if(number == 0) {
+                    		number++;
+                    		System.out.println("The predicate "+predicateID+" is satisfied.");
+                    		application.callback(String.valueOf(true));
+                    	}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -34,5 +34,7 @@ public enum Catalog {
     Application,
     AbstractGroup,
     Group,
-    Numerical
+    Numerical,
+    Worker,
+    FireMan
 }

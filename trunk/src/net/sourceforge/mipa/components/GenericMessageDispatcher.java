@@ -24,6 +24,8 @@ import java.rmi.RemoteException;
 //import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
 //import java.util.PriorityQueue;
 
 import net.sourceforge.mipa.naming.Naming;
@@ -49,6 +51,8 @@ public abstract class GenericMessageDispatcher
     private Map<String, Communication> comTable;
 
     private Naming server;
+    
+    private static Logger logger = Logger.getLogger(GenericMessageDispatcher.class);
 
     public GenericMessageDispatcher() {
         currentTime = 0;
@@ -94,6 +98,8 @@ public abstract class GenericMessageDispatcher
                         if (m == null || m.getDispatchTime() > currentTime)
                             break;
                         m = dispatchQueue.poll();
+                        //System.out.println("Dispatching: "+m.toString());
+                        //logger.info("Dispatching: "+m.toString());
                         //m = (Message) dispatchQueue.pop();
                     
                         dispatch(m);
@@ -113,8 +119,12 @@ public abstract class GenericMessageDispatcher
      */
     private void dispatch(Message message) {
         if(DEBUG) {
-            System.out.println("Message dispatch:");
-            System.out.println("\t" + message.getSenderID() + " -> " + message.getReceiverID());
+        	if(MIPAResource.getMode().equals(Mode.SIMULATED)) {
+        		System.out.println("Message dispatch:");
+        		System.out.println("\t" + message.getSenderID() + " -> " + message.getReceiverID());
+        		logger.info("Message dispatch:");
+        		logger.info("\t" + message.getSenderID() + " -> " + message.getReceiverID());
+        	}
         }
         
         try {

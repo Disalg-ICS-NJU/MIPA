@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import net.sourceforge.mipa.naming.Naming;
 import net.sourceforge.mipa.predicatedetection.NormalProcess;
 
@@ -38,6 +40,8 @@ public class CoordinatorImp implements Coordinator {
     private Map<String, Group> groupMap;
 
     private Naming server;
+    
+    private static Logger logger = Logger.getLogger(CoordinatorImp.class);
 
     public CoordinatorImp() {
         groupMap = new HashMap<String, Group>();
@@ -58,7 +62,9 @@ public class CoordinatorImp implements Coordinator {
         Group g = groupMap.get(groupID);
         if(DEBUG) {
             System.out.println("group ID is " + groupID);
+            logger.info("group ID is " + groupID);
         }
+        
         int finishedNum = g.getNumberOfFinishedMembers();
         int total = g.getMembers().size();
 
@@ -70,6 +76,8 @@ public class CoordinatorImp implements Coordinator {
         if (DEBUG) {
             System.out.println("Coordinator receives normal process name: "
                                + memberID);
+            logger.info("Coordinator receives normal process name: "
+                    + memberID);
         }
 
         if (finishedNum == total) {

@@ -22,6 +22,7 @@ package net.sourceforge.mipa.predicatedetection;
 
 import static config.Debug.DEBUG;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -31,15 +32,20 @@ import org.w3c.dom.Element;
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class PredicateIdentify {
+	
+	private static Logger logger = Logger.getLogger(PredicateIdentify.class);	
+	
     public static PredicateType predicateIdentify(Document predicate) {
         
         if(DEBUG) {
             System.out.println("\tidentify predicate...");
+            logger.info("Identify predicate...");
         }
         Element root = predicate.getDocumentElement();
         
         String type = root.getAttribute("type");
         System.out.println("predicate type is " + type);
+        logger.info("Predicate type is " + type);
         
         return PredicateType.valueOf(type);
     }

@@ -38,6 +38,8 @@ public class OGATopChecker extends AbstractGenericChecker {
     private int m;
 
     private Map<String, ArrayList<OGAVectorClock>> preQueHiMap;
+    
+    private int number = 0;
 
     public OGATopChecker(ResultCallback application, String predicateID, String checkerName,
                          String[] children) {
@@ -95,7 +97,11 @@ public class OGATopChecker extends AbstractGenericChecker {
         if (find) index++;
         if (index > m) {
             try {
-                application.callback(predicateID, String.valueOf(true));
+            	if(number == 0) {
+            		number++;
+            		System.out.println("The predicate "+predicateID+" is satisfied.");
+            		application.callback(String.valueOf(true));
+            	}
                 index = 1;
             } catch (Exception e) {
                 e.printStackTrace();
