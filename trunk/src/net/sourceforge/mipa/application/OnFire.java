@@ -29,7 +29,7 @@ public class OnFire extends UnicastRemoteObject implements ResultCallback {
 			//		.lookup("RobotsManager");
 			//String locationOfFire = robotsManager.getRobots().get(0)
 			//		.getLocation();
-			String locationOfFire = "813";
+			String locationOfFire = "workshop_1";
 			
 			/* launch the fire alarm */
 
