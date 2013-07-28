@@ -22,11 +22,9 @@ HOW TO GENERATE DOCUMENTS?
 HOW TO RUN MIPA SYSTEM?
 
 * RUN IN COMMAND LINE:
-    run the demo which MIPA provides in bin/<platform> directory. There are four steps
- to start the demo (Make sure you are in bin/<platform> directory):
+    run the demo which MIPA provides in bin/<platform> directory. There are four steps to start the demo (Make sure you are in bin/<platform> directory):
     1. run MIPAInitialize.sh<bat> to initialize MIPA system.
-    2. run ECAInitialize.sh<bat> to start ECA resource in MIPA system. ECA resources 
-could run in different platforms.
+    2. run ECAInitialize.sh<bat> to start ECA resource in MIPA system. ECA resources could run in different platforms.
     3. start MIPA application through application.sh<bat>, you can run many 
 applications in one time.
 
