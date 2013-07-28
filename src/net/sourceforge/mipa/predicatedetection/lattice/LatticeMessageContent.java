@@ -33,11 +33,19 @@ public class LatticeMessageContent extends MessageContent {
 	private LatticeVectorClock lvc;
 
 	private boolean localPredicate;
+	
+	private long physicalTime = 0;
 
 	public LatticeMessageContent(LatticeVectorClock lvc, boolean localPredicate) {
 		this.lvc = lvc;
 		this.localPredicate = localPredicate;
 	}
+	
+	public LatticeMessageContent(LatticeVectorClock lvc, boolean localPredicate, long physicalTime) {
+        this.lvc = lvc;
+        this.localPredicate = localPredicate;
+        this.setPhysicalTime(physicalTime);
+    }
 
 	public LatticeVectorClock getlvc() {
 		return lvc;
@@ -55,4 +63,17 @@ public class LatticeMessageContent extends MessageContent {
 		this.localPredicate = localPredicate;
 	}
 
+    /**
+     * @param physicalTime the physicalTime to set
+     */
+    public void setPhysicalTime(long physicalTime) {
+        this.physicalTime = physicalTime;
+    }
+
+    /**
+     * @return the physicalTime
+     */
+    public long getPhysicalTime() {
+        return physicalTime;
+    }
 }

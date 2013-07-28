@@ -39,6 +39,8 @@ public class LocalPredicate implements Structure,Serializable {
     
     private ArrayList<Structure> formula;
     
+    private String windowSize = "";
+    
     public LocalPredicate() {
         atoms = new ArrayList<Atom>();
         formula = new ArrayList<Structure>();
@@ -88,6 +90,21 @@ public class LocalPredicate implements Structure,Serializable {
     public NodeType getNodeType() {
     // TODO Auto-generated method stub
     return NodeType.LP;
+    }
+    
+    /**
+     * @param windowSize the windowSize to set
+     */
+    public void setWindowSize(String windowSize) {
+        this.windowSize = windowSize;
+    }
+
+
+    /**
+     * @return the windowSize
+     */
+    public String getWindowSize() {
+        return windowSize;
     }
     
     public String toString()

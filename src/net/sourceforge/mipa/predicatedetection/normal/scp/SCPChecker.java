@@ -147,7 +147,7 @@ public class SCPChecker extends AbstractFIFOChecker {
                 }
                 if (found == true) {
                     try {
-                    	if(number ==0) {
+                    	if(number == 0) {
                     		System.out.println("The predicate "+ predicateID + " is satisfied.");
                     		application.callback(String.valueOf(true));
                     		number++;

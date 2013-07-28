@@ -23,6 +23,7 @@ package net.sourceforge.mipa.predicatedetection.lattice.sequence;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import net.sourceforge.mipa.predicatedetection.State;
 import net.sourceforge.mipa.predicatedetection.lattice.AbstractLatticeIDNode;
 import net.sourceforge.mipa.predicatedetection.lattice.LocalState;
@@ -129,5 +130,13 @@ public class SequenceLatticeIDNode extends AbstractLatticeIDNode {
 
     public void setFlagInclusion(boolean flagInclusion) {
         this.flagInclusion = flagInclusion;
+    }
+    
+    public int hashCode() {
+        return (StringUtils.join(ID)).hashCode();
+    }
+    
+    public boolean equals(AbstractLatticeIDNode node) {
+        return hashCode() == node.hashCode();
     }
 }

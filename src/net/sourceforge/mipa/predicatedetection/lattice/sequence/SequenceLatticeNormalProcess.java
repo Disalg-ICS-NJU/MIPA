@@ -36,16 +36,16 @@ import net.sourceforge.mipa.predicatedetection.lattice.LatticeVectorClock;
 /**
  * 
  * @author Yiling Yang <csylyang@gmail.com>
- *
+ * 
  */
 public class SequenceLatticeNormalProcess extends AbstractNormalProcess {
 
     private static final long serialVersionUID = -3908797397730424171L;
-    
+
     private boolean localPredicate;
 
     private Map<String, Long> currentMessageCount;
-    
+
     private PrintWriter out;
     private long pTimeLo;
     private int index;
@@ -61,65 +61,67 @@ public class SequenceLatticeNormalProcess extends AbstractNormalProcess {
         for (int i = 0; i < checkers.length; i++) {
             currentMessageCount.put(checkers[i], new Long(0));
         }
-        
+
         localPredicate = false;
-        
+
         try {
             out = new PrintWriter(LOG_DIRECTORY + "/" + name + ".log");
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         index = 0;
     }
 
     @Override
-    public void action(boolean value) {
+    public synchronized void action(boolean value) {
 
         if ((value == true) && (localPredicate == false)) {
             localPredicate = true;
 
             index++;
             pTimeLo = (new Date()).getTime();
-            
+            out.println("¡ü");
+            out.flush();
             // send message to other normal process
             broadcast(MessageType.Control, null);
-            
-            // update vector clock
-            currentClock.increment(id);
-            
-            // localState changed, send localState to checker
-            LatticeVectorClock clock = new LatticeVectorClock(currentClock);
-            LatticeMessageContent content = new LatticeMessageContent(clock,
-                    value);
-            for (int i = 0; i < checkers.length; i++) {
-                String checker = checkers[i];
-                send(MessageType.Detection, checker, content);
-            }
-            
-        } else if ((value == false) && (localPredicate == true)) {
-            localPredicate = false;
-            
-            //out put the physical time, to compare with the lattice result
-            try {
-                long pTimeHi = (new Date()).getTime();
-                out.println(index + " " + pTimeLo + " " + pTimeHi);
-                out.flush();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-            
+
             // update vector clock
             currentClock.increment(id);
 
             // localState changed, send localState to checker
             LatticeVectorClock clock = new LatticeVectorClock(currentClock);
             LatticeMessageContent content = new LatticeMessageContent(clock,
-                    value);
+                    value, pTimeLo);
             for (int i = 0; i < checkers.length; i++) {
                 String checker = checkers[i];
                 send(MessageType.Detection, checker, content);
             }
-            
+
+        } else if ((value == false) && (localPredicate == true)) {
+            localPredicate = false;
+            long pTimeHi = 0;
+            // out put the physical time, to compare with the lattice result
+            try {
+                pTimeHi = (new Date()).getTime();
+                out.println(index + " " + pTimeLo + " " + pTimeHi);
+                out.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            out.println("¡ý");
+            out.flush();
+            // update vector clock
+            currentClock.increment(id);
+
+            // localState changed, send localState to checker
+            LatticeVectorClock clock = new LatticeVectorClock(currentClock);
+            LatticeMessageContent content = new LatticeMessageContent(clock,
+                    value, pTimeHi);
+            for (int i = 0; i < checkers.length; i++) {
+                String checker = checkers[i];
+                send(MessageType.Detection, checker, content);
+            }
+
         }
 
     }
@@ -141,7 +143,8 @@ public class SequenceLatticeNormalProcess extends AbstractNormalProcess {
         } else {
             assert (false);
         }
-
+        out.println("send "+m.getMessageID()+"["+m.getTimestamp().toString()+"] to"+receiverName);
+        out.flush();
         sender.send(m);
     }
 
@@ -164,17 +167,19 @@ public class SequenceLatticeNormalProcess extends AbstractNormalProcess {
         // update the vector clock
         VectorClock timestamp = message.getTimestamp();
         currentClock.update(timestamp);
-
+        out.println("receive ["+message.getTimestamp().toString()+"] from NP"+message.getSenderID());
+        out.println("VC changes to ["+currentClock.toString()+"]");
+        out.flush();
+        long time = (new Date()).getTime();
         // fix Issue 10, add check message sending
         // localState changed, send localState to checker
         LatticeVectorClock clock = new LatticeVectorClock(currentClock);
         LatticeMessageContent content = new LatticeMessageContent(clock,
-                localPredicate);
+                localPredicate, time);
         for (int i = 0; i < checkers.length; i++) {
             String checker = checkers[i];
             send(MessageType.Detection, checker, content);
         }
     }
-
 
 }

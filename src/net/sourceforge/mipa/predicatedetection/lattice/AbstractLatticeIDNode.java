@@ -21,6 +21,8 @@ package net.sourceforge.mipa.predicatedetection.lattice;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 
  * @author Yiling Yang <csylyang@gmail.com>
@@ -48,5 +50,13 @@ public class AbstractLatticeIDNode implements Serializable {
 
     public LocalState[] getGlobalState() {
         return globalState;
+    }
+    
+    public int hashCode() {
+        return (StringUtils.join(ID)).hashCode();
+    }
+    
+    public boolean equals(AbstractLatticeIDNode node) {
+        return hashCode() == node.hashCode();
     }
 }
