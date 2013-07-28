@@ -26,11 +26,20 @@ package net.sourceforge.mipa.test;
  */
 public class PhysicalTimeInterval {
 	
-	private String intervalID;
+	private String intervalID = "";
 	
-	private long pTimeLo;
+	private long pTimeLo = 0;
     
-    private long pTimeHi;
+    private long pTimeHi = 0;
+    
+    public PhysicalTimeInterval(long lo) {
+        pTimeLo=lo;
+    }
+    
+    public PhysicalTimeInterval(long lo,long hi) {
+        pTimeLo=lo;
+        pTimeHi=hi;
+    }
     
     /**
      * @param id

@@ -75,4 +75,15 @@ public class State implements Serializable{
     public boolean isAccept() {
         return state.isAccept();
     }
+    
+    public int hashCode() {
+        return name.hashCode();
+    }
+    
+    public boolean equals(State state) {
+        if(name == state.getName()) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -350,10 +350,36 @@ public class StructureParser {
     }
 
     public LocalPredicate parseLocalPredicate(Node localPredicate) {
+        String windowSize = "";
+        if (localPredicate.getAttributes().getNamedItem("windowSize") != null) {
+            windowSize = localPredicate.getAttributes().getNamedItem(
+                    "windowSize").getNodeValue();
+            try {
+                int size = Integer.valueOf(windowSize);
+                if (size < 1) {
+                    new NumberFormatException("Window size of node "
+                            + localPredicate.toString()
+                            + " should be bigger than zero.").printStackTrace();;
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                System.out
+                        .println("Window size of node "
+                                + localPredicate.toString()
+                                + " should be an integer and bigger than zero.");
+            }
+        }
         LocalPredicate LP = new LocalPredicate();
-        if(DEBUG){
-            System.out.println("--------LP");
-            logger.info("--------LP");
+        LP.setWindowSize(windowSize);
+        if (DEBUG) {
+            if (windowSize != "") {
+                System.out.println("--------LP windowSize: " + windowSize);
+                logger.info("--------LP windowSize: " + windowSize);
+            }
+            else {
+                System.out.println("--------LP");
+                logger.info("--------LP");
+            }
         }
         for (Node node = localPredicate.getFirstChild(); 
               node != null; 
@@ -470,6 +496,7 @@ public class StructureParser {
         }
         return formulaNode;
     }
+
     public Structure parseAtom(Node atom)
     {
         Atom atomNode = new Atom(NodeType.ATOM,"atom");

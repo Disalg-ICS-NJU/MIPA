@@ -258,6 +258,13 @@ public class ECAManagerImp implements ECAManager {
                             surSequenceNP, 0);
                     action = surSequenceNP;
                     break;
+                case WINDOWSEQUENCE:
+                    SequenceLatticeNormalProcess winSequenceNP = new SequenceLatticeNormalProcess(
+                            name, checkers, normalProcesses);
+                    npStub = (NormalProcess) UnicastRemoteObject.exportObject(
+                            winSequenceNP, 0);
+                    action = winSequenceNP;
+                    break;
                 case CTL:
                     SequenceLatticeNormalProcess ctlSequenceNP = new SequenceLatticeNormalProcess(
                             name, checkers, normalProcesses);

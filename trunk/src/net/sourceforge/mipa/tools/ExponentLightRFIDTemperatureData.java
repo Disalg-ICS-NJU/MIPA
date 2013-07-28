@@ -19,10 +19,10 @@ public class ExponentLightRFIDTemperatureData {
 
         int timeGap = 200;
         String concernedTag = "tag_00001";
-        String outputFile_1_1 = "data/RFID_2";
-        String outputFile_1_2 = "data/RFID_3";
-        String outputFile_2_1 = "data/light_2";
-        String outputFile_2_2 = "data/light_3";
+        String outputFile_1_1 = "data/RFID";
+        String outputFile_1_2 = "data/RFID_1";
+        String outputFile_2_1 = "data/light";
+        String outputFile_2_2 = "data/light_1";
 //        String outputFile_3_1 = "data/temperature";
 //        String outputFile_3_2 = "data/temperature_1";
         PrintWriter output_1_1 = null;
@@ -62,7 +62,7 @@ public class ExponentLightRFIDTemperatureData {
                 output_1_2.println(tags.get(i));
             }
             for (int i = 0; i < tags.size(); i++) {
-                int count = 10;
+                int count = 48;
                 String stream = "";
                 for (int j = 0; j < count; j++) {
                     double gapLength = ExponentDistribution

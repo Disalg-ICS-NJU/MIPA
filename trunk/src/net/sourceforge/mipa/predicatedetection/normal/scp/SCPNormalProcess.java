@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
-
 import net.sourceforge.mipa.components.MIPAResource;
 import net.sourceforge.mipa.components.Message;
 import net.sourceforge.mipa.components.MessageType;

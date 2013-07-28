@@ -1,5 +1,5 @@
 <!ELEMENT predicate (CGSs, specification)>
-<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE|CTL) #REQUIRED>
+<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE|CTL|WINDOWSEQUENCE) #REQUIRED>
 
 <!-- CGS definition -->
 <!ELEMENT CGSs (CGS)+>
@@ -10,6 +10,8 @@
 
 <!-- local predicate definition -->
 <!ELEMENT LP (formula)>
+<!ATTLIST LP 
+	windowSize CDATA #IMPLIED>
 <!ELEMENT formula ((quantifier, formula)|(formula, binary, formula)|(unary, formula)|atom)>
 
 <!-- quantifier contains symbol and variable -->

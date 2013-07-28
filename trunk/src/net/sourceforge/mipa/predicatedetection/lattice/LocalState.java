@@ -36,6 +36,10 @@ public class LocalState implements Serializable{
 
 	protected boolean localPredicate;
 	
+	protected String ID;
+	
+	protected long physicalTime = 0;
+	
 	public LocalState(int pID, LatticeVectorClock lvc, boolean lp) {
         processID = pID;
         vc = new LatticeVectorClock(lvc);
@@ -48,6 +52,14 @@ public class LocalState implements Serializable{
 		vc = new LatticeVectorClock(lvc);
 		localPredicate = lp;
 	}
+	
+	public LocalState(int pID, int iID, LatticeVectorClock lvc, boolean lp, long physicalTime) {
+        processID = pID;
+        intervalID = iID;
+        vc = new LatticeVectorClock(lvc);
+        localPredicate = lp;
+        this.physicalTime = physicalTime;
+    }
 
 	public void setVC(LatticeVectorClock lvc) {
 
@@ -73,5 +85,21 @@ public class LocalState implements Serializable{
 
     public void setProcessID(int processID) {
         this.processID = processID;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String id) {
+        ID = id;
+    }
+
+    public long getPhysicalTime() {
+        return physicalTime;
+    }
+
+    public void setPhysicalTime(long physicalTime) {
+        this.physicalTime = physicalTime;
     }
 }

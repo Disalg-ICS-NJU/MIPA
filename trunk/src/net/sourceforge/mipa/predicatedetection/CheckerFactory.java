@@ -34,6 +34,7 @@ import net.sourceforge.mipa.predicatedetection.lattice.ctl.CTLLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.sequence.SequenceLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.sequence.SequenceSurfaceLatticeChecker;
+import net.sourceforge.mipa.predicatedetection.lattice.sequence.SequenceWindowedLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.normal.cada.CADAChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.normal.oga.OGASubChecker;
@@ -172,7 +173,6 @@ public class CheckerFactory {
 
     public static void createCADAChecker(ResultCallback callback, String predicateID, String checkerName,
             String[] normalProcesses) {
-        // TODO Auto-generated method stub
         try {
             //ResultCallback application = (ResultCallback) server.lookup(callback);
 
@@ -204,7 +204,6 @@ public class CheckerFactory {
 
     public static void createSequenceChecker(ResultCallback callback, String predicateID, 
             String checkerName, String[] normalProcesses, Structure specification) {
-        // TODO Auto-generated method stub
         try {
             //ResultCallback application = (ResultCallback) server.lookup(callback);
 
@@ -231,7 +230,6 @@ public class CheckerFactory {
 
     public static void createSequenceSurfaceChecker(ResultCallback callback, String predicateID, 
             String checkerName, String[] normalProcesses, Structure specification) {
-        // TODO Auto-generated method stub
         try {
             //ResultCallback application = (ResultCallback) server.lookup(callback);
 
@@ -298,6 +296,32 @@ public class CheckerFactory {
 			logger.fatal(e.getMessage());
 			e.printStackTrace();
 		}
+    }
+    
+    public static void createSequenceWindowChecker(ResultCallback callback,
+            String predicateID, String checkerName, String[] normalProcesses,
+            Structure specification) {
+        try {
+            //ResultCallback application = (ResultCallback) server
+            //        .lookup(callback);
+
+            CheckMode checkMode = MIPAResource.getCheckMode();
+            if (checkMode == CheckMode.NORMAL) {
+                // NORMAL mode code puts here!
+            } else if (checkMode == CheckMode.LATTICE) {
+                SequenceWindowedLatticeChecker sequenceWindowedLatticeChecker = new SequenceWindowedLatticeChecker(
+                		callback, predicateID, checkerName, normalProcesses,specification);
+                Communication sequenceLatticecheckerStub = (Communication) UnicastRemoteObject
+                        .exportObject(sequenceWindowedLatticeChecker, 0);
+                server.bind(checkerName, sequenceLatticecheckerStub);
+            } else {
+                System.out.println("Check Mode " + checkMode
+                        + "has not been defined.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /*
