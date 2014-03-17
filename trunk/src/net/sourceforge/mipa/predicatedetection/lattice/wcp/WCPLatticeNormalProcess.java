@@ -65,9 +65,10 @@ public class WCPLatticeNormalProcess extends AbstractNormalProcess {
 	}
 
 	@Override
-	public void action(boolean value) {
-
-		if ((value == true) && tfirstflag) {
+	public void action(String value) {
+		String[] values = value.split("\\s+");
+    	boolean newValue = Boolean.parseBoolean(values[0]);
+		if ((newValue == true) && tfirstflag) {
 			tfirstflag = false;
 			ffirstflag = true;
 			localPredicate = true;
@@ -81,13 +82,13 @@ public class WCPLatticeNormalProcess extends AbstractNormalProcess {
 			// localState changed, send localState to checker
 			LatticeVectorClock clock = new LatticeVectorClock(currentClock);
 			LatticeMessageContent content = new LatticeMessageContent(clock,
-					value);
+					newValue);
 			for (int i = 0; i < checkers.length; i++) {
 				String checker = checkers[i];
 				send(MessageType.Detection, checker, content);
 			}
 
-		} else if ((value == false) && ffirstflag) {
+		} else if ((newValue == false) && ffirstflag) {
 			ffirstflag = false;
 			tfirstflag = true;
 			localPredicate = false;
@@ -98,7 +99,7 @@ public class WCPLatticeNormalProcess extends AbstractNormalProcess {
 			// localState changed, send localState to checker
 			LatticeVectorClock clock = new LatticeVectorClock(currentClock);
 			LatticeMessageContent content = new LatticeMessageContent(clock,
-					value);
+					newValue);
 			for (int i = 0; i < checkers.length; i++) {
 				String checker = checkers[i];
 				send(MessageType.Detection, checker, content);

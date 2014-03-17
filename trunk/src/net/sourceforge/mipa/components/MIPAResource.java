@@ -60,6 +60,8 @@ public class MIPAResource {
     private static String checkMode = null;
     
     private static String mode = null;
+    
+    private static long epsilon = 0;
 
     static {
         parseConfig(config.Config.CONFIG_FILE);
@@ -92,6 +94,9 @@ public class MIPAResource {
             
             mode = doc.getElementsByTagName("mode").item(0)
                                 .getFirstChild().getNodeValue();
+            
+            epsilon = Long.valueOf(doc.getElementsByTagName("epsilon").item(0)
+                    .getFirstChild().getNodeValue());
             
             MIPAResource
                         .setNamingAddress("rmi://" + address + ":" + port + "/");
@@ -263,4 +268,13 @@ public class MIPAResource {
         else
             return Mode.SIMULATED;
     }
+
+	public static long getEpsilon() {
+		// TODO Auto-generated method stub
+		return epsilon;
+	}
+
+	public static void setEpsilon(long epsilon) {
+		MIPAResource.epsilon = epsilon;
+	}
 }

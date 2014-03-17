@@ -155,7 +155,8 @@ public class GroupManager {
         if (predicateType.equals(PredicateType.SEQUENCE)
                 || predicateType.equals(PredicateType.SURSEQUENCE)
                 || predicateType.equals(PredicateType.CTL)
-                || predicateType.equals(PredicateType.WINDOWSEQUENCE)) {
+                || predicateType.equals(PredicateType.WINDOWSEQUENCE)
+                || predicateType.equals(PredicateType.TCTL)) {
             Structure GSE = new Composite(NodeType.GSE, "GSE");
             Structure CGS = new Composite(NodeType.CGS, "CGS");
             GSE.add(CGS);
@@ -372,6 +373,11 @@ public class GroupManager {
         			localPredicateToNormalProcess, callback, predicateID,
         			maxLevel);
         	break;
+        case TCTL:
+        	allocateAsTCTL(groups,groupToChecker,
+        			localPredicateToNormalProcess, callback, predicateID,
+        			maxLevel);
+        	break;
         case WINDOWSEQUENCE:
             allocateAsWindowSequence(groups, groupToChecker,
                     localPredicateToNormalProcess, callback, predicateID,
@@ -400,7 +406,70 @@ public class GroupManager {
         return info;
     }
 
-    private void allocateAsWindowSequence(Map<String, AbstractGroup> groups,
+    private void allocateAsTCTL(Map<String, AbstractGroup> groups,
+			Map<String, String> groupToChecker,
+			Map<LocalPredicate, String> localPredicateToNormalProcess,
+			ResultCallback callback, String predicateID, int maxLevel) {
+		// TODO Auto-generated method stub
+    	IDManager idManager = MIPAResource.getIDManager();
+        Coordinator coordinator = MIPAResource.getCoordinator();
+
+        // start checker for level > 0
+        for (int i = maxLevel; i > 0; i--) {
+
+        }
+
+        // check the level == 0
+        for (String s : groups.keySet()) {
+            AbstractGroup g = groups.get(s);
+            if (g.getLevel() == 0) {
+                String gid = g.getGroupId();
+
+                // current Implementation is that father of sequence checker is null;
+
+                ArrayList<Object> children = g.getChildren();
+                ArrayList<String> owners = new ArrayList<String>();
+                ArrayList<String> members = new ArrayList<String>();
+                owners.add(groupToChecker.get(gid));
+                for (int i = 0; i < children.size(); i++) {
+                    members.add(localPredicateToNormalProcess.get(children
+                            .get(i)));
+                }
+                // create group
+                String groupId = null;
+                try {
+                    groupId = idManager.getID(Catalog.Group);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Group ng = new Group(groupId, owners, members,
+                        PredicateType.TCTL);
+                ng.setCoordinatorID(groupId);
+
+                try {
+                    coordinator.newCoordinator(ng);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String checkerName = ng.getOwners().get(0);
+                String[] normalProcesses = new String[ng.getMembers().size()];
+                ng.getMembers().toArray(normalProcesses);
+                CheckerFactory.createTCTLChecker(callback, predicateID, checkerName,
+                        normalProcesses, specification);
+
+                // create Normal Processes.
+                for (int i = 0; i < children.size(); i++) {
+                    broker.registerLocalPredicate((LocalPredicate) children
+                            .get(i), localPredicateToNormalProcess.get(children
+                            .get(i)), ng);
+                }
+            }
+        }
+	}
+
+	private void allocateAsWindowSequence(Map<String, AbstractGroup> groups,
             Map<String, String> groupToChecker,
             Map<LocalPredicate, String> localPredicateToNormalProcess,
             ResultCallback callback, String predicateID, int maxLevel) {

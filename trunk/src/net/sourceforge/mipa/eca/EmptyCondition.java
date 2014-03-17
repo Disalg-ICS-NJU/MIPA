@@ -68,6 +68,10 @@ public class EmptyCondition extends Condition {
     public synchronized void update(String eventName, String[] values) {
         assign(eventName, values);
         boolean result = localPredicate.getNodeValue();
-        notifyListener(eventName, String.valueOf(result));
+        long timestamp = 0;
+        if(values.length > 1) {
+        	timestamp = Long.valueOf(values[1].trim());
+        }
+        notifyListener(eventName, String.valueOf(result)+ " "+ timestamp);
     }
 }

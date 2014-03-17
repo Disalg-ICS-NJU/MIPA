@@ -28,6 +28,8 @@ import java.io.Serializable;
  */
 public class LocalState implements Serializable{
 
+	private static final long serialVersionUID = 2360560254269250708L;
+
 	protected int processID;
 	
     protected int intervalID;
@@ -39,6 +41,9 @@ public class LocalState implements Serializable{
 	protected String ID;
 	
 	protected long physicalTime = 0;
+	
+	private long startTime = 0;
+	private long endTime = 0;
 	
 	public LocalState(int pID, LatticeVectorClock lvc, boolean lp) {
         processID = pID;
@@ -60,6 +65,14 @@ public class LocalState implements Serializable{
         localPredicate = lp;
         this.physicalTime = physicalTime;
     }
+
+	public LocalState(int pID, int iID, boolean localPredicate, long startTime,	long endTime) {
+		processID = pID;
+        intervalID = iID;
+        this.localPredicate = localPredicate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+	}
 
 	public void setVC(LatticeVectorClock lvc) {
 
@@ -102,4 +115,20 @@ public class LocalState implements Serializable{
     public void setPhysicalTime(long physicalTime) {
         this.physicalTime = physicalTime;
     }
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	public long getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(long endTime) {
+		this.endTime = endTime;
+	}
 }

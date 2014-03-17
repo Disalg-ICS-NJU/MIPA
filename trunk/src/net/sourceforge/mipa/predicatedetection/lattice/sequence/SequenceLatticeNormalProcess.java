@@ -73,9 +73,10 @@ public class SequenceLatticeNormalProcess extends AbstractNormalProcess {
     }
 
     @Override
-    public synchronized void action(boolean value) {
-
-        if ((value == true) && (localPredicate == false)) {
+    public synchronized void action(String value) {
+    	String[] values = value.split("\\s+");
+    	boolean newValue = Boolean.parseBoolean(values[0]);
+        if ((newValue == true) && (localPredicate == false)) {
             localPredicate = true;
 
             index++;
@@ -91,13 +92,13 @@ public class SequenceLatticeNormalProcess extends AbstractNormalProcess {
             // localState changed, send localState to checker
             LatticeVectorClock clock = new LatticeVectorClock(currentClock);
             LatticeMessageContent content = new LatticeMessageContent(clock,
-                    value, pTimeLo);
+            		newValue, pTimeLo);
             for (int i = 0; i < checkers.length; i++) {
                 String checker = checkers[i];
                 send(MessageType.Detection, checker, content);
             }
 
-        } else if ((value == false) && (localPredicate == true)) {
+        } else if ((newValue == false) && (localPredicate == true)) {
             localPredicate = false;
             long pTimeHi = 0;
             // out put the physical time, to compare with the lattice result
@@ -116,7 +117,7 @@ public class SequenceLatticeNormalProcess extends AbstractNormalProcess {
             // localState changed, send localState to checker
             LatticeVectorClock clock = new LatticeVectorClock(currentClock);
             LatticeMessageContent content = new LatticeMessageContent(clock,
-                    value, pTimeHi);
+            		newValue, pTimeHi);
             for (int i = 0; i < checkers.length; i++) {
                 String checker = checkers[i];
                 send(MessageType.Detection, checker, content);

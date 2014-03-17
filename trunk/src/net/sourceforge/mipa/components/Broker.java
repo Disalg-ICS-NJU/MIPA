@@ -19,6 +19,8 @@
  */
 package net.sourceforge.mipa.components;
 
+import static config.Debug.DEBUG;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -196,10 +198,11 @@ public class Broker implements BrokerInterface {
             
             Naming server = MIPAResource.getNamingServer();
             ECAManager ecaManager = (ECAManager) server.lookup(ecaManagerId);
-            
-            System.out.println("find eca manager successfully.");
-            System.out.println(ecaManagerId);
-            logger.info("Find eca manager "+ecaManagerId+" successfully.");
+            if(DEBUG) {
+	            System.out.println("find eca manager successfully.");
+	            System.out.println(ecaManagerId);
+	            logger.info("Find eca manager "+ecaManagerId+" successfully.");
+            }
             ecaManager.registerLocalPredicate(lp, normalProcessId, g);
             normalProcessToECAManager.put(normalProcessId, ecaManagerId);
         } catch (Exception e) {

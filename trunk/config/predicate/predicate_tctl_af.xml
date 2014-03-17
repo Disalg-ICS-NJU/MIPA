@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE predicate SYSTEM "predicate.dtd" >
+<predicate type="TCTL">
+  <CGSs>
+	<CGS name="d" value="conjunction">
+		<LP>
+			<formula>
+				<atom operator="less-than" name="d_1" value="1100" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="less-than" name="d_2" value="1500" />
+			</formula>
+		</LP>
+	</CGS>
+  </CGSs>
+  <specification>
+  		<TCTLFormula>
+     		<unary value="AF" leftOperator="greater-than" leftBound = "0" rightOperator="less-than" rightBound = "10000"/>
+     		<TCTLFormula>
+     			<cgs name="d"/>
+     		</TCTLFormula>
+   		</TCTLFormula>
+	</specification>
+</predicate>
+
+

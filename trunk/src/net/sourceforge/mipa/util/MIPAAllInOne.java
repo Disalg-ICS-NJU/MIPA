@@ -1,5 +1,7 @@
 package net.sourceforge.mipa.util;
 
+import java.io.FileNotFoundException;
+
 import net.sourceforge.mipa.Application;
 import net.sourceforge.mipa.ECAInitialize;
 import net.sourceforge.mipa.MIPAInitialize;
@@ -41,8 +43,9 @@ public class MIPAAllInOne
 	/**
 	 * run mipa all in one including mipa infrastructure, 
 	 * eca infrastructure, and mipa application
+	 * @throws FileNotFoundException 
 	 */
-	public void runMIPAAllInOne()
+	public void runMIPAAllInOne() throws FileNotFoundException
 	{
 		try
 		{
@@ -63,8 +66,9 @@ public class MIPAAllInOne
 	 * 
 	 * this configuration can be used to test 
 	 * the parser module (@see {@link CTLParserTestNG})
+	 * @throws FileNotFoundException 
 	 */
-	public void runMIPAWithoutECA()
+	public void runMIPAWithoutECA() throws FileNotFoundException
 	{
 		try
 		{
@@ -81,8 +85,9 @@ public class MIPAAllInOne
 	 * initialize mipa
 	 * 
 	 * {@link net.sourceforge.mipa.MIPAInitialize}
+	 * @throws FileNotFoundException 
 	 */
-	private void mipaInitialize()
+	private void mipaInitialize() throws FileNotFoundException
 	{
         // start naming service
         NamingService service = new NamingService();
@@ -105,8 +110,9 @@ public class MIPAAllInOne
 	 * initialize eca
 	 * 
 	 * {@link net.sourceforge.mipa.ECAInitialize}
+	 * @throws FileNotFoundException 
 	 */
-	private void ecaInitialize()
+	private void ecaInitialize() throws FileNotFoundException
 	{
 		new ECAInitialize().initialize();
 	}

@@ -76,9 +76,10 @@ public class SCPLatticeNormalProcess extends AbstractNormalProcess {
 	}
 
 	@Override
-	public void action(boolean value) {
-
-		if ((value == true) && (localPredicate == false)) {
+	public void action(String value) {
+		String[] values = value.split("\\s+");
+    	boolean newValue = Boolean.parseBoolean(values[0]);
+		if ((newValue == true) && (localPredicate == false)) {
 			localPredicate = true;
 
 			index++;
@@ -93,13 +94,13 @@ public class SCPLatticeNormalProcess extends AbstractNormalProcess {
 			// localState changed, send localState to checker
 			LatticeVectorClock clock = new LatticeVectorClock(currentClock);
 			LatticeMessageContent content = new LatticeMessageContent(clock,
-					value);
+					newValue);
 			for (int i = 0; i < checkers.length; i++) {
 				String checker = checkers[i];
 				send(MessageType.Detection, checker, content);
 			}
 			
-		} else if ((value == false) && (localPredicate == true)) {
+		} else if ((newValue == false) && (localPredicate == true)) {
 			localPredicate = false;
 			
 			//out put the physical time, to compare with the lattice result
@@ -117,7 +118,7 @@ public class SCPLatticeNormalProcess extends AbstractNormalProcess {
 			// localState changed, send localState to checker
 			LatticeVectorClock clock = new LatticeVectorClock(currentClock);
 			LatticeMessageContent content = new LatticeMessageContent(clock,
-					value);
+					newValue);
 			for (int i = 0; i < checkers.length; i++) {
 				String checker = checkers[i];
 				send(MessageType.Detection, checker, content);

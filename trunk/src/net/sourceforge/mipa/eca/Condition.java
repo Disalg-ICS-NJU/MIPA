@@ -19,6 +19,8 @@
  */
 package net.sourceforge.mipa.eca;
 
+import static config.Debug.DEBUG;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,8 +73,10 @@ public abstract class Condition implements Serializable {
     public Composite parseLocalPredicate(LocalPredicate localPredicate)
     {
         Formula formulaNode = (Formula)localPredicate.getChildren().get(0);
-        System.out.println("parseLocalPredicate:");
-        logger.info("parseLocalPredicate:");
+        if(DEBUG) {
+	        System.out.println("parseLocalPredicate:");
+	        logger.info("parseLocalPredicate:");
+        }
         return parseFormula(formulaNode);
     }
     

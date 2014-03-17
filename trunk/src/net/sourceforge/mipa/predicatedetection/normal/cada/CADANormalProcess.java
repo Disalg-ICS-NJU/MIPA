@@ -95,9 +95,11 @@ public class CADANormalProcess extends AbstractNormalProcess {
     }
 
     @Override
-    public void action(boolean value) {
+    public void action(String value) {
         // TODO Auto-generated method stub
-        if(prevState != value) {
+    	String[] values = value.split("\\s+");
+    	boolean newValue = Boolean.parseBoolean(values[0]);
+        if(prevState != newValue) {
             if(prevState == false) {
                 broadcast(MessageType.Control, null);
                 lo = new CADAVectorClock(currentClock);
@@ -176,7 +178,7 @@ public class CADANormalProcess extends AbstractNormalProcess {
                 }
             }
         }
-        prevState = value;
+        prevState = newValue;
     }
     
     private void send(MessageType type, String receiverName, CADAMessageContent content) {

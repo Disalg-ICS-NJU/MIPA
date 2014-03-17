@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE predicate SYSTEM "predicate.dtd" >
+<predicate type="TCTL">
+  <CGSs>
+	<CGS name="a" value="conjunction">
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_1" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_2" value="500" />
+			</formula>
+		</LP>
+		<!--<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_3" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_4" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_5" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_6" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_7" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_8" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_9" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_10" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_11" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_12" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_13" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_14" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_15" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_16" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_17" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_18" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_19" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_20" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_21" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_22" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_23" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_24" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_25" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_26" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_27" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_28" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_29" value="500" />
+			</formula>
+		</LP>
+		<LP>
+			<formula>
+				<atom operator="greater-than" name="distance_30" value="500" />
+			</formula>
+		</LP>-->
+	</CGS>
+  </CGSs>
+  <specification>
+  		<TCTLFormula>
+     		<unary value="AF" leftOperator="greater-than" leftBound = "0" rightOperator="less-than" rightBound = "15000"/>
+     		<TCTLFormula>
+     			<cgs name="a"/>
+     		</TCTLFormula>
+   		</TCTLFormula>
+	</specification>
+</predicate>
+
+

@@ -8,5 +8,6 @@
 	<!-- normal or lattice -->
 	<checkMode>lattice</checkMode>
 	<!-- real or simulated -->
-	<mode>simulated</mode>
+	<mode>real</mode>
+	<epsilon>10</epsilon>
 </config>

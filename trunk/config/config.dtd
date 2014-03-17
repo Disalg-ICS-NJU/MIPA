@@ -4,3 +4,4 @@
 <!ELEMENT port (#PCDATA)>
 <!ELEMENT checkMode (#PCDATA)>
 <!ELEMENT mode (#PCDATA)>
+<!ELEMENT epsilon (#PCDATA)>

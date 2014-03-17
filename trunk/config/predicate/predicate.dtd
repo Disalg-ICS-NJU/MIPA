@@ -1,5 +1,5 @@
 <!ELEMENT predicate (CGSs, specification)>
-<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE|CTL|WINDOWSEQUENCE) #REQUIRED>
+<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE|CTL|WINDOWSEQUENCE|TCTL) #REQUIRED>
 
 <!-- CGS definition -->
 <!ELEMENT CGSs (CGS)+>
@@ -21,6 +21,10 @@
 <!ATTLIST binary value (conjunction|disjunction|imply|EU|AU) #REQUIRED>
 <!ELEMENT unary EMPTY>
 <!ATTLIST unary value (not|EX|EF|EG|AX|AF|AG) #IMPLIED>
+<!ATTLIST unary leftOperator (greater-than|greater-or-equal) #IMPLIED>
+<!ATTLIST unary leftBound CDATA #IMPLIED>
+<!ATTLIST unary rightOperator (less-than|less-or-equal) #IMPLIED>
+<!ATTLIST unary rightBound CDATA #IMPLIED>
 
 <!-- operator: ==, great-than, not-great-than, less-than, not-less-than, etc. -->
 <!ELEMENT atom EMPTY>
@@ -30,7 +34,7 @@
 	value CDATA #REQUIRED>
 
 <!-- specification definition -->
-<!ELEMENT specification ((prefix, GSE)|(CTLFormula))>
+<!ELEMENT specification ((prefix, GSE)|(CTLFormula)|(TCTLFormula))>
 <!ELEMENT prefix EMPTY>
 <!ATTLIST prefix value (def|pos) #REQUIRED>
 
@@ -47,5 +51,7 @@
 <!ELEMENT global (#PCDATA)>
 
 <!ELEMENT CTLFormula (cgs | (CTLFormula,binary,CTLFormula) | (unary, CTLFormula))>
+
+<!ELEMENT TCTLFormula (cgs | (unary, TCTLFormula))>
 
 

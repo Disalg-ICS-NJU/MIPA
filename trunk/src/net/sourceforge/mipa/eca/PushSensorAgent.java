@@ -38,7 +38,14 @@ public class PushSensorAgent extends SensorAgent {
     /** time gap between two data generations. */
     private long gap;
     
-    private static Logger logger = Logger.getLogger(PushSensorAgent.class);
+    protected final static int heartBeat = 1;
+    private long time;
+    private long lastTime;
+    private boolean first = true;
+
+    private String[] values;
+    
+    //private static Logger logger = Logger.getLogger(PushSensorAgent.class);
 
     public PushSensorAgent(DataDisseminate dataDisseminate, 
                              String name,
@@ -81,19 +88,43 @@ public class PushSensorAgent extends SensorAgent {
     public void run() {
         try {
             while(true) {
-                Thread.sleep(gap);
-                
-                String[] values = sensor.getData();
-                
-                if(values != null) {
-                    dataDisseminate.update(this.name, values);
+            	values = sensor.getData();
+            	if(values != null) {
+	            	if(values.length > 1) {
+	            		time = Long.valueOf(values[1]);
+//		            	long currentTime = System.currentTimeMillis();
+//		            	if(currentTime >= time) {
+//		            		dataDisseminate.update(this.name, values);
+//		            	}
+//		            	else {
+//		            		long distance = time - currentTime;
+//		            		Thread.sleep(distance);
+//		            		dataDisseminate.update(this.name, values);
+//		            	}
+	            		if(first == true) {
+	            			lastTime = time;
+	            			dataDisseminate.update(this.name, values);
+	            			first = false;
+	            		}
+	            		else {
+	            			long distance = time - lastTime;
+	            			lastTime = time;
+	            			Thread.sleep(distance);
+		            		dataDisseminate.update(this.name, values);
+	            		}
+	            	}
+	            	else {
+	            		Thread.sleep(gap);
+	            		dataDisseminate.update(this.name, values);
+	            	}
                 } else {
+                	System.out.println("Sensor " + name + " Stopped!");
                     if(DEBUG) {
                         System.out.println("Sensor " + name + " Stopped!");
-                        logger.info("Sensor " + name + " Stopped!");
+                        //logger.info("Sensor " + name + " Stopped!");
                     }
                     return;
-                }
+                }	                
             }
         } catch(Exception e) {
             e.printStackTrace();

@@ -99,9 +99,11 @@ public class SCPNormalProcess extends AbstractNormalProcess {
     }
 
     @Override
-    public void action(boolean value) {
+    public void action(String value) {
         // TODO Auto-generated method stub
-    	if(prevState != value) {
+    	String[] values = value.split("\\s+");
+    	boolean newValue = Boolean.parseBoolean(values[0]);
+    	if(prevState != newValue) {
             if(prevState == false) {
             	broadcast(MessageType.Control, null);
             	lo = new SCPVectorClock(currentClock);
@@ -140,7 +142,7 @@ public class SCPNormalProcess extends AbstractNormalProcess {
     	else{
     		System.out.println(name+": The event is ignored because it does not change the value of the local predicate.");
     	}
-        prevState = value;
+        prevState = newValue;
     }
     
     public void send(MessageType type, String receiverName, SCPMessageContent content) {

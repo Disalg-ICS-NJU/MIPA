@@ -72,9 +72,11 @@ public class WCPNormalProcess extends AbstractNormalProcess {
     }
 
     @Override
-    public void action(boolean value) {
+    public void action(String value) {
         // TODO Auto-generated method stub
-        if(value == true && firstflag) {
+    	String[] values = value.split("\\s+");
+    	boolean newValue = Boolean.parseBoolean(values[0]);
+        if(newValue == true && firstflag) {
             WCPVectorClock wcpVectorClock= new WCPVectorClock(currentClock);
             WCPMessageContent wcpMessageContent = new WCPMessageContent(wcpVectorClock);
             

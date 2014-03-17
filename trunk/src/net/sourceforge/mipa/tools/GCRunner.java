@@ -19,17 +19,46 @@
  */
 package net.sourceforge.mipa.tools;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Date;
+
 /**
  *
  * @author Jianping Yu <jianp.yue@gmail.com>
  */
 public class GCRunner implements Runnable {
-
+	PrintWriter out = null;
+	
+	public GCRunner() {
+		// TODO Auto-generated method stub
+	}
+	
+	public GCRunner(PrintWriter out) {
+		// TODO Auto-generated method stub
+		this.out = out;
+	}
+	
     public void run() {
+    	//int count = 14400;
+        int period = 0;
         while(true) {
+        	//count--;
             System.gc();
+            if(out != null) {
+	            long total = Runtime.getRuntime().totalMemory();
+	            long free = Runtime.getRuntime().freeMemory();
+	            long mem = (total-free)/1024;
+	            out.println("Total-free: "+mem+"KB");
+	        	period++;
+	        	if(period >= 5) {
+	        		out.flush();
+	        		period = 0;
+	        	}
+            }
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch(Exception e) {
                 e.printStackTrace();
             }

@@ -112,8 +112,8 @@ public abstract class AbstractNormalProcess
 
     public synchronized void update(String eventName, String value) {
         if (finished) {
-            boolean newValue = Boolean.parseBoolean(value);
-            action(newValue);
+            //boolean newValue = Boolean.parseBoolean(value);
+            action(value);
         }
 
         if (DEBUG && !finished) {
@@ -125,7 +125,7 @@ public abstract class AbstractNormalProcess
         application();
     }
 
-    public abstract void action(boolean value);
+    public abstract void action(String value);
 
     public abstract void receiveMsg(Message message);
 

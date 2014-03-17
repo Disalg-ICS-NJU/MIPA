@@ -44,9 +44,10 @@ public class PredicateIdentify {
         Element root = predicate.getDocumentElement();
         
         String type = root.getAttribute("type");
-        System.out.println("predicate type is " + type);
-        logger.info("Predicate type is " + type);
-        
+        if(DEBUG) {
+	        System.out.println("predicate type is " + type);
+	        logger.info("Predicate type is " + type);
+        }
         return PredicateType.valueOf(type);
     }
 }

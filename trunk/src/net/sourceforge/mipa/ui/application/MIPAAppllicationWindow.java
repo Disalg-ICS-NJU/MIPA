@@ -185,7 +185,12 @@ public class MIPAAppllicationWindow extends ApplicationWindow
 					else
 					{
 						logger.info("Run MIPA application all in one.");
-						MIPAAllInOne.getInstance(MIPAAppllicationWindow.this.predicateFileName).runMIPAAllInOne();
+						try {
+							MIPAAllInOne.getInstance(MIPAAppllicationWindow.this.predicateFileName).runMIPAAllInOne();
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			};

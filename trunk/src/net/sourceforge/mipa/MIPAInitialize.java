@@ -22,6 +22,9 @@ package net.sourceforge.mipa;
 import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.log4j.Logger;
@@ -59,14 +62,16 @@ public class MIPAInitialize {
      * initialize MIPA Infrastructure.
      * 
      * @return true if successful, false otherwise
+     * @throws FileNotFoundException 
      */
-    public boolean initialize() {
+    public boolean initialize() throws FileNotFoundException {
 
-        if(EXPERIMENT) {
-            GCRunner r = new GCRunner();
-            Thread t = new Thread(r);
-            t.start();
-        }
+    	PrintWriter out = new PrintWriter(new File("log/heap-MIPA.log"));
+        //if(EXPERIMENT) {
+            GCRunner r = new GCRunner(out);
+            Thread tr = new Thread(r);
+            tr.start();
+        //}
 
         try {
             Naming server = MIPAResource.getNamingServer();
@@ -160,7 +165,7 @@ public class MIPAInitialize {
         return true;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // start naming service
         NamingService service = new NamingService();
         System.out.println("MIPA system Naming Service starts successfully.");

@@ -159,7 +159,7 @@ public class Atom extends Composite {
                 double sensorValue = Double.parseDouble(values[0]);
                 double threshold = Double.parseDouble(value);
                 
-                if(operator.equals("great-than") == true) {
+                if(operator.equals("greater-than") == true) {
                     if(sensorValue > threshold)
                     {
                         nodeValue = true;
@@ -194,7 +194,7 @@ public class Atom extends Composite {
                     }
                 } else {
                     System.out.println("The operator of Float has not been defined.");
-                    logger.error("The operator of String has not been defined.");
+                    logger.error("The operator of Float has not been defined.");
                 }
             }
             catch(NumberFormatException e)

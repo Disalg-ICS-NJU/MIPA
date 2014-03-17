@@ -18,3 +18,10 @@ tags data per line by following as the order of tags id.
 
 first line: time gap.
 light sensor data per line by following.
+
+
+* distance sensor data source format:
+
+first line: time gap.
+distance sensor data per line by following.
+distance value with timestamps.

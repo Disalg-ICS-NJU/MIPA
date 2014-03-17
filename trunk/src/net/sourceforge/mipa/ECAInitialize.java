@@ -23,6 +23,8 @@ import static config.Config.EXPERIMENT;
 import static config.Debug.DEBUG;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -52,13 +54,15 @@ public class ECAInitialize {
 	private static Logger logger = Logger.getLogger(ECAInitialize.class);
     /**
      * initialize method.
+     * @throws FileNotFoundException 
      */
-    public void initialize() {
-        if(EXPERIMENT) {
+    public void initialize() throws FileNotFoundException {
+    	//PrintWriter out = new PrintWriter(new File("log/heap-ECA.log"));
+        //if(EXPERIMENT) {
             GCRunner r = new GCRunner();
-            Thread t = new Thread(r);
-            t.start();
-        }
+            Thread tr = new Thread(r);
+            tr.start();
+        //}
 
         String namingAddress = MIPAResource.getNamingAddress();
         try {
@@ -126,7 +130,7 @@ public class ECAInitialize {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         new ECAInitialize().initialize();
     }
 }

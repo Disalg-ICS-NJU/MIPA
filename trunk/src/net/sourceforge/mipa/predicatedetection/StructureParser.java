@@ -23,6 +23,7 @@ import static config.Debug.DEBUG;
 import java.util.HashMap;
 
 import net.sourceforge.mipa.predicatedetection.ctl.CTLParser;
+import net.sourceforge.mipa.predicatedetection.lattice.tctl.TCTLParser;
 import net.sourceforge.mipa.ui.predicate.PredicateDot;
 
 import org.apache.log4j.Logger;
@@ -139,6 +140,11 @@ public class StructureParser {
         	return result;
         }
         /************************************************************************/
+        if(PredicateIdentify.predicateIdentify(predicate) == PredicateType.TCTL)
+        {
+        	result = TCTLParser.getInstance().parseTCTLFormula(predicate, result, nameToCGS);
+        	return result;
+        }
         elements = predicate.getElementsByTagName("specification");
         if (elements != null) {
             if(DEBUG){

@@ -35,6 +35,7 @@ import net.sourceforge.mipa.predicatedetection.lattice.scp.SCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.sequence.SequenceLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.sequence.SequenceSurfaceLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.sequence.SequenceWindowedLatticeChecker;
+import net.sourceforge.mipa.predicatedetection.lattice.tctl.TimedLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.normal.cada.CADAChecker;
 import net.sourceforge.mipa.predicatedetection.lattice.wcp.WCPLatticeChecker;
 import net.sourceforge.mipa.predicatedetection.normal.oga.OGASubChecker;
@@ -323,6 +324,42 @@ public class CheckerFactory {
             e.printStackTrace();
         }
     }
+
+	public static void createTCTLChecker(ResultCallback callback,
+			String predicateID, String checkerName, String[] normalProcesses,
+			Structure specification) {
+		// TODO Auto-generated method stub
+		try
+		{
+			//ResultCallback application = null;
+			//if(callback != null)
+			//{
+			//	application = (ResultCallback) server.lookup(callback);
+			//}
+
+			CheckMode checkMode = MIPAResource.getCheckMode();
+			if (checkMode == CheckMode.NORMAL)
+			{
+				// NORMAL mode code puts here!
+			} else if (checkMode == CheckMode.LATTICE)
+			{
+				TimedLatticeChecker tctlLatticeChecker = new TimedLatticeChecker(
+						callback, predicateID, checkerName, normalProcesses,
+						specification);
+				Communication tctlLatticeCheckerStub = (Communication) UnicastRemoteObject
+						.exportObject(tctlLatticeChecker, 0);
+				server.bind(checkerName, tctlLatticeCheckerStub);
+			} else
+			{
+				logger.error("The check mode of " + checkMode + " is not defined.");
+			}
+
+		} catch (Exception e)
+		{
+			logger.fatal(e.getMessage());
+			e.printStackTrace();
+		}
+	}
 
     /*
      * public static void newChecker(String callback, String checkerName,

@@ -98,9 +98,11 @@ public class OGANormalProcess extends AbstractNormalProcess {
     }
 
     @Override
-    public void action(boolean value) {
+    public void action(String value) {
+    	String[] values = value.split("\\s+");
+    	boolean newValue = Boolean.parseBoolean(values[0]);
         boolean changed = false;
-        if (prevState != value)
+        if (prevState != newValue)
             changed = true;
 
         if (changed == true && prevState == false) {
@@ -149,7 +151,7 @@ public class OGANormalProcess extends AbstractNormalProcess {
             
             broadcast(MessageType.Control, null);
         }
-        prevState = value;
+        prevState = newValue;
     }
 
     @Override

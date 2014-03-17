@@ -55,7 +55,7 @@ public class SequenceLatticeIDNode extends AbstractLatticeIDNode {
     private boolean flagInclusion = false;
 
     public SequenceLatticeIDNode(LocalState[] gs, String[] s) {
-        super(gs, s);
+        super(gs, s, 0);
         // TODO Auto-generated constructor stub
         visited = false;
         tailFlag = false;

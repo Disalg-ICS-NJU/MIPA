@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sensor SYSTEM "sensor.dtd">
+<sensor>
+  <name>d_2</name>
+  <id>d_2</id>
+  <class>net.sourceforge.mipa.eca.sensor.SimulationDistanceWithTime</class>
+  <location>nju</location>
+  <ValueType>Double</ValueType>
+  <DataSchema type="push" />
+  <DataDisseminate time="1" lazy="true" />
+  <arguments>
+	<argument>data/d_2</argument>
+  </arguments>
+</sensor>

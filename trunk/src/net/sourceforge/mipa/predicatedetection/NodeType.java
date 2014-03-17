@@ -55,5 +55,6 @@ public enum NodeType {
     AX,
     AU,
     AF,
-    AG
+    AG,
+    TCTLFORMULA
 }
