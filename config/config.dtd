@@ -1,0 +1,7 @@
+<!ELEMENT config (naming, checkMode,mode)>
+<!ELEMENT naming (address, port)>
+<!ELEMENT address (#PCDATA)>
+<!ELEMENT port (#PCDATA)>
+<!ELEMENT checkMode (#PCDATA)>
+<!ELEMENT mode (#PCDATA)>
+<!ELEMENT epsilon (#PCDATA)>

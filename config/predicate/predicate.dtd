@@ -1,0 +1,57 @@
+<!ELEMENT predicate (CGSs, specification)>
+<!ATTLIST predicate type (SCP|WCP|OGA|LP|CADA|SEQUENCE|SURSEQUENCE|CTL|WINDOWSEQUENCE|TCTL) #REQUIRED>
+
+<!-- CGS definition -->
+<!ELEMENT CGSs (CGS)+>
+<!ELEMENT CGS (LP)+>
+<!ATTLIST CGS 
+	name CDATA #REQUIRED
+	value (conjunction|disjunction) #IMPLIED>
+
+<!-- local predicate definition -->
+<!ELEMENT LP (formula)>
+<!ATTLIST LP 
+	windowSize CDATA #IMPLIED>
+<!ELEMENT formula ((quantifier, formula)|(formula, binary, formula)|(unary, formula)|atom)>
+
+<!-- quantifier contains symbol and variable -->
+<!ELEMENT quantifier (#PCDATA)>
+<!ATTLIST quantifier value (universal|existential) #REQUIRED>
+<!ELEMENT binary EMPTY>
+<!ATTLIST binary value (conjunction|disjunction|imply|EU|AU) #REQUIRED>
+<!ELEMENT unary EMPTY>
+<!ATTLIST unary value (not|EX|EF|EG|AX|AF|AG) #IMPLIED>
+<!ATTLIST unary leftOperator (greater-than|greater-or-equal) #IMPLIED>
+<!ATTLIST unary leftBound CDATA #IMPLIED>
+<!ATTLIST unary rightOperator (less-than|less-or-equal) #IMPLIED>
+<!ATTLIST unary rightBound CDATA #IMPLIED>
+
+<!-- operator: ==, great-than, not-great-than, less-than, not-less-than, etc. -->
+<!ELEMENT atom EMPTY>
+<!ATTLIST atom
+	operator CDATA #REQUIRED
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED>
+
+<!-- specification definition -->
+<!ELEMENT specification ((prefix, GSE)|(CTLFormula)|(TCTLFormula))>
+<!ELEMENT prefix EMPTY>
+<!ATTLIST prefix value (def|pos) #REQUIRED>
+
+<!ELEMENT GSE (element+, global)>
+<!ATTLIST GSE value (conjunction|disjunction) #REQUIRED>
+
+<!ELEMENT element (zeroOrMore|oneOrMore|choice|optional|cgs)>
+<!ELEMENT zeroOrMore (element)+>
+<!ELEMENT oneOrMore (element)+>
+<!ELEMENT choice (element,(element)+)>
+<!ELEMENT optional (element)+>
+<!ELEMENT cgs EMPTY>
+<!ATTLIST cgs name CDATA #REQUIRED>
+<!ELEMENT global (#PCDATA)>
+
+<!ELEMENT CTLFormula (cgs | (CTLFormula,binary,CTLFormula) | (unary, CTLFormula))>
+
+<!ELEMENT TCTLFormula (cgs | (unary, TCTLFormula))>
+
+
