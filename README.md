@@ -41,4 +41,4 @@ Please refer to our research papers below. If you have any comments or suggestio
   See more in ./INSTALL file.
 
 ### Any Questions?
-For more detail, please visit https://github.com/alg-nju/mipa
+For more detail, please visit https://github.com/alg-nju
